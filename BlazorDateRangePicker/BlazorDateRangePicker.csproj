@@ -18,6 +18,8 @@
     <PackageProjectUrl>https://github.com/jdtcn/BlazorDateRangePicker</PackageProjectUrl>
     <PackageTags>blazor;nodatime;datepicker;datepicker;timepicker</PackageTags>
     <RepositoryUrl>https://github.com/jdtcn/BlazorDateRangePicker</RepositoryUrl>
+    <PackageTags>blazor,daterangepicker</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

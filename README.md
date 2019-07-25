@@ -15,6 +15,8 @@ a single date picker mode, and predefined date ranges.
 
 JS Interop is used for popup positioning and outside click handling. With future releases of ASP.NET Core Blazor it will be possible without js.
 
+## [Live Demo](https://blazordaterangepicker.azurewebsites.net/)
+
 ## Get Started
 
 Download library from NuGet in the NuGet Package Manager, or by executing the following command in the Package Manager Console:
