@@ -8,7 +8,7 @@ Date Range Picker for [Blazor](https://blazor.net/)
 This date range picker component is a port of js [DateRangePicker](https://github.com/dangrossman/daterangepicker/), rewritten using C# as a Razor Component.
 It creates a dropdown menu from which a user can select a range of dates.
 
-There is no dependecy with jquery, moment, or bootstrap
+There is no dependency with jquery, moment, or bootstrap
 
 Features include limiting the selectable date range, localizable strings and date formats,
 a single date picker mode, and predefined date ranges.
