@@ -1,0 +1,320 @@
+﻿@*
+    * author: Sergey Zaikin zaikinsr@yandex.ru
+    * copyright: Copyright (c) 2019 Sergey Zaikin. All rights reserved.
+    * license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
+*@
+
+@inherits DatePickerComponentBase
+@using Microsoft.AspNetCore.Components
+
+@if (PickerTemplate == null)
+{
+    <input id="@ParentId" type="text" @attributes="Attributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
+}
+else
+{
+    @PickerTemplate(((object)this) as BlazorDateRangePicker.DateRangePicker);
+}
+<div style="visibility:@(Visible ? "visible" : "hidden");">
+    <div id="@Id" class="daterangepicker @RootStyles" style="top: 0px;left: 0px;right:auto;position:fixed;">
+
+        <div class="ranges">
+            @if (Ranges != null && Ranges.Any())
+            {
+                <ul>
+                    @foreach (var range in Ranges)
+                    {
+                        <li class="@(range.Name == ChosenLabel ? "active" : "")" @onclick="@(args => ClickRange(args, range.Name))">@range.Name</li>
+                    }
+                    @if (ShowCustomRangeLabel)
+                    {
+                        <li class="@(CustomRangeLabel == ChosenLabel ? "active" : "")" @onclick="@(args => ClickRange(args, CustomRangeLabel))">@CustomRangeLabel</li>
+                    }
+                </ul>
+            }
+        </div>
+        <div class="drp-calendar left @(SingleDatePicker ? "single" : "")">
+
+            <div class="calendar-table">
+                <Calendar Side="@SideType.Left"
+                          CalendarData="@LeftCalendar"
+                          ShowWeekNumbers="@ShowWeekNumbers"
+                          ShowISOWeekNumbers="@ShowISOWeekNumbers"
+                          MinDate="@MinDate"
+                          MaxDate="@MaxDate"
+                          LinkedCalendars="@LinkedCalendars"
+                          ShowDropdowns="@ShowDropdowns"
+                          SingleDatePicker="@SingleDatePicker"
+                          WeekAbbreviation="@WeekAbbreviation"
+                          StartDate="@StartDate"
+                          OnMonthChanged="@(date => MonthChanged(date, SideType.Left))"
+                          OnClickDate="@(date => ClickDate(date))"
+                          HoverDate="@HoverDate"
+                          OnHoverDate="@(date => OnHoverDate(date))"
+                          Culture="@Culture"
+                          DaysEnabledFunction="@DaysEnabledFunction"
+                          CustomDateFunction="@CustomDateFunction"
+                          CustomDateClass="@CustomDateClass"
+                          MaxSpan="@MaxSpan"
+                          EndDate="@EndDate" />
+            </div>
+
+        </div>
+        @if (!SingleDatePicker)
+        {
+            <div class="drp-calendar right">
+
+                <div class="calendar-table">
+                    <Calendar Side="@SideType.Right"
+                              CalendarData="@RightCalendar"
+                              ShowWeekNumbers="@ShowWeekNumbers"
+                              ShowISOWeekNumbers="@ShowISOWeekNumbers"
+                              MinDate="@MinDate"
+                              MaxDate="@MaxDate"
+                              LinkedCalendars="@LinkedCalendars"
+                              ShowDropdowns="@ShowDropdowns"
+                              SingleDatePicker="@SingleDatePicker"
+                              WeekAbbreviation="@WeekAbbreviation"
+                              StartDate="@StartDate"
+                              OnMonthChanged="@(date => MonthChanged(date, SideType.Right))"
+                              OnClickDate="@(date => ClickDate(date))"
+                              HoverDate="@HoverDate"
+                              OnHoverDate="@(date => OnHoverDate(date))"
+                              Culture="@Culture"
+                              DaysEnabledFunction="@DaysEnabledFunction"
+                              CustomDateFunction="@CustomDateFunction"
+                              CustomDateClass="@CustomDateClass"
+                              MaxSpan="@MaxSpan"
+                              EndDate="@EndDate" />
+                </div>
+
+            </div>
+        }
+        <div class="drp-buttons">
+
+            <span class="drp-selected"></span>
+            <button class="cancelBtn @ButtonClasses @CancelButtonClasses" @onclick="ClickCancel" type="button">@CancelLabel</button>
+            <button class="applyBtn @ButtonClasses @ApplyButtonClasses" @onclick="ClickApply" disabled="@(StartDate == null || EndDate == null)" type="button">@ApplyLabel</button>
+
+        </div>
+
+    </div>
+</div>
+@functions {
+
+    [Parameter]
+    RenderFragment<DateRangePicker> PickerTemplate { get; set; }
+
+    private CalendarType LeftCalendar { get; set; }
+    private CalendarType RightCalendar { get; set; }
+
+    private DateTimeOffset? HoverDate { get; set; }
+
+    private string EditText { get; set; }
+
+    public string FormattedRange
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(EditText))
+            {
+                return EditText;
+            }
+
+            if (SingleDatePicker && StartDate != null)
+            {
+                return $"{StartDate.Value.ToString(DateFormat)}";
+            }
+
+            if (StartDate != null && EndDate != null)
+            {
+                return $"{StartDate.Value.ToString(DateFormat)} - {EndDate.Value.ToString(DateFormat)}";
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        set { }
+    }
+
+    private string RootStyles
+    {
+        get
+        {
+            var result = new List<string>();
+            if (Ranges?.Any() == true) { result.Add("show-ranges"); }
+            if (AutoApply) { result.Add("auto-apply"); }
+            if (Drops == DropsType.Up) { result.Add("drop-up"); }
+            if (((Ranges == null || Ranges?.Any() == false) && !SingleDatePicker) || AlwaysShowCalendars || CalendarsVisible) { result.Add("show-calendar"); }
+
+            result.Add($"opens{Enum.GetName(typeof(SideType), Opens).ToLower()}");
+
+            return string.Join(" ", result);
+        }
+    }
+
+    protected override Task OnInitAsync()
+    {
+        LeftCalendar = new CalendarType(Culture);
+        RightCalendar = new CalendarType(Culture);
+
+        StartDate = StartDate?.Date;
+        EndDate = EndDate?.Date.AddDays(1).AddTicks(-1);
+
+        LeftCalendar.Month = StartDate.HasValue ? StartDate.Value : DateTime.Now;
+        RightCalendar.Month = EndDate.HasValue ? EndDate.Value : DateTime.Now.AddMonths(1);
+        if (LeftCalendar.Month.Year == RightCalendar.Month.Year && LeftCalendar.Month.Month == RightCalendar.Month.Month)
+        {
+            RightCalendar.Month = RightCalendar.Month.AddDays(1);
+        }
+
+        return base.OnInitAsync();
+    }
+
+    public async Task OnTextInput(UIChangeEventArgs e)
+    {
+        Console.WriteLine("On input=" + e.Value);
+        EditText = e.Value.ToString();
+        if (!SingleDatePicker && !e.Value.ToString().Contains("-")) { return; }
+        var dateStrings = e.Value.ToString().Split('-').Select(s => s.Trim()).ToList();
+        if (SingleDatePicker)
+        {
+            dateStrings = new List<string> { e.Value.ToString(), string.Empty };
+        }
+        if (dateStrings.Count != 2) { return; }
+
+        var startDateParsed = DateTimeOffset.TryParseExact(dateStrings[0], DateFormat, Culture, System.Globalization.DateTimeStyles.None, out var startDate);
+        var endDateParsed = DateTimeOffset.TryParseExact(dateStrings[1], DateFormat, Culture, System.Globalization.DateTimeStyles.None, out var endDate);
+
+        if (endDateParsed && endDate > MaxDate)
+        {
+            endDate = MaxDate.Value.Date;
+        }
+
+        if (startDateParsed && startDate < MinDate)
+        {
+            startDate = MinDate.Value.Date.AddDays(1).AddTicks(-1);
+        }
+
+        if (startDateParsed && SingleDatePicker)
+        {
+            Close();
+            StartDate = startDate.Date;
+            EndDate = startDate.Date;
+            await ClickApply(null);
+            EditText = null;
+        }
+
+        if (startDateParsed && endDateParsed && startDate < endDate
+            && (!MinDate.HasValue || startDate > MinDate)
+            && (!MaxDate.HasValue || endDate < MaxDate))
+        {
+            Close();
+            StartDate = startDate.Date;
+            EndDate = endDate.Date.AddDays(1).AddTicks(-1);
+            await ClickApply(null);
+            EditText = null;
+        }
+    }
+
+    public void LostFocus(UIFocusEventArgs e)
+    {
+        EditText = null;
+    }
+
+    private async Task ClickRange(UIMouseEventArgs e, string label)
+    {
+        ChosenLabel = label;
+        if (label == CustomRangeLabel)
+        {
+            ShowCalendars();
+        }
+        else
+        {
+            var dates = Ranges.FirstOrDefault(r => r.Name == label);
+            StartDate = dates.Start.Date;
+            EndDate = dates.End.Date.AddDays(1).AddTicks(-1);
+
+            if (!AlwaysShowCalendars)
+            { HideCalendars(); }
+            await ClickApply(e);
+        }
+    }
+
+    private void MonthChanged(DateTimeOffset date, SideType side)
+    {
+        if (side == SideType.Left)
+        {
+            LeftCalendar.Month = date;
+            if (LinkedCalendars)
+            {
+                RightCalendar.Month = LeftCalendar.Month.AddMonths(1);
+            }
+        }
+        else
+        {
+            RightCalendar.Month = date;
+            if (LinkedCalendars)
+            {
+                LeftCalendar.Month = RightCalendar.Month.AddMonths(-1);
+            }
+        }
+    }
+
+    private async Task ClickDate(DateTimeOffset date)
+    {
+        HoverDate = null;
+        if (EndDate.HasValue || StartDate == null || date < StartDate)
+        { //picking start
+            EndDate = null;
+            StartDate = date.Date;
+        }
+        else if (!EndDate.HasValue && date < StartDate)
+        {
+            //special case: clicking the same date for start/end,
+            //but the time of the end date is before the start date
+            EndDate = StartDate;
+        }
+        else
+        { // picking end
+            EndDate = date.Date.AddDays(1).AddTicks(-1);
+            if (AutoApply)
+            {
+                await ClickApply(null);
+            }
+        }
+
+        if (SingleDatePicker)
+        {
+            StartDate = date.Date;
+            EndDate = StartDate;
+            await ClickApply(null);
+        }
+    }
+
+    private void OnHoverDate(DateTimeOffset date)
+    {
+        if (!EndDate.HasValue)
+        {
+            HoverDate = date;
+        }
+    }
+
+    private async Task ClickApply(UIMouseEventArgs e)
+    {
+        if (StartDate.HasValue && EndDate.HasValue)
+        {
+            StateHasChanged();
+            await OnRangeSelect.InvokeAsync(new DateRange { Start = StartDate.Value, End = EndDate.Value });
+        }
+        Close();
+    }
+
+    private void ClickCancel(UIMouseEventArgs e)
+    {
+        StartDate = OldStartValue;
+        EndDate = OldEndValue;
+        Close();
+    }
+}

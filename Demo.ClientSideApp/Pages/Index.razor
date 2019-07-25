@@ -1,0 +1,207 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>DateRangePicker client-side Blazor demo</h1>
+
+            <p>A Blazor component for choosing date ranges and dates</p>
+            <hr />
+
+            <h4>Getting Started</h4>
+            <div class="row">
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Opens=\"SideType.Right\" class=\"form-control form-control-sm\">" +
+                                             "\n</DateRangePicker>")</code></pre>
+                </div>
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Opens="SideType.Left" class="form-control form-control-sm"></DateRangePicker>
+                </div>
+            </div>
+            <hr />
+
+            <h4>Opens="SideType.Left"</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Opens="SideType.Right" class="form-control form-control-sm"></DateRangePicker>
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Opens=\"SideType.Left\" class=\"form-control form-control-sm\">\n</DateRangePicker>")</code></pre>
+                </div>
+            </div>
+
+            <hr />
+            <h4>Simple Date Range Picker With an Event</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker StartDate="StartDate" EndDate="EndDate" OnRangeSelect="OnRangeSelect" class="form-control form-control-sm"></DateRangePicker>
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker OnRangeSelect=\"OnRangeSelect\"\n" +
+                                             "    StartDate=\"StartDate\" EndDate=\"EndDate\" >\n</DateRangePicker>")</code></pre>
+                    <pre><code lang="cs">DateTimeOffset StartDate { get; set; } = DateTime.Now.AddMonths(-1);
+DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
+                    <pre><code lang="cs">@("StartDate = range.Start;\nEndDate = range.End;\nList<string> events { get; set; } = new List<string>();\npublic void OnRangeSelect(DateRange range)\n" +
+                                           "    events.Add($\"Range {range.Start} - {range.End} selected\");\n}")</code></pre>
+                </div>
+                <div class="col-12">
+                    @if (events.Count > 0)
+                    {
+                        <label>Events:</label>
+                    }
+                    @foreach (var e in events)
+                    {
+                        <p>@e</p>
+                    }
+                </div>
+            </div>
+            <hr />
+
+            <h4>Single Date Picker</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm"></DateRangePicker>
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker SingleDatePicker=\"true\"></DateRangePicker>")</code></pre>
+                </div>
+            </div>
+
+            <hr />
+            <h4>Predefined Date Ranges</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Ranges="DateRanges" class="form-control form-control-sm"></DateRangePicker>
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Ranges=\"DateRanges\"></DateRangePicker>")</code></pre>
+                    <pre><code lang="cs">@("List<RangeItem> DateRanges => new List<RangeItem> {\n" +
+                                            "    new RangeItem {\n" +
+                                            "        Name = \"This month\",\n" +
+                                            "        Start = //...\n" +
+                                            "        End = //...\n" +
+                                            "    }\n" +
+                                            "};")</code></pre>
+                </div>
+            </div>
+
+            <hr />
+            <h4>Custom markup</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker>
+                        <PickerTemplate>
+                            <div id="@context.ParentId" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;">
+                                <i class="oi oi-calendar"></i>&nbsp;
+                                <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? "Choose dates..." : "")</span>
+                                <i class="oi oi-chevron-bottom float-right"></i>
+                            </div>
+                        </PickerTemplate>
+                    </DateRangePicker>
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker>\n" +
+                "    <PickerTemplate>\n" +
+                "        <div id=\"@context.ParentId\" @onclick=\"context.Toggle\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;\">\n" +
+                "            <i class=\"oi oi-calendar\"></i>&nbsp;\n" +
+                "            <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? \"Choose dates...\" : \"\")</span>\n" +
+                "            <i class=\"oi oi-chevron-bottom float-right\"></i>\n" +
+                "        </div>\n    </PickerTemplate>\n</DateRangePicker>")</code></pre>
+                </div>
+            </div>
+
+            <hr />
+
+            <h4>Drops="DropsType.Up"</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Drops="DropsType.Up" class="form-control form-control-sm"></DateRangePicker>
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Drops=\"DropsType.Up\"></DateRangePicker>")</code></pre>
+                </div>
+            </div>
+            <hr />
+
+            <h4>Localization</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))" class="form-control form-control-sm" />
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"ru\"))\" />")</code></pre>
+                </div>
+            </div>
+            <hr />
+
+            <h4>Licence</h4>
+
+            <p>The MIT License (MIT)</p>
+
+            <p>Copyright (c) @DateTime.Now.Year Sergey Zaikin</p>
+
+            <p>
+                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+            </p>
+            <p>
+                The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+            </p>
+            <p>
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </p>
+        </div>
+    </div>
+</div>
+
+@code{
+    List<string> events { get; set; } = new List<string>();
+
+    int daysInThisMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+    int daysInPrevMonth = DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
+    List<RangeItem> DateRanges => new List<RangeItem> {
+            new RangeItem {
+                Name = "This month",
+                Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, daysInThisMonth).AddDays(1).AddTicks(-1)
+            },
+            new RangeItem {
+                Name = "Previous month",
+                Start = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, 1),
+                End = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, daysInPrevMonth).AddDays(1).AddTicks(-1)
+            }
+        };
+
+    DateTimeOffset StartDate { get; set; } = DateTime.Now.AddMonths(-1);
+    DateTimeOffset EndDate { get; set; } = DateTime.Now;
+
+    public void OnRangeSelect(DateRange range)
+    {
+        StartDate = range.Start;
+        EndDate = range.End;
+        events.Add($"Range {range.Start} - {range.End} selected");
+    }
+
+    protected override async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeAsync<object>("highlightInterop.highlight");
+        await base.OnAfterRenderAsync();
+    }
+}
