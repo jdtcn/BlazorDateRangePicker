@@ -41,7 +41,6 @@ window.clickAndPositionHandler = {
         }
 
         var setStylesOnElement = function (styles, element) {
-            //Object.assign(element.style, styles);
             for (var prop in styles) {
                 element.style[prop] = styles[prop];
             }
@@ -52,20 +51,7 @@ window.clickAndPositionHandler = {
         else
             containerTop = elementRect.top + outerHeight(element) - parentOffset.top;
 
-        // Force the container to it's actual width
-        /*setStylesOnElement({
-            top: 0 + 'px',
-            left: 0 + 'px',
-            right: 'auto',
-            position: 'fixed'
-        }, container);*/
         var containerWidth = outerWidth(container);
-
-        /*if (drops == 'up') {
-            container.classList.add("drop-up");
-        } else {
-            container.classList.remove("drop-up");
-        }*/
 
         if (opens == 'left') {
             var containerRight = parentRightEdge - elementRect.left - outerWidth(element);
