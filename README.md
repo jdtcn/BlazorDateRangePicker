@@ -3,7 +3,7 @@ Date Range Picker for [Blazor](https://blazor.net/)
 
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/BlazorDateRangePicker.svg)](https://www.nuget.org/packages/BlazorDateRangePicker/)
 
-![https://github.com/jdtcn/BlazorDateRangePicker](https://habrastorage.org/webt/4s/ml/el/4smlelm0wf58eyzl4sryzg6vsyi.png)
+![https://github.com/jdtcn/BlazorDateRangePicker](https://habrastorage.org/webt/ku/ye/jt/kuyejt2khntesrw6asg9hvwiri0.png)
 
 This date range picker component is a port of js [DateRangePicker](https://github.com/dangrossman/daterangepicker/), rewritten using C# as a Razor Component.
 It creates a dropdown menu from which a user can select a range of dates.
