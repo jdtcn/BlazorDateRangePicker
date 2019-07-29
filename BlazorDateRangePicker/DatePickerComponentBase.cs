@@ -41,7 +41,7 @@ namespace BlazorDateRangePicker
         /// Set predefined date ranges the user can select from. Each RangeItem.Name is the label for the range, and its Start and End value representing the bounds of the range.
         /// </summary>
         [Parameter]
-        public List<RangeItem> Ranges { get; set; }
+        public Dictionary<string, DateRange> Ranges { get; set; }
 
         /// <summary>
         /// Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked.
@@ -65,28 +65,28 @@ namespace BlazorDateRangePicker
         /// CSS class names that will be added to both the apply and cancel buttons.
         /// </summary>
         [Parameter]
-        public string ButtonClasses { get; set; } = "btn btn-sm";
+        public string ButtonClasses { get; set; }
 
         /// <summary>
         /// CSS class names that will be added only to the apply button. 
         /// </summary>
         [Parameter]
-        public string ApplyButtonClasses { get; set; } = "btn-primary";
+        public string ApplyButtonClasses { get; set; }
 
         /// <summary>
         /// CSS class names that will be added only to the cancel button. 
         /// </summary>
         [Parameter]
-        public string CancelButtonClasses { get; set; } = "btn-default";
+        public string CancelButtonClasses { get; set; }
 
         [Parameter]
-        public string ApplyLabel { get; set; } = "Apply";
+        public string ApplyLabel { get; set; }
 
         [Parameter]
-        public string CancelLabel { get; set; } = "Cancel";
+        public string CancelLabel { get; set; }
 
         [Parameter]
-        public string CustomRangeLabel { get; set; } = "Custom range";
+        public string CustomRangeLabel { get; set; }
 
         /// <summary>
         /// The beginning date of the initially selected date range.
@@ -100,24 +100,11 @@ namespace BlazorDateRangePicker
         [Parameter]
         public DateTimeOffset? EndDate { get; set; }
 
-        private string dateFormat;
-
         /// <summary>
         /// Specify the format string to display dates, default is Culture.DateTimeFormat.ShortDatePattern
         /// </summary>
         [Parameter]
-        public string DateFormat
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(dateFormat)) return dateFormat;
-                return Culture.DateTimeFormat.ShortDatePattern;
-            }
-            set
-            {
-                dateFormat = value;
-            }
-        }
+        public string DateFormat { get; set; }      
 
         /// <summary>
         /// Show localized week numbers at the start of each week on the calendars.
@@ -151,11 +138,11 @@ namespace BlazorDateRangePicker
 
         /// <summary> Specify the culture to display dates and text in. Default is CultureInfo.CurrentCulture.</summary>
         [Parameter]
-        public System.Globalization.CultureInfo Culture { get; set; } = System.Globalization.CultureInfo.CurrentCulture;
+        public System.Globalization.CultureInfo Culture { get; set; }
 
         /// <summary>The text to display on the Week number heading</summary>
         [Parameter]
-        public string WeekAbbreviation { get; set; } = string.Empty;
+        public string WeekAbbreviation { get; set; }
 
         /// <summary>The day of the week to start from</summary>
         [Parameter]
@@ -197,7 +184,7 @@ namespace BlazorDateRangePicker
         /// A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not. 
         /// </summary>
         [Parameter]
-        public Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; } = _ => true;
+        public Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
 
         /// <summary>
         /// String of CSS class name to apply to that custom date's calendar cell <seealso cref="CustomDateFunction"/>
@@ -209,7 +196,7 @@ namespace BlazorDateRangePicker
         /// A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.
         /// </summary>
         [Parameter]
-        public Func<DateTimeOffset, bool> CustomDateFunction { get; set; } = _ => false;
+        public Func<DateTimeOffset, bool> CustomDateFunction { get; set; }
 
         /// <summary>
         /// Triggered when the apply button is clicked, or when a predefined range is clicked
@@ -232,8 +219,25 @@ namespace BlazorDateRangePicker
 
         protected override void OnInit()
         {
+            var markupAttributes = Attributes;
+
             var config = ServiceProvider.GetService<DateRangePickerConfig>();
-            config?.CopyProperties(this);
+            if (config == null) config = new DateRangePickerConfig();
+            config.CopyProperties(this);
+
+            if (markupAttributes?.Any() == true)
+            {
+                if (Attributes == null) Attributes = new Dictionary<string, object>();
+                foreach (var ma in markupAttributes)
+                {
+                    if (!Attributes.ContainsKey(ma.Key)) Attributes[ma.Key] = ma.Value;
+                }
+            }
+
+            if (string.IsNullOrEmpty(DateFormat))
+            {
+                DateFormat = Culture.DateTimeFormat.ShortDatePattern;
+            }
 
             if (SingleDatePicker) AutoApply = true;
             base.OnInit();
@@ -247,10 +251,12 @@ namespace BlazorDateRangePicker
             OldStartValue = StartDate;
             OldEndValue = EndDate;
 
-            var selectedRange = Ranges?.FirstOrDefault(r => r.Start.Date == StartDate?.Date && r.End.Date == EndDate?.Date);
+            var selectedRange = Ranges?.FirstOrDefault(r => 
+                r.Value.Start.Date == StartDate?.Date && 
+                r.Value.End.Date == EndDate?.Date);
             if (selectedRange != null)
             {
-                ChosenLabel = selectedRange.Name;
+                ChosenLabel = selectedRange.Value.Key;
             }
             else
             {

@@ -24,7 +24,7 @@ else
                 <ul>
                     @foreach (var range in Ranges)
                     {
-                        <li class="@(range.Name == ChosenLabel ? "active" : "")" @onclick="@(args => ClickRange(args, range.Name))">@range.Name</li>
+                        <li class="@(range.Key == ChosenLabel ? "active" : "")" @onclick="@(args => ClickRange(args, range.Key))">@range.Key</li>
                     }
                     @if (ShowCustomRangeLabel)
                     {
@@ -232,7 +232,7 @@ else
         }
         else
         {
-            var dates = Ranges.FirstOrDefault(r => r.Name == label);
+            var dates = Ranges[label];
             StartDate = dates.Start.Date;
             EndDate = dates.End.Date.AddDays(1).AddTicks(-1);
 

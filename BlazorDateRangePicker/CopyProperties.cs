@@ -51,8 +51,15 @@ namespace BlazorDateRangePicker
                 {
                     continue;
                 }
+
+                // Skip properties passed to object directly in the markup
+                if (!targetProperty.PropertyType.IsValueType && targetProperty.GetValue(destination) != null)
+                {
+                    continue;
+                }
+
                 // Passed all tests, lets set the value
-                targetProperty.SetValue(destination, srcProp.GetValue(source, null), null);
+                targetProperty.SetValue(destination, srcProp.GetValue(source));
             }
         }
     }

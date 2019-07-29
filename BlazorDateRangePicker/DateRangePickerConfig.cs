@@ -16,7 +16,7 @@ namespace BlazorDateRangePicker
         /// <summary>
         /// Set predefined date ranges the user can select from. Each RangeItem.Name is the label for the range, and its Start and End value representing the bounds of the range.
         /// </summary>
-        public List<RangeItem> Ranges { get; set; }
+        public Dictionary<string, DateRange> Ranges { get; set; }
 
         /// <summary>
         /// Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked.

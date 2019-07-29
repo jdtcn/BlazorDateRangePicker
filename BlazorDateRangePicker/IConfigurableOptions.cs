@@ -34,7 +34,7 @@ namespace BlazorDateRangePicker
         TimeSpan? MaxSpan { get; set; }
         DateTimeOffset? MinDate { get; set; }
         SideType Opens { get; set; }
-        List<RangeItem> Ranges { get; set; }
+        Dictionary<string, DateRange> Ranges { get; set; }
         bool ShowCustomRangeLabel { get; set; }
         bool ShowDropdowns { get; set; }
         bool ShowISOWeekNumbers { get; set; }
