@@ -11,6 +11,8 @@ namespace BlazorDateRangePicker
 {
     public class DateRangePickerConfig : IConfigurableOptions
     {
+        public string Name { get; set; }
+
         public Dictionary<string, object> Attributes { get; set; }
 
         /// <summary>

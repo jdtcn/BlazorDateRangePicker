@@ -32,6 +32,12 @@ namespace BlazorDateRangePicker
         public string ParentId { get; } = Guid.NewGuid().ToString();
 
         /// <summary>
+        /// Attach a named properties config object to this instance of datepicker
+        /// </summary>
+        [Parameter]
+        public string Config { get; set; }
+
+        /// <summary>
         /// All unmatched parameters will be passed to parent element
         /// </summary>
         [Parameter(CaptureUnmatchedValues = true)]
@@ -221,7 +227,13 @@ namespace BlazorDateRangePicker
         {
             var markupAttributes = Attributes;
 
-            var config = ServiceProvider.GetService<DateRangePickerConfig>();
+            var configs = ServiceProvider.GetServices<DateRangePickerConfig>();
+            var config = configs?.FirstOrDefault();
+            if (!string.IsNullOrEmpty(Config) && configs.Any(c => c.Name == Config))
+            {
+                config = configs.First(c => c.Name == Config);
+            }
+
             if (config == null) config = new DateRangePickerConfig();
             config.CopyProperties(this);
 

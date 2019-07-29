@@ -14,10 +14,13 @@ namespace BlazorDateRangePicker
         /// <summary>
         /// Adds a singleton <see cref="DateRangePickerConfig"/> instance to the DI
         /// </summary>
-        public static IServiceCollection AddDateRangePicker(this IServiceCollection services, DateRangePickerConfig configuration)
+        public static IServiceCollection AddDateRangePicker(this IServiceCollection services,
+            DateRangePickerConfig configuration,
+            string configName = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
+            configuration.Name = configName;
             services.AddSingleton(configuration);
             return services;
         }
@@ -26,14 +29,15 @@ namespace BlazorDateRangePicker
         /// Adds a singleton <see cref="DateRangePickerConfig"/> instance to the DI
         /// </summary>
         public static IServiceCollection AddDateRangePicker(this IServiceCollection services,
-            Action<DateRangePickerConfig> configure)
+            Action<DateRangePickerConfig> configure,
+            string configName = null)
         {
             if (configure == null) throw new ArgumentNullException(nameof(configure));
 
             var options = new DateRangePickerConfig();
             configure(options);
 
-            return AddDateRangePicker(services, options);
+            return AddDateRangePicker(services, options, configName);
         }
     }
 }
