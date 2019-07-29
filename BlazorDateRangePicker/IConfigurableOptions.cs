@@ -26,14 +26,14 @@ namespace BlazorDateRangePicker
         string CustomRangeLabel { get; set; }
         string DateFormat { get; set; }
         Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
-        DropsType Drops { get; set; }
+        DropsType? Drops { get; set; }
         DateTimeOffset? EndDate { get; set; }
         DayOfWeek FirstDayOfWeek { get; set; }
         bool LinkedCalendars { get; set; }
         DateTimeOffset? MaxDate { get; set; }
         TimeSpan? MaxSpan { get; set; }
         DateTimeOffset? MinDate { get; set; }
-        SideType Opens { get; set; }
+        SideType? Opens { get; set; }
         Dictionary<string, DateRange> Ranges { get; set; }
         bool ShowCustomRangeLabel { get; set; }
         bool ShowDropdowns { get; set; }

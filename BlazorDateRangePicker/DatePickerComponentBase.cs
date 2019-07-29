@@ -172,13 +172,13 @@ namespace BlazorDateRangePicker
         /// Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.
         /// </summary>
         [Parameter]
-        public SideType Opens { get; set; } = SideType.Right;
+        public SideType? Opens { get; set; }
 
         /// <summary>
         /// Whether the picker appears below (default) or above the HTML element it's attached to.
         /// </summary>
         [Parameter]
-        public DropsType Drops { get; set; } = DropsType.Down;
+        public DropsType? Drops { get; set; }
 
         /// <summary>
         /// A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not. 

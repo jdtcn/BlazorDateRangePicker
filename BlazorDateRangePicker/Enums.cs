@@ -8,14 +8,14 @@ namespace BlazorDateRangePicker
 {
     public enum SideType
     {
-        Left,
         Right,
+        Left,
         Center
     }
 
     public enum DropsType
     {
-        Up,
-        Down
+        Down,
+        Up
     }
 }
