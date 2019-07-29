@@ -52,7 +52,7 @@
                 }
                 else
                 {
-                    @Culture.DateTimeFormat.GetMonthName(CalendarData[1][1].Month) @CalendarData[1][1].Year
+                    @Culture.DateTimeFormat.GetMonthName(CalendarData[1][1].Month)<text>&nbsp;</text>@CalendarData[1][1].Year
                 }
             </th>
             @if ((!maxDate.HasValue || maxDate > CalendarData.LastDay) && (!LinkedCalendars || Side == SideType.Right || SingleDatePicker))
