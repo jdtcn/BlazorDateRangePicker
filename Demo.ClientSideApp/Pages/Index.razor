@@ -8,31 +8,31 @@
             <h1>DateRangePicker client-side Blazor demo</h1>
 
             <p>A Blazor component for choosing date ranges and dates</p>
-            <hr />
 
+            <hr />
             <h4>Getting Started</h4>
+            <div class="row">
+                <div class="col-4">
+                    <label>Produces:</label>
+                    <DateRangePicker />
+                </div>
+                <div class="col-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker />")</code></pre>
+                </div>
+            </div>
+
+            <hr />
+            <h4>Opens="SideType.Left"</h4>
             <div class="row">
                 <div class="col-8">
                     <label>Code:</label>
-                    <pre><code lang="html">@("<DateRangePicker Opens=\"SideType.Right\" class=\"form-control form-control-sm\">" +
+                    <pre><code lang="html">@("<DateRangePicker Opens=\"SideType.Left\">" +
                                              "\n</DateRangePicker>")</code></pre>
                 </div>
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker Opens="SideType.Left" class="form-control form-control-sm"></DateRangePicker>
-                </div>
-            </div>
-            <hr />
-
-            <h4>Opens="SideType.Left"</h4>
-            <div class="row">
-                <div class="col-4">
-                    <label>Produces:</label>
-                    <DateRangePicker Opens="SideType.Right" class="form-control form-control-sm"></DateRangePicker>
-                </div>
-                <div class="col-8">
-                    <label>Code:</label>
-                    <pre><code lang="html">@("<DateRangePicker Opens=\"SideType.Left\" class=\"form-control form-control-sm\">\n</DateRangePicker>")</code></pre>
+                    <DateRangePicker Opens="SideType.Left"></DateRangePicker>
                 </div>
             </div>
 
@@ -41,15 +41,17 @@
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker StartDate="StartDate" EndDate="EndDate" OnRangeSelect="OnRangeSelect" class="form-control form-control-sm"></DateRangePicker>
+                    <DateRangePicker StartDate="StartDate" EndDate="EndDate" OnRangeSelect="OnRangeSelect"></DateRangePicker>
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
                     <pre><code lang="html">@("<DateRangePicker OnRangeSelect=\"OnRangeSelect\"\n" +
-                                             "    StartDate=\"StartDate\" EndDate=\"EndDate\" >\n</DateRangePicker>")</code></pre>
+                                             "    StartDate=\"StartDate\" EndDate=\"EndDate\">\n</DateRangePicker>")</code></pre>
                     <pre><code lang="cs">DateTimeOffset StartDate { get; set; } = DateTime.Now.AddMonths(-1);
-DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
-                    <pre><code lang="cs">@("StartDate = range.Start;\nEndDate = range.End;\nList<string> events { get; set; } = new List<string>();\npublic void OnRangeSelect(DateRange range)\n" +
+DateTimeOffset EndDate { get; set; } = DateTime.Now;
+List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
+                    <pre><code lang="cs">@("public void OnRangeSelect(DateRange range)\n" +
+                                           "    StartDate = range.Start;\n    EndDate = range.End;\n" +
                                            "    events.Add($\"Range {range.Start} - {range.End} selected\");\n}")</code></pre>
                 </div>
                 <div class="col-12">
@@ -69,7 +71,7 @@ DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm"></DateRangePicker>
+                    <DateRangePicker SingleDatePicker="true"></DateRangePicker>
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
@@ -82,17 +84,18 @@ DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker Ranges="DateRanges" class="form-control form-control-sm"></DateRangePicker>
+                    <DateRangePicker Ranges="DateRanges"></DateRangePicker>
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
                     <pre><code lang="html">@("<DateRangePicker Ranges=\"DateRanges\"></DateRangePicker>")</code></pre>
-                    <pre><code lang="cs">@("List<RangeItem> DateRanges => new List<RangeItem> {\n" +
-                                            "    new RangeItem {\n" +
-                                            "        Name = \"This month\",\n" +
-                                            "        Start = //...\n" +
-                                            "        End = //...\n" +
-                                            "    }\n" +
+                    <pre><code lang="cs">@("Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {\n"+
+                                            "    { \"This month\", new DateRange\n"+
+                                            "        {\n"+
+                                            "            Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),\n"+
+                                            "            End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)\n"+
+                                            "        }\n"+
+                                            "    }, ...\n" + 
                                             "};")</code></pre>
                 </div>
             </div>
@@ -130,7 +133,7 @@ DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker Drops="DropsType.Up" class="form-control form-control-sm"></DateRangePicker>
+                    <DateRangePicker Drops="DropsType.Up"></DateRangePicker>
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
@@ -143,7 +146,7 @@ DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))" class="form-control form-control-sm" />
+                    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))" />
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
@@ -174,20 +177,20 @@ DateTimeOffset EndDate { get; set; } = DateTime.Now;</code></pre>
 @code{
     List<string> events { get; set; } = new List<string>();
 
-    int daysInThisMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-    int daysInPrevMonth = DateTime.DaysInMonth(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month);
-    List<RangeItem> DateRanges => new List<RangeItem> {
-            new RangeItem {
-                Name = "This month",
-                Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
-                End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, daysInThisMonth).AddDays(1).AddTicks(-1)
-            },
-            new RangeItem {
-                Name = "Previous month",
-                Start = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, 1),
-                End = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, daysInPrevMonth).AddDays(1).AddTicks(-1)
+    Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {
+            { "This month", new DateRange
+                {
+                    Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                    End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)
+                }
+            } ,
+            { "Previous month" , new DateRange
+                {
+                    Start = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, 1),
+                    End = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, 1).AddMonths(1).AddTicks(-1)
+                }
             }
-        };
+     };
 
     DateTimeOffset StartDate { get; set; } = DateTime.Now.AddMonths(-1);
     DateTimeOffset EndDate { get; set; } = DateTime.Now;

@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EmbeddedBlazorContent;
+using BlazorDateRangePicker;
+using System.Net.Http;
 
 namespace Demo.ServerSideApp
 {
@@ -28,6 +30,14 @@ namespace Demo.ServerSideApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddDateRangePicker(config =>
+            {
+                config.Attributes = new Dictionary<string, object>
+                {
+                    { "class", "form-control form-control-sm" }
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

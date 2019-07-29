@@ -101,19 +101,43 @@ Using custom markup for picker.
 ````
 Set id="@context.ParentId" for outside click handling to root element.
 
+### One configuration for all pickers
+
+````C#
+#Startup.cs
+
+using BlazorDateRangePicker;
+
+//ConfigureServices
+services.AddDateRangePicker(config =>
+{
+    config.Attributes = new Dictionary<string, object>
+    {
+        { "class", "form-control form-control-sm" }
+    };
+});
+````
+It's possible to create multiple named config instances and bind it to picker with "Config" property.
+
+````C#
+services.AddDateRangePicker(config => ..., configName: "CustomConfig");
+
+<DateRangePicker Config="CustomConfig" />
+````
+
 ## Properties
 
 | Name | Type | DefaultValue |  Description |
 |------|------|--------------|--------------|
-|StartDate|DateTimeOffset|null|The beginning date of the initially selected date range. If you provide a string, it must match the date format string set in your locale setting.|
+|StartDate|DateTimeOffset|null|The beginning date of the initially selected date range.|
 |EndDate|DateTimeOffset|null|The end date of the initially selected date range.|
 |MinDate|DateTimeOffset|null|The earliest date a user may select.|
 |MaxDate|DateTimeOffset|null|The latest date a user may select.|
-|MaxSpan|TimeSpan|null|The maximum span between the selected start and end dates. Check off maxSpan in the configuration generator for an example of how to use this. You can provide any object the moment library would let you add to a date.|
+|MaxSpan|TimeSpan|null|The maximum span between the selected start and end dates.|
 |ShowDropdowns|bool|true|Show year and month select boxes above calendars to jump to a specific month and year.|
 |ShowWeekNumbers|bool|false|Show localized week numbers at the start of each week on the calendars.|
 |ShowISOWeekNumbers|bool|false|Show ISO week numbers at the start of each week on the calendars.|
-|Ranges|List<RangeItem>|null|Set predefined date ranges the user can select from. Each key is the label for the range, and its value an array with two dates representing the bounds of the range. Click ranges in the configuration generator for examples.|
+|Ranges|Dictionary<string, DateRange>|null|Set predefined date ranges the user can select from. Each key is the label for the range.|
 |ShowCustomRangeLabel|bool|true|Displays "Custom Range" at the end of the list of predefined ranges, when the ranges option is used. This option will be highlighted whenever the current date range selection does not match one of the predefined ranges. Clicking it will display the calendars to select a new range.|
 |AlwaysShowCalendars|bool|false|Normally, if you use the ranges option to specify pre-defined date ranges, calendars for choosing a custom date range are not shown until the user clicks "Custom Range". When this option is set to true, the calendars for choosing a custom date range are always shown instead.|
 |Opens|SideType enum: Left/Right/Center|Right|Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.|
@@ -127,28 +151,29 @@ Set id="@context.ParentId" for outside click handling to root element.
 |LinkedCalendars|bool|false|When enabled, the two calendars displayed will always be for two sequential months (i.e. January and February), and both will be advanced when clicking the left or right arrows above the calendars. When disabled, the two calendars can be individually advanced and display any month/year.|
 |DaysEnabledFunction|Func<DateTimeOffset,bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not.|
 |CustomDateFunction|Func<DateTimeOffset,bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.|
-|CustomDateClass|string|string.Empty|String of CSS class name to apply to that custom date's calendar cell|
-|ApplyLabel|string|"Apply"|Apply button text|
-|CancelLabel|string|"Cancel"|Cancel button text|
-|CustomRangeLabel|string|"Custom range"|Custom range label at the end of the list of predefined ranges|
+|CustomDateClass|string|string.Empty|String of CSS class name to apply to that custom date's calendar cell.|
+|ApplyLabel|string|"Apply"|Apply button text.|
+|CancelLabel|string|"Cancel"|Cancel button text.|
+|CustomRangeLabel|string|"Custom range"|Custom range label at the end of the list of predefined ranges.|
+|Config|string|null|Name of the named configuration to use with this picker instance.|
 
 
 ## Events
 
 | Name | Type | Description |
 |------|------|-------------|
-|OnRangeSelect|DateRange|Triggered when the apply button is clicked, or when a predefined range is clicked|
-|OnOpened|void|An event that is invoked when the DatePicker is opened|
-|OnClosed|void|An event that is invoked when the DatePicker is closed|
+|OnRangeSelect|DateRange|Triggered when the apply button is clicked, or when a predefined range is clicked.|
+|OnOpened|void|An event that is invoked when the DatePicker is opened.|
+|OnClosed|void|An event that is invoked when the DatePicker is closed.|
 
 
 ## Methods
 
 | Name |Description |
 |------|------------|
-|Open|Show picker popup|
-|Close|Close picker popup|
-|Toggle|Toggle picker popup state|
+|Open|Show picker popup.|
+|Close|Close picker popup.|
+|Toggle|Toggle picker popup state.|
 
 
 ## Types
@@ -170,17 +195,6 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
  
- 
-RangeItem:
-````C#
-public class RangeItem
-{
-    public string Name { get; set; }
-    public DateTimeOffset Start { get; set; }
-    public DateTimeOffset End { get; set; }
-}
-````
-
 ## License
 
 The MIT License (MIT)
