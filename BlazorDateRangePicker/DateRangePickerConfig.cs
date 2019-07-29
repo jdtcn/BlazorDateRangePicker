@@ -23,17 +23,17 @@ namespace BlazorDateRangePicker
         /// <summary>
         /// Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked.
         /// </summary>
-        public bool AutoApply { get; set; }
+        public bool? AutoApply { get; set; }
 
         /// <summary>
         /// Show only a single calendar to choose one date, instead of a range picker with two calendars. The start and end dates provided to your callback will be the same single date chosen. 
         /// </summary>
-        public bool SingleDatePicker { get; set; }
+        public bool? SingleDatePicker { get; set; }
 
         /// <summary>
         /// Normally, if you use the ranges option to specify pre-defined date ranges, calendars for choosing a custom date range are not shown until the user clicks "Custom Range". When this option is set to true, the calendars for choosing a custom date range are always shown instead. 
         /// </summary>
-        public bool AlwaysShowCalendars { get; set; }
+        public bool? AlwaysShowCalendars { get; set; }
 
         /// <summary>
         /// CSS class names that will be added to both the apply and cancel buttons.
@@ -66,48 +66,35 @@ namespace BlazorDateRangePicker
         /// </summary>
         public DateTimeOffset? EndDate { get; set; }
 
-        private string dateFormat;
-
         /// <summary>
         /// Specify the format string to display dates, default is Culture.DateTimeFormat.ShortDatePattern
         /// </summary>
-        public string DateFormat
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(dateFormat)) return dateFormat;
-                return Culture.DateTimeFormat.ShortDatePattern;
-            }
-            set
-            {
-                dateFormat = value;
-            }
-        }
+        public string DateFormat { get; set; }
 
         /// <summary>
         /// Show localized week numbers at the start of each week on the calendars.
         /// </summary>
-        public bool ShowWeekNumbers { get; set; }
+        public bool? ShowWeekNumbers { get; set; }
 
         /// <summary>
         /// Show ISO week numbers at the start of each week on the calendars.
         /// </summary>
-        public bool ShowISOWeekNumbers { get; set; }
+        public bool? ShowISOWeekNumbers { get; set; }
 
         /// <summary>
         /// When enabled, the two calendars displayed will always be for two sequential months (i.e. January and February), and both will be advanced when clicking the left or right arrows above the calendars. When disabled, the two calendars can be individually advanced and display any month/year.
         /// </summary>
-        public bool LinkedCalendars { get; set; }
+        public bool? LinkedCalendars { get; set; }
 
         /// <summary>
         /// Show year and month select boxes above calendars to jump to a specific month and year.
         /// </summary>
-        public bool ShowDropdowns { get; set; } = true;
+        public bool? ShowDropdowns { get; set; } = true;
 
         /// <summary>
         /// Displays "Custom Range" at the end of the list of predefined ranges, when the ranges option is used. This option will be highlighted whenever the current date range selection does not match one of the predefined ranges. Clicking it will display the calendars to select a new range.
         /// </summary>
-        public bool ShowCustomRangeLabel { get; set; } = true;
+        public bool? ShowCustomRangeLabel { get; set; } = true;
 
         /// <summary> Specify the culture to display dates and text in. Default is CultureInfo.CurrentCulture.</summary>
         public System.Globalization.CultureInfo Culture { get; set; } = System.Globalization.CultureInfo.CurrentCulture;
@@ -116,7 +103,7 @@ namespace BlazorDateRangePicker
         public string WeekAbbreviation { get; set; } = string.Empty;
 
         /// <summary>The day of the week to start from</summary>
-        public DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Monday;
+        public DayOfWeek? FirstDayOfWeek { get; set; } = DayOfWeek.Monday;
 
         /// <summary>The earliest date that can be selected, inclusive. A value of null indicates that there is no minimum date.</summary>
         public DateTimeOffset? MinDate { get; set; }
@@ -128,11 +115,6 @@ namespace BlazorDateRangePicker
         /// The maximum TimeSpan between the selected start and end dates. A value of null indicates that there is no limit.
         /// </summary>
         public TimeSpan? MaxSpan { get; set; }
-
-        /// <summary>
-        /// Picker popup visibility. Use Open() instead.
-        /// </summary>
-        public bool Visible { get; set; }
 
         /// <summary>
         /// Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.

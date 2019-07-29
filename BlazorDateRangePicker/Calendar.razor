@@ -13,11 +13,11 @@
                 var minDate = Side == SideType.Left ? MinDate : StartDate;
                 var maxDate = MaxDate;
             }
-            @if (ShowWeekNumbers || ShowISOWeekNumbers)
+            @if (ShowWeekNumbers == true || ShowISOWeekNumbers == true)
             {
                 <th></th>
             }
-            @if ((!minDate.HasValue || minDate < CalendarData.FirstDay) && (!LinkedCalendars || Side == SideType.Left))
+            @if ((!minDate.HasValue || minDate < CalendarData.FirstDay) && (LinkedCalendars != true || Side == SideType.Left))
             {
                 <th class="prev available" @onclick="PreviousMonth"><span></span></th>
             }
@@ -26,7 +26,7 @@
                 <th></th>
             }
             <th colspan="5" class="month">
-                @if (ShowDropdowns)
+                @if (ShowDropdowns == true)
                 {
                     var currentMonth = CalendarData[1][1].Month;
                     var currentYear = CalendarData[1][1].Year;
@@ -55,7 +55,7 @@
                     @Culture.DateTimeFormat.GetMonthName(CalendarData[1][1].Month)<text>&nbsp;</text>@CalendarData[1][1].Year
                 }
             </th>
-            @if ((!maxDate.HasValue || maxDate > CalendarData.LastDay) && (!LinkedCalendars || Side == SideType.Right || SingleDatePicker))
+            @if ((!maxDate.HasValue || maxDate > CalendarData.LastDay) && (LinkedCalendars != true || Side == SideType.Right || SingleDatePicker == true))
             {
                 <th class="next available" @onclick="NextMonth"><span></span></th>
             }
@@ -67,7 +67,7 @@
         </tr>
         <tr>
 
-            @if (ShowWeekNumbers || ShowISOWeekNumbers)
+            @if (ShowWeekNumbers == true || ShowISOWeekNumbers == true)
             {
                 <th class="week">@WeekAbbreviation</th>
             }
@@ -105,7 +105,7 @@
         @for (int row = 0; row < 6; row++)
         {
             <tr>
-                @if (ShowWeekNumbers)
+                @if (ShowWeekNumbers == true)
                 {
                     var weekRule = Culture.DateTimeFormat.CalendarWeekRule;
                     var firstDayOfWeek = Culture.DateTimeFormat.FirstDayOfWeek;
@@ -113,7 +113,7 @@
                         @DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(CalendarData[row][0].DateTime, weekRule, firstDayOfWeek)
                     </td>
                 }
-                else if (ShowISOWeekNumbers)
+                else if (ShowISOWeekNumbers == true)
                 {
                     <td class="week">
                         @GetIso8601WeekOfYear(CalendarData[row][0].DateTime)
@@ -212,14 +212,14 @@
 @functions{
     [Parameter] internal CalendarType CalendarData { get; set; }
 
-    [Parameter] public bool ShowWeekNumbers { get; set; } = false;
-    [Parameter] public bool ShowISOWeekNumbers { get; set; } = false;
+    [Parameter] public bool? ShowWeekNumbers { get; set; } = false;
+    [Parameter] public bool? ShowISOWeekNumbers { get; set; } = false;
     [Parameter] public DateTimeOffset? MinDate { get; set; }
     [Parameter] public DateTimeOffset? MaxDate { get; set; }
-    [Parameter] public bool LinkedCalendars { get; set; } = true;
-    [Parameter] public SideType Side { get; set; }
-    [Parameter] public bool ShowDropdowns { get; set; } = true;
-    [Parameter] public bool SingleDatePicker { get; set; } = false;
+    [Parameter] public bool? LinkedCalendars { get; set; } = true;
+    [Parameter] public SideType? Side { get; set; }
+    [Parameter] public bool? ShowDropdowns { get; set; } = true;
+    [Parameter] public bool? SingleDatePicker { get; set; } = false;
     [Parameter] public string WeekAbbreviation { get; set; } = string.Empty;
     [Parameter] public DateTimeOffset? HoverDate { get; set; }
     [Parameter] public CultureInfo Culture { get; set; }

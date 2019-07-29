@@ -26,14 +26,14 @@ else
                     {
                         <li class="@(range.Key == ChosenLabel ? "active" : "")" @onclick="@(args => ClickRange(args, range.Key))">@range.Key</li>
                     }
-                    @if (ShowCustomRangeLabel)
+                    @if (ShowCustomRangeLabel == true)
                     {
                         <li class="@(CustomRangeLabel == ChosenLabel ? "active" : "")" @onclick="@(args => ClickRange(args, CustomRangeLabel))">@CustomRangeLabel</li>
                     }
                 </ul>
             }
         </div>
-        <div class="drp-calendar left @(SingleDatePicker ? "single" : "")">
+        <div class="drp-calendar left @(SingleDatePicker == true? "single" : "")">
 
             <div class="calendar-table">
                 <Calendar Side="@SideType.Left"
@@ -60,7 +60,7 @@ else
             </div>
 
         </div>
-        @if (!SingleDatePicker)
+        @if (SingleDatePicker != true)
         {
             <div class="drp-calendar right">
 
@@ -121,7 +121,7 @@ else
                 return EditText;
             }
 
-            if (SingleDatePicker && StartDate != null)
+            if (SingleDatePicker == true && StartDate != null)
             {
                 return $"{StartDate.Value.ToString(DateFormat)}";
             }
@@ -144,9 +144,9 @@ else
         {
             var result = new List<string>();
             if (Ranges?.Any() == true) { result.Add("show-ranges"); }
-            if (AutoApply) { result.Add("auto-apply"); }
+            if (AutoApply == true) { result.Add("auto-apply"); }
             if (Drops == DropsType.Up) { result.Add("drop-up"); }
-            if (((Ranges == null || Ranges?.Any() == false) && !SingleDatePicker) || AlwaysShowCalendars || CalendarsVisible) { result.Add("show-calendar"); }
+            if (((Ranges == null || Ranges?.Any() == false) && SingleDatePicker != true) || AlwaysShowCalendars == true || CalendarsVisible) { result.Add("show-calendar"); }
 
             result.Add($"opens{Enum.GetName(typeof(SideType), Opens).ToLower()}");
 
@@ -176,9 +176,9 @@ else
     {
         Console.WriteLine("On input=" + e.Value);
         EditText = e.Value.ToString();
-        if (!SingleDatePicker && !e.Value.ToString().Contains("-")) { return; }
+        if (SingleDatePicker != true && !e.Value.ToString().Contains("-")) { return; }
         var dateStrings = e.Value.ToString().Split('-').Select(s => s.Trim()).ToList();
-        if (SingleDatePicker)
+        if (SingleDatePicker == true)
         {
             dateStrings = new List<string> { e.Value.ToString(), string.Empty };
         }
@@ -197,7 +197,7 @@ else
             startDate = MinDate.Value.Date.AddDays(1).AddTicks(-1);
         }
 
-        if (startDateParsed && SingleDatePicker)
+        if (startDateParsed && SingleDatePicker == true)
         {
             Close();
             StartDate = startDate.Date;
@@ -236,7 +236,7 @@ else
             StartDate = dates.Start.Date;
             EndDate = dates.End.Date.AddDays(1).AddTicks(-1);
 
-            if (!AlwaysShowCalendars)
+            if (AlwaysShowCalendars != true)
             { HideCalendars(); }
             await ClickApply(e);
         }
@@ -247,7 +247,7 @@ else
         if (side == SideType.Left)
         {
             LeftCalendar.Month = date;
-            if (LinkedCalendars)
+            if (LinkedCalendars == true)
             {
                 RightCalendar.Month = LeftCalendar.Month.AddMonths(1);
             }
@@ -255,7 +255,7 @@ else
         else
         {
             RightCalendar.Month = date;
-            if (LinkedCalendars)
+            if (LinkedCalendars == true)
             {
                 LeftCalendar.Month = RightCalendar.Month.AddMonths(-1);
             }
@@ -279,13 +279,13 @@ else
         else
         { // picking end
             EndDate = date.Date.AddDays(1).AddTicks(-1);
-            if (AutoApply)
+            if (AutoApply == true)
             {
                 await ClickApply(null);
             }
         }
 
-        if (SingleDatePicker)
+        if (SingleDatePicker == true)
         {
             StartDate = date.Date;
             EndDate = StartDate;

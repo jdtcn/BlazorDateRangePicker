@@ -12,11 +12,11 @@ namespace BlazorDateRangePicker
 {
     internal interface IConfigurableOptions
     {
-        bool AlwaysShowCalendars { get; set; }
+        bool? AlwaysShowCalendars { get; set; }
         string ApplyButtonClasses { get; set; }
         string ApplyLabel { get; set; }
         Dictionary<string, object> Attributes { get; set; }
-        bool AutoApply { get; set; }
+        bool? AutoApply { get; set; }
         string ButtonClasses { get; set; }
         string CancelButtonClasses { get; set; }
         string CancelLabel { get; set; }
@@ -28,20 +28,19 @@ namespace BlazorDateRangePicker
         Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
         DropsType? Drops { get; set; }
         DateTimeOffset? EndDate { get; set; }
-        DayOfWeek FirstDayOfWeek { get; set; }
-        bool LinkedCalendars { get; set; }
+        DayOfWeek? FirstDayOfWeek { get; set; }
+        bool? LinkedCalendars { get; set; }
         DateTimeOffset? MaxDate { get; set; }
         TimeSpan? MaxSpan { get; set; }
         DateTimeOffset? MinDate { get; set; }
         SideType? Opens { get; set; }
         Dictionary<string, DateRange> Ranges { get; set; }
-        bool ShowCustomRangeLabel { get; set; }
-        bool ShowDropdowns { get; set; }
-        bool ShowISOWeekNumbers { get; set; }
-        bool ShowWeekNumbers { get; set; }
-        bool SingleDatePicker { get; set; }
+        bool? ShowCustomRangeLabel { get; set; }
+        bool? ShowDropdowns { get; set; }
+        bool? ShowISOWeekNumbers { get; set; }
+        bool? ShowWeekNumbers { get; set; }
+        bool? SingleDatePicker { get; set; }
         DateTimeOffset? StartDate { get; set; }
-        bool Visible { get; set; }
-        string WeekAbbreviation { get; set; }
+        string? WeekAbbreviation { get; set; }
     }
 }
