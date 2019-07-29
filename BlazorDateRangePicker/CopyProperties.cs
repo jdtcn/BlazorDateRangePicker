@@ -53,7 +53,7 @@ namespace BlazorDateRangePicker
                 }
 
                 // Skip properties passed to object directly in the markup
-                if (!targetProperty.PropertyType.IsValueType && targetProperty.GetValue(destination) != null)
+                if (GetDefaultValue(targetProperty.PropertyType) == null && targetProperty.GetValue(destination) != null)
                 {
                     continue;
                 }
@@ -61,6 +61,14 @@ namespace BlazorDateRangePicker
                 // Passed all tests, lets set the value
                 targetProperty.SetValue(destination, srcProp.GetValue(source));
             }
+        }
+
+        private static object GetDefaultValue(Type t)
+        {
+            if (t.IsValueType)
+                return Activator.CreateInstance(t);
+
+            return null;
         }
     }
 }
