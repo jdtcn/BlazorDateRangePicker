@@ -13,12 +13,22 @@ window.clickAndPositionHandler = {
         });
     },
     getPickerPosition: function (elementId, parentId, drops, opens, skipAddListener) {
+        var resizeFunction = function () {
+            window.clickAndPositionHandler.getPickerPosition(elementId, parentId, drops, opens, true);
+        };
         var parentOffset = { top: 0, left: 0 },
             containerTop;
         var parentRightEdge = window.innerWidth;
         var container = document.getElementById(elementId);
         var parentEl = document.getElementById(parentId);
         var element = parentEl;
+        if (element == null || container == null) {
+            window.removeEventListener('resize', resizeFunction, true);
+            window.removeEventListener('onwheel', resizeFunction, true);
+            window.removeEventListener('onmousewheel', resizeFunction, true);
+            window.removeEventListener('scroll', resizeFunction, true);
+            return;
+        }
 
         if (parentEl === document.body) {
             var rect = parentEl.getBoundingClientRect();
@@ -114,9 +124,6 @@ window.clickAndPositionHandler = {
         }
 
         if (skipAddListener !== true) {
-            var resizeFunction = function () {
-                window.clickAndPositionHandler.getPickerPosition(elementId, parentId, drops, opens, true);
-            };
             window.addEventListener('resize', resizeFunction, true);
             window.addEventListener('onwheel', resizeFunction, true);
             window.addEventListener('onmousewheel', resizeFunction, true);
