@@ -10,7 +10,7 @@ using System.Globalization;
 
 namespace BlazorDateRangePicker
 {
-    internal class CalendarType
+    public class CalendarType
     {
         private int DaysInMonth => DateTime.DaysInMonth(Month.Year, Month.Month);
         private int LastMonth => FirstDay.AddMonths(-1).Month;

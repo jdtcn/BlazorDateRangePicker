@@ -103,7 +103,7 @@ else
 @functions {
 
     [Parameter]
-    RenderFragment<DateRangePicker> PickerTemplate { get; set; }
+    public RenderFragment<DateRangePicker> PickerTemplate { get; set; }
 
     private CalendarType LeftCalendar { get; set; }
     private CalendarType RightCalendar { get; set; }
@@ -154,7 +154,7 @@ else
         }
     }
 
-    protected override Task OnInitAsync()
+    protected override Task OnInitializedAsync()
     {
         LeftCalendar = new CalendarType(Culture);
         RightCalendar = new CalendarType(Culture);
@@ -169,12 +169,11 @@ else
             RightCalendar.Month = RightCalendar.Month.AddDays(1);
         }
 
-        return base.OnInitAsync();
+        return base.OnInitializedAsync();
     }
 
     public async Task OnTextInput(UIChangeEventArgs e)
     {
-        Console.WriteLine("On input=" + e.Value);
         EditText = e.Value.ToString();
         if (SingleDatePicker != true && !e.Value.ToString().Contains("-")) { return; }
         var dateStrings = e.Value.ToString().Split('-').Select(s => s.Trim()).ToList();

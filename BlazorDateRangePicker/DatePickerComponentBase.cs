@@ -223,7 +223,7 @@ namespace BlazorDateRangePicker
         internal string ChosenLabel { get; set; }
         internal bool CalendarsVisible { get; set; }
 
-        protected override void OnInit()
+        protected override void OnInitialized()
         {
             var markupAttributes = Attributes;
 
@@ -252,7 +252,7 @@ namespace BlazorDateRangePicker
             }
 
             if (SingleDatePicker == true) AutoApply = true;
-            base.OnInit();
+            base.OnInitialized();
         }
 
         /// <summary>

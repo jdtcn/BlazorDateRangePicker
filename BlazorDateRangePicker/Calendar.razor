@@ -210,7 +210,7 @@
 </table>
 
 @functions{
-    [Parameter] internal CalendarType CalendarData { get; set; }
+    [Parameter] public CalendarType CalendarData { get; set; }
 
     [Parameter] public bool? ShowWeekNumbers { get; set; } = false;
     [Parameter] public bool? ShowISOWeekNumbers { get; set; } = false;
@@ -239,9 +239,9 @@
     private int MinYear => MinDate?.Year ?? 1900;
     private int MaxYear => MaxDate?.Year ?? DateTime.Now.AddYears(100).Year;
 
-    protected override void OnInit()
+    protected override void OnInitialized()
     {
-        base.OnInit();
+        base.OnInitialized();
     }
 
     public bool IsDayDisabled(DateTimeOffset date)
