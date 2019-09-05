@@ -5,7 +5,6 @@
 *@
 
 @inherits DatePickerComponentBase
-@using Microsoft.AspNetCore.Components
 
 @if (PickerTemplate == null)
 {
@@ -172,7 +171,7 @@ else
         return base.OnInitializedAsync();
     }
 
-    public async Task OnTextInput(UIChangeEventArgs e)
+    public async Task OnTextInput(ChangeEventArgs e)
     {
         EditText = e.Value.ToString();
         if (SingleDatePicker != true && !e.Value.ToString().Contains("-")) { return; }
@@ -217,12 +216,12 @@ else
         }
     }
 
-    public void LostFocus(UIFocusEventArgs e)
+    public void LostFocus(FocusEventArgs e)
     {
         EditText = null;
     }
 
-    private async Task ClickRange(UIMouseEventArgs e, string label)
+    private async Task ClickRange(MouseEventArgs e, string label)
     {
         ChosenLabel = label;
         if (label == CustomRangeLabel)
@@ -300,7 +299,7 @@ else
         }
     }
 
-    private async Task ClickApply(UIMouseEventArgs e)
+    private async Task ClickApply(MouseEventArgs e)
     {
         if (StartDate.HasValue && EndDate.HasValue)
         {
@@ -310,7 +309,7 @@ else
         Close();
     }
 
-    private void ClickCancel(UIMouseEventArgs e)
+    private void ClickCancel(MouseEventArgs e)
     {
         StartDate = OldStartValue;
         EndDate = OldEndValue;

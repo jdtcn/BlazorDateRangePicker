@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker />
+                    <DateRangePicker/>
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
@@ -197,12 +197,14 @@ List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
 
     public void OnRangeSelect(DateRange range)
     {
+        StartDate = range.Start;
+        EndDate = range.End;
         events.Add($"Range {range.Start} - {range.End} selected");
     }
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JSRuntime.InvokeAsync<object>("highlightInterop.highlight");
-        await base.OnAfterRenderAsync();
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

@@ -202,9 +202,9 @@ List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
         events.Add($"Range {range.Start} - {range.End} selected");
     }
 
-    protected override async Task OnAfterRenderAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JSRuntime.InvokeAsync<object>("highlightInterop.highlight");
-        await base.OnAfterRenderAsync();
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

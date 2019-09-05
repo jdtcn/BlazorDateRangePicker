@@ -110,7 +110,7 @@ namespace BlazorDateRangePicker
         /// Specify the format string to display dates, default is Culture.DateTimeFormat.ShortDatePattern
         /// </summary>
         [Parameter]
-        public string DateFormat { get; set; }      
+        public string DateFormat { get; set; }
 
         /// <summary>
         /// Show localized week numbers at the start of each week on the calendars.
@@ -263,8 +263,8 @@ namespace BlazorDateRangePicker
             OldStartValue = StartDate;
             OldEndValue = EndDate;
 
-            var selectedRange = Ranges?.FirstOrDefault(r => 
-                r.Value.Start.Date == StartDate?.Date && 
+            var selectedRange = Ranges?.FirstOrDefault(r =>
+                r.Value.Start.Date == StartDate?.Date &&
                 r.Value.End.Date == EndDate?.Date);
             if (selectedRange != null)
             {
@@ -278,14 +278,13 @@ namespace BlazorDateRangePicker
 
             Visible = true;
 
-            Issue11159 fixer = new Issue11159(JSRuntime);
-            DotNetObjectRef<DatePickerComponentBase> reference = fixer.CreateDotNetObjectRef(this);
-            JSRuntime.InvokeAsync<object>("clickAndPositionHandler.addClickOutsideEvent", Id, ParentId, reference);
-
+            JSRuntime.InvokeAsync<object>("clickAndPositionHandler.addClickOutsideEvent", Id, ParentId, DotNetObjectReference.Create(this));
             JSRuntime.InvokeAsync<object>("clickAndPositionHandler.getPickerPosition", Id, ParentId,
                 Enum.GetName(typeof(DropsType), Drops).ToLower(), Enum.GetName(typeof(SideType), Opens).ToLower());
 
             OnOpened.InvokeAsync(null);
+
+            StateHasChanged();
         }
 
         /// <summary>
@@ -326,39 +325,6 @@ namespace BlazorDateRangePicker
         internal void HideCalendars()
         {
             CalendarsVisible = false;
-        }
-    }
-
-    public class Issue11159
-    {
-        private IJSRuntime Js { get; set; }
-
-        public Issue11159(IJSRuntime jsRuntime)
-        {
-            Js = jsRuntime;
-        }
-
-        private static readonly object CreateDotNetObjectRefSyncObj = new object();
-
-        public DotNetObjectRef<T> CreateDotNetObjectRef<T>(T value) where T : class
-        {
-            lock (CreateDotNetObjectRefSyncObj)
-            {
-                JSRuntime.SetCurrentJSRuntime(Js);
-                return DotNetObjectRef.Create(value);
-            }
-        }
-
-        public void DisposeDotNetObjectRef<T>(DotNetObjectRef<T> value) where T : class
-        {
-            if (value != null)
-            {
-                lock (CreateDotNetObjectRefSyncObj)
-                {
-                    JSRuntime.SetCurrentJSRuntime(Js);
-                    value.Dispose();
-                }
-            }
         }
     }
 }

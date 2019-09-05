@@ -4,7 +4,6 @@
 * license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
 *@
 
-@using Microsoft.AspNetCore.Components
 @using System.Globalization
 <table class="table-condensed">
     <thead>
@@ -202,7 +201,7 @@
                     }
 
                     var classNames = string.Join(" ", classes);
-                    <td class="@classNames" @onmouseover="@(e => OnMouseOverDate(e, dt))" @onclick="@(e => ClickDate(e, disabled, dt))">@dt.Day</td>
+                    <td class="@classNames" @onmouseover="@(_ => OnMouseOverDate(dt))" @onclick="@(_ => ClickDate(disabled, dt))">@dt.Day</td>
                 }
             </tr>
         }
@@ -268,31 +267,31 @@
         }
     }
 
-    private Task PreviousMonth(UIMouseEventArgs e)
+    private Task PreviousMonth(MouseEventArgs e)
     {
         return OnMonthChanged.InvokeAsync(CalendarData.Month.AddMonths(-1));
     }
 
-    private Task NextMonth(UIMouseEventArgs e)
+    private Task NextMonth(MouseEventArgs e)
     {
         return OnMonthChanged.InvokeAsync(CalendarData.Month.AddMonths(1));
     }
 
-    private Task MonthSelected(UIChangeEventArgs e)
+    private Task MonthSelected(ChangeEventArgs e)
     {
         var month = int.Parse(e.Value.ToString());
         var d = CalendarData.Month;
         return OnMonthChanged.InvokeAsync(new DateTime(d.Year, month, d.Day, d.Hour, d.Minute, d.Second));
     }
 
-    private Task YearSelected(UIChangeEventArgs e)
+    private Task YearSelected(ChangeEventArgs e)
     {
         var year = int.Parse(e.Value.ToString());
         var d = CalendarData.Month;
         return OnMonthChanged.InvokeAsync(new DateTime(year, d.Month, d.Day, d.Hour, d.Minute, d.Second));
     }
 
-    private Task ClickDate(UIMouseEventArgs e, bool disabled, DateTimeOffset date)
+    private Task ClickDate(bool disabled, DateTimeOffset date)
     {
         if (disabled)
         {
@@ -301,9 +300,16 @@
         return OnClickDate.InvokeAsync(date);
     }
 
-    private Task OnMouseOverDate(UIMouseEventArgs e, DateTimeOffset date)
+    private Task OnMouseOverDate(DateTimeOffset date)
     {
-        return OnHoverDate.InvokeAsync(date);
+        if (HoverDate != date)
+        {
+            return OnHoverDate.InvokeAsync(date);
+        }
+        else
+        {
+            return Task.CompletedTask;
+        }
     }
 
     private int GetIso8601WeekOfYear(DateTime time)
