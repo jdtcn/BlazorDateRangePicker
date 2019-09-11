@@ -96,6 +96,11 @@ namespace BlazorDateRangePicker
         /// </summary>
         public bool? ShowCustomRangeLabel { get; set; } = true;
 
+        /// <summary>
+        /// Whether the picker should close on outside click
+        /// </summary>
+        public bool? CloseOnOutsideClick { get; set; } = true;
+
         /// <summary> Specify the culture to display dates and text in. Default is CultureInfo.CurrentCulture.</summary>
         public System.Globalization.CultureInfo Culture { get; set; } = System.Globalization.CultureInfo.CurrentCulture;
 

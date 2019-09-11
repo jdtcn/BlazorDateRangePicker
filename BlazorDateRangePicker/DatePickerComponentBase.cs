@@ -175,6 +175,12 @@ namespace BlazorDateRangePicker
         public bool Visible { get; set; }
 
         /// <summary>
+        /// Whether the picker should close on outside click
+        /// </summary>
+        [Parameter]
+        public bool? CloseOnOutsideClick { get; set; }
+
+        /// <summary>
         /// Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.
         /// </summary>
         [Parameter]
@@ -310,11 +316,14 @@ namespace BlazorDateRangePicker
         /// JSInvokable callback to handle outside click
         /// </summary>
         [JSInvokable]
-        public void InvokeClickOutside()
+        public virtual void InvokeClickOutside()
         {
-            Visible = false;
-            StateHasChanged();
-            OnClosed.InvokeAsync(null);
+            if (CloseOnOutsideClick == true)
+            {
+                Visible = false;
+                StateHasChanged();
+                OnClosed.InvokeAsync(null);
+            }
         }
 
         internal void ShowCalendars()
