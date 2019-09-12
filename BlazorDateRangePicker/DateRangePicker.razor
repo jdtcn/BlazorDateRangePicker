@@ -32,7 +32,7 @@ else
                 </ul>
             }
         </div>
-        <div class="drp-calendar left @(SingleDatePicker == true? "single" : "")">
+        <div class="drp-calendar left @(SingleDatePicker == true || ShowOnlyOneCalendar == true ? "single" : "")">
 
             <div class="calendar-table">
                 <Calendar Side="@SideType.Left"
@@ -59,7 +59,7 @@ else
             </div>
 
         </div>
-        @if (SingleDatePicker != true)
+        @if (SingleDatePicker != true && ShowOnlyOneCalendar != true)
         {
             <div class="drp-calendar right">
 

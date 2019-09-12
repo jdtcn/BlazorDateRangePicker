@@ -62,6 +62,12 @@ namespace BlazorDateRangePicker
         public bool? SingleDatePicker { get; set; }
 
         /// <summary>
+        /// Show only one calendar in the picker instead of two calendars.
+        /// </summary>
+        [Parameter]
+        public bool? ShowOnlyOneCalendar { get; set; }
+
+        /// <summary>
         /// Normally, if you use the ranges option to specify pre-defined date ranges, calendars for choosing a custom date range are not shown until the user clicks "Custom Range". When this option is set to true, the calendars for choosing a custom date range are always shown instead. 
         /// </summary>
         [Parameter]
