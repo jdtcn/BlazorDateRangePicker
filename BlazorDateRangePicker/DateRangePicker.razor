@@ -8,7 +8,7 @@
 
 @if (PickerTemplate == null)
 {
-    <input id="@ParentId" type="text" @attributes="Attributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
+    <input id="@ParentId" type="text" @attributes="CombinedAttributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
 }
 else
 {

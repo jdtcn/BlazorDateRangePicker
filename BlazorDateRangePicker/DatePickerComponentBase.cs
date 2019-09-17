@@ -43,6 +43,32 @@ namespace BlazorDateRangePicker
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object> Attributes { get; set; }
 
+        private Dictionary<string, object> ConfigAttributes { get; set; }
+
+        protected private Dictionary<string, object> CombinedAttributes
+        {
+            get
+            {
+                var combined = new Dictionary<string, object>();
+                if (Attributes != null)
+                {
+                    foreach (var attr in Attributes)
+                    {
+                        combined[attr.Key] = attr.Value;
+                    }
+                }
+
+                if (ConfigAttributes != null)
+                {
+                    foreach (var attr in ConfigAttributes)
+                    {
+                        combined[attr.Key] = attr.Value;
+                    }
+                }
+                return combined;
+            }
+        }
+
         /// <summary>
         /// Set predefined date ranges the user can select from. Each RangeItem.Name is the label for the range, and its Start and End value representing the bounds of the range.
         /// </summary>
@@ -237,8 +263,6 @@ namespace BlazorDateRangePicker
 
         protected override void OnInitialized()
         {
-            var markupAttributes = Attributes;
-
             var configs = ServiceProvider.GetServices<DateRangePickerConfig>();
             var config = configs?.FirstOrDefault();
             if (!string.IsNullOrEmpty(Config) && configs.Any(c => c.Name == Config))
@@ -249,14 +273,7 @@ namespace BlazorDateRangePicker
             if (config == null) config = new DateRangePickerConfig();
             config.CopyProperties(this);
 
-            if (markupAttributes?.Any() == true)
-            {
-                if (Attributes == null) Attributes = new Dictionary<string, object>();
-                foreach (var ma in markupAttributes)
-                {
-                    if (!Attributes.ContainsKey(ma.Key)) Attributes[ma.Key] = ma.Value;
-                }
-            }
+            ConfigAttributes = config.Attributes;
 
             if (string.IsNullOrEmpty(DateFormat))
             {
@@ -324,11 +341,11 @@ namespace BlazorDateRangePicker
         [JSInvokable]
         public virtual void InvokeClickOutside()
         {
-            if (CloseOnOutsideClick == true)
+            if (Visible && CloseOnOutsideClick == true)
             {
-                Visible = false;
-                StateHasChanged();
-                OnClosed.InvokeAsync(null);
+                StartDate = OldStartValue;
+                EndDate = OldEndValue;
+                Close();
             }
         }
 
