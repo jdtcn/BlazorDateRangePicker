@@ -50,17 +50,17 @@ namespace BlazorDateRangePicker
             get
             {
                 var combined = new Dictionary<string, object>();
-                if (Attributes != null)
+                if (ConfigAttributes != null)
                 {
-                    foreach (var attr in Attributes)
+                    foreach (var attr in ConfigAttributes)
                     {
                         combined[attr.Key] = attr.Value;
                     }
                 }
 
-                if (ConfigAttributes != null)
+                if (Attributes != null)
                 {
-                    foreach (var attr in ConfigAttributes)
+                    foreach (var attr in Attributes)
                     {
                         combined[attr.Key] = attr.Value;
                     }

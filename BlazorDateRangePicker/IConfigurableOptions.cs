@@ -41,6 +41,8 @@ namespace BlazorDateRangePicker
         bool? ShowWeekNumbers { get; set; }
         bool? SingleDatePicker { get; set; }
         DateTimeOffset? StartDate { get; set; }
-        string? WeekAbbreviation { get; set; }
+        string WeekAbbreviation { get; set; }
+        bool? CloseOnOutsideClick { get; set; }
+        bool? ShowOnlyOneCalendar { get; set; }
     }
 }
