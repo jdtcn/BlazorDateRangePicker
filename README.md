@@ -156,6 +156,8 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |CancelLabel|string|"Cancel"|Cancel button text.|
 |CustomRangeLabel|string|"Custom range"|Custom range label at the end of the list of predefined ranges.|
 |Config|string|null|Name of the named configuration to use with this picker instance.|
+|ShowOnlyOneCalendar|bool|false|Show only one calendar in the picker instead of two calendars.|
+|CloseOnOutsideClick|bool|true|Whether the picker should close on outside click.|
 
 
 ## Events
@@ -174,7 +176,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |Open|Show picker popup.|
 |Close|Close picker popup.|
 |Toggle|Toggle picker popup state.|
-
+|virtual InvokeClickOutside|A JSInvokable callback to handle outside click. When inherited can be overridden to modify outside click closing behavior.|
 
 ## Types
 
