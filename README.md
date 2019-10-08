@@ -5,6 +5,8 @@ Date Range Picker for [Blazor](https://blazor.net/)
 
 ![https://github.com/jdtcn/BlazorDateRangePicker](https://habrastorage.org/webt/ku/ye/jt/kuyejt2khntesrw6asg9hvwiri0.png)
 
+## [Live Demo](https://blazordaterangepicker.azurewebsites.net/)
+
 This date range picker component is a port of js [DateRangePicker](https://github.com/dangrossman/daterangepicker/), rewritten using C# as a Razor Component.
 It creates a dropdown menu from which a user can select a range of dates.
 
@@ -15,18 +17,28 @@ a single date picker mode, and predefined date ranges.
 
 JS Interop is used for popup positioning and outside click handling. With future releases of ASP.NET Core Blazor it will be possible without js.
 
-## [Live Demo](https://blazordaterangepicker.azurewebsites.net/)
-
 ## Get Started
 
 Download library from NuGet in the NuGet Package Manager, or by executing the following command in the Package Manager Console:
 ````shell
-Install-Package BlazorDateRangePicker -Pre
+Install-Package BlazorDateRangePicker
 ````
 
-Temporarily server-side Blazor can't serve library static assets (css and js) so we need [EmbeddedBlazorContent](https://github.com/SamProf/EmbeddedBlazorContent) library for server-side Blazor.
+For server-side Blazor include these lines into your _Host.cshtml file `<head></head>` section:
+
+````html
+<script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
+<link rel="stylesheet" href="_content/BlazorDateRangePicker/daterangepicker.min.css" />
+```` 
+
+Alternatively, one can use [EmbeddedBlazorContent](https://github.com/SamProf/EmbeddedBlazorContent) library.
+
+<details>
+<summary>How?</summary>
+<p>
+
 ````shell
-Install-Package EmbeddedBlazorContent -Pre
+Install-Package EmbeddedBlazorContent
 ````
 
 ````C#
@@ -50,9 +62,8 @@ app.UseEmbeddedBlazorContent(typeof(BlazorDateRangePicker.DateRangePicker).Assem
 </head>
 ````
 
-Otherwise you must load *.css and *.js files from content filder into your project manually.
-
-
+</p>
+</details>
 
 ### Use the component:
 
