@@ -95,6 +95,32 @@ Gives you:
 <DateRangePicker MinDate="DateTimeOffset.Now.AddYears(-10)" MaxDate="DateTimeOffset.Now" />
 ````
 
+### Two-way data binding:
+````C#
+@using BlazorDateRangePicker
+
+<DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" />
+
+@code {
+    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
+    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
+}
+````
+
+### Handle selection event:
+````C#
+@using BlazorDateRangePicker
+
+<DateRangePicker OnRangeSelect="OnRangeSelect" />
+
+@code {
+    public void OnRangeSelect(DateRange range)
+    {
+        //Use range.Start and range.End here
+    }
+}
+````
+
 ### More complex usage:
 Using custom markup for picker.
 ````C#
@@ -140,11 +166,11 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 
 | Name | Type | DefaultValue |  Description |
 |------|------|--------------|--------------|
-|StartDate|DateTimeOffset|null|The beginning date of the initially selected date range.|
-|EndDate|DateTimeOffset|null|The end date of the initially selected date range.|
-|MinDate|DateTimeOffset|null|The earliest date a user may select.|
-|MaxDate|DateTimeOffset|null|The latest date a user may select.|
-|MaxSpan|TimeSpan|null|The maximum span between the selected start and end dates.|
+|StartDate|DateTimeOffset?|null|The beginning date of the initially selected date range.|
+|EndDate|DateTimeOffset?|null|The end date of the initially selected date range.|
+|MinDate|DateTimeOffset?|null|The earliest date a user may select.|
+|MaxDate|DateTimeOffset?|null|The latest date a user may select.|
+|MaxSpan|TimeSpan?|null|The maximum span between the selected start and end dates.|
 |ShowDropdowns|bool|true|Show year and month select boxes above calendars to jump to a specific month and year.|
 |ShowWeekNumbers|bool|false|Show localized week numbers at the start of each week on the calendars.|
 |ShowISOWeekNumbers|bool|false|Show ISO week numbers at the start of each week on the calendars.|

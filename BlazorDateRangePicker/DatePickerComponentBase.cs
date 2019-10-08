@@ -132,11 +132,17 @@ namespace BlazorDateRangePicker
         [Parameter]
         public DateTimeOffset? StartDate { get; set; }
 
+        [Parameter]
+        public EventCallback<DateTimeOffset?> StartDateChanged { set; get; }
+
         /// <summary>
         /// The end date of the initially selected date range
         /// </summary>
         [Parameter]
         public DateTimeOffset? EndDate { get; set; }
+
+        [Parameter]
+        public EventCallback<DateTimeOffset?> EndDateChanged { set; get; }
 
         /// <summary>
         /// Specify the format string to display dates, default is Culture.DateTimeFormat.ShortDatePattern

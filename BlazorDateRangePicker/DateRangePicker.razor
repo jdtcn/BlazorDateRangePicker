@@ -99,7 +99,7 @@ else
 
     </div>
 </div>
-@functions {
+@code {
 
     [Parameter]
     public RenderFragment<DateRangePicker> PickerTemplate { get; set; }
@@ -197,7 +197,6 @@ else
 
         if (startDateParsed && SingleDatePicker == true)
         {
-            Close();
             StartDate = startDate.Date;
             EndDate = startDate.Date;
             await ClickApply(null);
@@ -208,7 +207,6 @@ else
             && (!MinDate.HasValue || startDate > MinDate)
             && (!MaxDate.HasValue || endDate < MaxDate))
         {
-            Close();
             StartDate = startDate.Date;
             EndDate = endDate.Date.AddDays(1).AddTicks(-1);
             await ClickApply(null);
@@ -304,6 +302,8 @@ else
         if (StartDate.HasValue && EndDate.HasValue)
         {
             StateHasChanged();
+            await StartDateChanged.InvokeAsync(StartDate.Value);
+            await EndDateChanged.InvokeAsync(EndDate.Value);
             await OnRangeSelect.InvokeAsync(new DateRange { Start = StartDate.Value, End = EndDate.Value });
         }
         Close();

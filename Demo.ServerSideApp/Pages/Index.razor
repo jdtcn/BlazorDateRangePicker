@@ -41,18 +41,20 @@
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker StartDate="StartDate" EndDate="EndDate" OnRangeSelect="OnRangeSelect"></DateRangePicker>
+                    <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" OnRangeSelect="OnRangeSelect"></DateRangePicker>
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
                     <pre><code lang="html">@("<DateRangePicker OnRangeSelect=\"OnRangeSelect\"\n" +
-                                             "    StartDate=\"StartDate\" EndDate=\"EndDate\">\n</DateRangePicker>")</code></pre>
-                    <pre><code lang="cs">DateTimeOffset StartDate { get; set; } = DateTime.Now.AddMonths(-1);
-DateTimeOffset EndDate { get; set; } = DateTime.Now;
+                                             "    @bind-StartDate=\"StartDate\" @bind-EndDate=\"EndDate\">\n</DateRangePicker>")</code></pre>
+                    <pre><code lang="cs">DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
+DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
 List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
-                    <pre><code lang="cs">@("public void OnRangeSelect(DateRange range)\n" +
-                                           "    StartDate = range.Start;\n    EndDate = range.End;\n" +
+                    <pre><code lang="cs">@("public void OnRangeSelect(DateRange range)\n{\n" +
                                            "    events.Add($\"Range {range.Start} - {range.End} selected\");\n}")</code></pre>
+                </div>
+                <div class="col-12">
+                    Start: @StartDate, End: @EndDate
                 </div>
                 <div class="col-12">
                     @if (events.Count > 0)
@@ -192,14 +194,12 @@ List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
             }
      };
 
-    DateTimeOffset StartDate { get; set; } = DateTime.Now.AddMonths(-1);
-    DateTimeOffset EndDate { get; set; } = DateTime.Now;
+    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
+    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
 
     public void OnRangeSelect(DateRange range)
     {
-        StartDate = range.Start;
-        EndDate = range.End;
-        events.Add($"Range {range.Start} - {range.End} selected");
+        events.Add($"Range {StartDate} - {EndDate} selected");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
