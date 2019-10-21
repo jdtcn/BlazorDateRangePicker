@@ -11,19 +11,14 @@
             @{
                 var minDate = Side == SideType.Left ? MinDate : StartDate;
                 var maxDate = MaxDate;
+                var prevBtnVisible = (!minDate.HasValue || minDate < CalendarData.FirstDay) && (LinkedCalendars != true || Side == SideType.Left);
+                var nextBtnVisible = (!maxDate.HasValue || maxDate > CalendarData.LastDay) && (LinkedCalendars != true || Side == SideType.Right || SingleDatePicker == true);
             }
             @if (ShowWeekNumbers == true || ShowISOWeekNumbers == true)
             {
                 <th></th>
             }
-            @if ((!minDate.HasValue || minDate < CalendarData.FirstDay) && (LinkedCalendars != true || Side == SideType.Left))
-            {
-                <th class="prev available" @onclick="PreviousMonth"><span></span></th>
-            }
-            else
-            {
-                <th></th>
-            }
+            <th class="@(prevBtnVisible ? "prev available" : "")" @onclick="@(e => prevBtnVisible ? PreviousMonth(e) : null)"><span></span></th>
             <th colspan="5" class="month">
                 @if (ShowDropdowns == true)
                 {
@@ -54,15 +49,8 @@
                     @Culture.DateTimeFormat.GetMonthName(CalendarData[1][1].Month)<text>&nbsp;</text>@CalendarData[1][1].Year
                 }
             </th>
-            @if ((!maxDate.HasValue || maxDate > CalendarData.LastDay) && (LinkedCalendars != true || Side == SideType.Right || SingleDatePicker == true))
-            {
-                <th class="next available" @onclick="NextMonth"><span></span></th>
-            }
-            else
-            {
-                <th></th>
-            }
-
+            <th class="@(nextBtnVisible ? "next available" : "")" @onclick="@(e => nextBtnVisible ? NextMonth(e) : null)"><span></span></th>
+        
         </tr>
         <tr>
 
