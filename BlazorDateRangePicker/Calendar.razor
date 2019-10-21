@@ -26,21 +26,21 @@
                     var currentYear = CalendarData[1][1].Year;
                     var inMinYear = currentYear == MinYear;
                     var inMaxYear = currentYear == MaxYear;
-                    <select class="monthselect" @onchange="@(m => MonthSelected(m))">
+                    <select @key="CalendarData.Month" class="monthselect" @onchange="@(m => MonthSelected(m))">
                         @for (var m = 1; m < 13; m++)
                         {
                             var enabled = (!inMinYear || (m >= minDate?.Month)) && (!inMaxYear || (m <= maxDate?.Month));
                             var selected = m == currentMonth;
-                            <option selected="@selected" disabled="@(!enabled)" value="@m">
+                            <option @key="m" selected="@selected" disabled="@(!enabled)" value="@m">
                                 @Culture.DateTimeFormat.GetMonthName(m)
                             </option>
                         }
                     </select>
 
-                    <select class="yearselect" @onchange="@(y => YearSelected(y))">
+                    <select @key="CalendarData.Month.Year" class="yearselect" @onchange="@(y => YearSelected(y))">
                         @for (var y = MinYear; y <= MaxYear; y++)
                         {
-                            <option value="@y" selected="@(y == currentYear)">@y</option>
+                            <option @key="y" value="@y" selected="@(y == currentYear)">@y</option>
                         }
                     </select>
                 }
