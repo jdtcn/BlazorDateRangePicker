@@ -24,7 +24,7 @@ Download library from NuGet in the NuGet Package Manager, or by executing the fo
 Install-Package BlazorDateRangePicker
 ````
 
-For server-side Blazor include these lines into your _Host.cshtml file `<head></head>` section:
+Include these lines into your _Host.cshtml (or *index.html* for Blazor WebAssembly) file `<head></head>` section:
 
 ````html
 <script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
@@ -233,6 +233,14 @@ public class DateRange
 >
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
+## Changelog
+
+### 2.0.0
+
+1. Updated to support .NET Core 3.1.0 projects
+2. Now in Blazor WebAssembly we need to add library static assets manually
+
+In .NET Core 3.0.0 projects you should stay on 1.\*.\* version
  
 ## License
 
