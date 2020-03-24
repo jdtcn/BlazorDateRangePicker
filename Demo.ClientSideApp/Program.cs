@@ -1,16 +1,29 @@
-﻿using Microsoft.AspNetCore.Blazor.Hosting;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using BlazorDateRangePicker;
 
 namespace Demo.ClientSideApp
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable")]
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.RootComponents.Add<App>("app");
 
-        public static IWebAssemblyHostBuilder CreateHostBuilder(string[] args) =>
-            BlazorWebAssemblyHost.CreateDefaultBuilder()
-                .UseBlazorStartup<Startup>();
+            builder.Services.AddBaseAddressHttpClient();
+            builder.Services.AddDateRangePicker(config =>
+            {
+                config.Attributes = new Dictionary<string, object>
+                {
+                    { "class", "form-control form-control-sm" }
+                };
+            });
+
+            await builder.Build().RunAsync();
+        }
     }
 }
