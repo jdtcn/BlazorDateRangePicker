@@ -314,5 +314,6 @@ else
         StartDate = OldStartValue;
         EndDate = OldEndValue;
         Close();
+        OnCancel.InvokeAsync(true);
     }
 }

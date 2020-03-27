@@ -262,6 +262,10 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback OnClosed { get; set; }
 
+        /// <summary>An event that is invoked on backdrop click (false) or cancel button click (true).</summary>
+        [Parameter]
+        public EventCallback<bool> OnCancel { get; set; }
+
         internal DateTimeOffset? OldStartValue { get; set; }
         internal DateTimeOffset? OldEndValue { get; set; }
         internal string ChosenLabel { get; set; }
@@ -352,6 +356,7 @@ namespace BlazorDateRangePicker
                 StartDate = OldStartValue;
                 EndDate = OldEndValue;
                 Close();
+                OnCancel.InvokeAsync(false);
             }
         }
 

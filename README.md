@@ -178,7 +178,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |ShowCustomRangeLabel|bool|true|Displays "Custom Range" at the end of the list of predefined ranges, when the ranges option is used. This option will be highlighted whenever the current date range selection does not match one of the predefined ranges. Clicking it will display the calendars to select a new range.|
 |AlwaysShowCalendars|bool|false|Normally, if you use the ranges option to specify pre-defined date ranges, calendars for choosing a custom date range are not shown until the user clicks "Custom Range". When this option is set to true, the calendars for choosing a custom date range are always shown instead.|
 |Opens|SideType enum: Left/Right/Center|Right|Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.|
-|Drops|DrposType enum: Down/Up|Down|Whether the picker appears below (default) or above the HTML element it's attached to.|
+|Drops|DropsType enum: Down/Up|Down|Whether the picker appears below (default) or above the HTML element it's attached to.|
 |ButtonClasses|string|btn btn-sm|CSS class names that will be added to both the apply and cancel buttons.|
 |ApplyButtonClasses|string|btn-primary|CSS class names that will be added only to the apply button.|
 |CancelButtonClasses|string|btn-default|CSS class names that will be added only to the cancel button.|
@@ -204,6 +204,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnRangeSelect|DateRange|Triggered when the apply button is clicked, or when a predefined range is clicked.|
 |OnOpened|void|An event that is invoked when the DatePicker is opened.|
 |OnClosed|void|An event that is invoked when the DatePicker is closed.|
+|OnCancel|bool|An event that is invoked when user cancels the selection (`true` if by pressing "Cancel" button, `false` if by backdrop click).|
 
 
 ## Methods
@@ -213,7 +214,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |Open|Show picker popup.|
 |Close|Close picker popup.|
 |Toggle|Toggle picker popup state.|
-|virtual InvokeClickOutside|A JSInvokable callback to handle outside click. When inherited can be overridden to modify outside click closing behavior.|
+|virtual InvokeClickOutside|A JSInvocable callback to handle outside click. When inherited can be overridden to modify outside click closing behavior.|
 
 ## Types
 
@@ -234,6 +235,10 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 2.1.0
+
+1. OnCancel event added.
 
 ### 2.0.0
 
