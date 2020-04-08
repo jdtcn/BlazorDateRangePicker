@@ -4,13 +4,19 @@
 * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
 */
 window.clickAndPositionHandler = {
+    listeners: [],
     addClickOutsideEvent: function (elementId, parentId, dotnetHelper) {
+        if (window.clickAndPositionHandler.listeners.indexOf(elementId) > -1) return;
         window.addEventListener("click", function (e) {
             if ((document.getElementById(elementId) != null && !document.getElementById(elementId).contains(e.target)) &&
-                (document.getElementById(parentId) != null && !document.getElementById(parentId).contains(e.target))) {
+                (document.getElementById(parentId) != null && !document.getElementById(parentId).contains(e.target)) &&
+                (document.getElementById(elementId).parentElement == null ||
+                    document.getElementById(elementId).parentElement.style == null ||
+                    document.getElementById(elementId).parentElement.style.visibility == "visible")) {
                 dotnetHelper.invokeMethodAsync("InvokeClickOutside");
             }
         });
+        window.clickAndPositionHandler.listeners.push(elementId);
     },
     getPickerPosition: function (elementId, parentId, drops, opens, skipAddListener) {
         var resizeFunction = function () {

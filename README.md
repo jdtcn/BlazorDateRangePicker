@@ -236,6 +236,10 @@ public class DateRange
 
 ## Changelog
 
+### 2.2.0
+
+1. Fixed performance issue with js outsidle click handler.
+
 ### 2.1.0
 
 1. OnCancel event added.
