@@ -14,7 +14,6 @@ namespace Demo.ClientSideApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddBaseAddressHttpClient();
             builder.Services.AddDateRangePicker(config =>
             {
                 config.Attributes = new Dictionary<string, object>
