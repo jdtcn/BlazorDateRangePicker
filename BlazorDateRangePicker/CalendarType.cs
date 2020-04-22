@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace BlazorDateRangePicker
 {
@@ -19,21 +18,21 @@ namespace BlazorDateRangePicker
         private DayOfWeek DayOfWeek => FirstDay.DayOfWeek;
         private DayOfWeek FirstDayOfWeek { get; set; }
 
-        public SideType Side { get; set; }
-        public DateTimeOffset? MinDate { get; set; }
-        public DateTimeOffset? MaxDate { get; set; }
+        internal SideType Side { get; set; }
+        internal DateTimeOffset? MinDate { get; set; }
+        internal DateTimeOffset? MaxDate { get; set; }
 
-        public DateTimeOffset FirstDay => new DateTime(Month.Year, Month.Month, 1);
-        public DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
+        internal DateTimeOffset FirstDay => new DateTime(Month.Year, Month.Month, 1);
+        internal DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
 
         private DateTimeOffset month = DateTime.Today;
         public DateTimeOffset Month { get { return month; } set { month = value; CalculateCalendar(); } }
 
-        public List<List<DateTimeOffset>> Calendar { get; set; }
+        internal List<List<DateTimeOffset>> Calendar { get; set; }
 
-        public CalendarType(CultureInfo culture)
+        internal CalendarType(DayOfWeek firstDayOfWeek)
         {
-            FirstDayOfWeek = culture.DateTimeFormat.FirstDayOfWeek;
+            FirstDayOfWeek = firstDayOfWeek;
         }
 
         private void CalculateCalendar()
@@ -79,7 +78,7 @@ namespace BlazorDateRangePicker
             Calendar = calendar;
         }
 
-        public List<DateTimeOffset> this[int index]
+        internal List<DateTimeOffset> this[int index]
         {
             get
             {

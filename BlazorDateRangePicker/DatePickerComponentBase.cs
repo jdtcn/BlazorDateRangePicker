@@ -190,7 +190,7 @@ namespace BlazorDateRangePicker
 
         /// <summary>The day of the week to start from</summary>
         [Parameter]
-        public DayOfWeek? FirstDayOfWeek { get; set; } = DayOfWeek.Monday;
+        public DayOfWeek? FirstDayOfWeek { get; set; }
 
         /// <summary>The earliest date that can be selected, inclusive. A value of null indicates that there is no minimum date.</summary>
         [Parameter]
@@ -266,6 +266,9 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<bool> OnCancel { get; set; }
 
+        public CalendarType LeftCalendar { get; set; }
+        public CalendarType RightCalendar { get; set; }
+
         internal DateTimeOffset? OldStartValue { get; set; }
         internal DateTimeOffset? OldEndValue { get; set; }
         internal string ChosenLabel { get; set; }
@@ -291,6 +294,26 @@ namespace BlazorDateRangePicker
             }
 
             if (SingleDatePicker == true) AutoApply = true;
+
+            if (!FirstDayOfWeek.HasValue)
+            {
+                FirstDayOfWeek = Culture.DateTimeFormat.FirstDayOfWeek;
+            }
+
+            LeftCalendar = new CalendarType(FirstDayOfWeek.Value);
+            RightCalendar = new CalendarType(FirstDayOfWeek.Value);
+
+            StartDate = StartDate?.Date;
+            EndDate = EndDate?.Date.AddDays(1).AddTicks(-1);
+
+            LeftCalendar.Month = StartDate ?? DateTime.Now;
+            RightCalendar.Month = EndDate ?? DateTime.Now.AddMonths(1);
+            if (LeftCalendar.Month.Year == RightCalendar.Month.Year 
+                && LeftCalendar.Month.Month == RightCalendar.Month.Month)
+            {
+                RightCalendar.Month = RightCalendar.Month.AddMonths(1);
+            }
+
             base.OnInitialized();
         }
 

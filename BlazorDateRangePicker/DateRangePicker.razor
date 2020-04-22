@@ -104,9 +104,6 @@ else
     [Parameter]
     public RenderFragment<DateRangePicker> PickerTemplate { get; set; }
 
-    private CalendarType LeftCalendar { get; set; }
-    private CalendarType RightCalendar { get; set; }
-
     private DateTimeOffset? HoverDate { get; set; }
 
     private string EditText { get; set; }
@@ -151,24 +148,6 @@ else
 
             return string.Join(" ", result);
         }
-    }
-
-    protected override Task OnInitializedAsync()
-    {
-        LeftCalendar = new CalendarType(Culture);
-        RightCalendar = new CalendarType(Culture);
-
-        StartDate = StartDate?.Date;
-        EndDate = EndDate?.Date.AddDays(1).AddTicks(-1);
-
-        LeftCalendar.Month = StartDate.HasValue ? StartDate.Value : DateTime.Now;
-        RightCalendar.Month = EndDate.HasValue ? EndDate.Value : DateTime.Now.AddMonths(1);
-        if (LeftCalendar.Month.Year == RightCalendar.Month.Year && LeftCalendar.Month.Month == RightCalendar.Month.Month)
-        {
-            RightCalendar.Month = RightCalendar.Month.AddMonths(1);
-        }
-
-        return base.OnInitializedAsync();
     }
 
     public async Task OnTextInput(ChangeEventArgs e)
