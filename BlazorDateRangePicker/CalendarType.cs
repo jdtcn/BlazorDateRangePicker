@@ -16,7 +16,7 @@ namespace BlazorDateRangePicker
         private int LastYear => FirstDay.AddMonths(-1).Year;
         private int DaysInLastMonth => DateTime.DaysInMonth(LastYear, LastMonth);
         private DayOfWeek DayOfWeek => FirstDay.DayOfWeek;
-        private DayOfWeek FirstDayOfWeek { get; set; }
+        internal DayOfWeek FirstDayOfWeek { get; set; }
 
         internal SideType Side { get; set; }
         internal DateTimeOffset? MinDate { get; set; }
@@ -26,7 +26,21 @@ namespace BlazorDateRangePicker
         internal DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
 
         private DateTimeOffset month = DateTime.Today;
-        public DateTimeOffset Month { get { return month; } set { month = value; CalculateCalendar(); } }
+        public DateTimeOffset Month
+        {
+            get { return month; }
+            set
+            {
+                var prevValue = month;
+                month = value;
+                if (prevValue.Month != value.Month
+                    || prevValue.Year != value.Year
+                    || Calendar == null)
+                {
+                    CalculateCalendar();
+                }
+            }
+        }
 
         internal List<List<DateTimeOffset>> Calendar { get; set; }
 

@@ -219,6 +219,12 @@ namespace BlazorDateRangePicker
         public bool? CloseOnOutsideClick { get; set; }
 
         /// <summary>
+        /// Whether the picker should pick months based on selected range
+        /// </summary>
+        [Parameter]
+        public bool? AutoAdjustCalendars { get; set; }
+
+        /// <summary>
         /// Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.
         /// </summary>
         [Parameter]
@@ -306,13 +312,7 @@ namespace BlazorDateRangePicker
             StartDate = StartDate?.Date;
             EndDate = EndDate?.Date.AddDays(1).AddTicks(-1);
 
-            LeftCalendar.Month = StartDate ?? DateTime.Now;
-            RightCalendar.Month = EndDate ?? DateTime.Now.AddMonths(1);
-            if (LeftCalendar.Month.Year == RightCalendar.Month.Year 
-                && LeftCalendar.Month.Month == RightCalendar.Month.Month)
-            {
-                RightCalendar.Month = RightCalendar.Month.AddMonths(1);
-            }
+            AdjustCalendars();
 
             base.OnInitialized();
         }
@@ -322,8 +322,12 @@ namespace BlazorDateRangePicker
         /// </summary>
         public void Open()
         {
+            if (Visible) return;
+
             OldStartValue = StartDate;
             OldEndValue = EndDate;
+
+            if (AutoAdjustCalendars == true) AdjustCalendars();
 
             var selectedRange = Ranges?.FirstOrDefault(r =>
                 r.Value.Start.Date == StartDate?.Date &&
@@ -347,6 +351,17 @@ namespace BlazorDateRangePicker
             OnOpened.InvokeAsync(null);
 
             StateHasChanged();
+        }
+
+        public void AdjustCalendars()
+        {
+            LeftCalendar.Month = StartDate ?? DateTime.Now;
+            RightCalendar.Month = EndDate ?? DateTime.Now.AddMonths(1);
+            if (LeftCalendar.Month.Year == RightCalendar.Month.Year
+                && LeftCalendar.Month.Month == RightCalendar.Month.Month)
+            {
+                RightCalendar.Month = RightCalendar.Month.AddMonths(1);
+            }
         }
 
         /// <summary>

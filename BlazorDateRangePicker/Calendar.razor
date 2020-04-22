@@ -59,20 +59,7 @@
                 <th class="week">@WeekAbbreviation</th>
             }
 
-            @{
-                var dayNames = Culture.DateTimeFormat.ShortestDayNames.ToList();
-                var firstDayNumber = (int)Culture.DateTimeFormat.FirstDayOfWeek;
-                if (firstDayNumber > 0)
-                {
-                    for (int i = 0; i < firstDayNumber; i++)
-                    {
-                        var item = dayNames[i];
-                        dayNames.Insert(dayNames.Count, item);
-                        dayNames.RemoveAt(i);
-                    }
-                }
-            }
-            @foreach (var dayOfWeekName in dayNames)
+            @foreach (var dayOfWeekName in DayNames)
             {
                 <th>@dayOfWeekName</th>
             }
@@ -95,7 +82,7 @@
                 @if (ShowWeekNumbers == true)
                 {
                     var weekRule = Culture.DateTimeFormat.CalendarWeekRule;
-                    var firstDayOfWeek = Culture.DateTimeFormat.FirstDayOfWeek;
+                    var firstDayOfWeek = CalendarData.FirstDayOfWeek;
                     <td class="week">
                         @DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(CalendarData[row][0].DateTime, weekRule, firstDayOfWeek)
                     </td>
@@ -226,8 +213,27 @@
     private int MinYear => MinDate?.Year ?? 1900;
     private int MaxYear => MaxDate?.Year ?? DateTime.Now.AddYears(100).Year;
 
+    private List<string> DayNames { get; set; } = new List<string>();
+
+    private List<string> GetDayNames()
+    {
+        var dayNames = Culture.DateTimeFormat.ShortestDayNames.ToList();
+        var firstDayNumber = (int)CalendarData.FirstDayOfWeek;
+        if (firstDayNumber > 0)
+        {
+            for (int i = 0; i < firstDayNumber; i++)
+            {
+                var item = dayNames[0];
+                dayNames.Insert(dayNames.Count, item);
+                dayNames.RemoveAt(0);
+            }
+        }
+        return dayNames;
+    }
+
     protected override void OnInitialized()
     {
+        DayNames = GetDayNames();
         base.OnInitialized();
     }
 

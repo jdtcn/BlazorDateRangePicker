@@ -106,6 +106,11 @@ namespace BlazorDateRangePicker
         /// </summary>
         public bool? CloseOnOutsideClick { get; set; } = true;
 
+        /// <summary>
+        /// Whether the picker should pick months based on selected range
+        /// </summary>
+        public bool? AutoAdjustCalendars { get; set; } = true;
+
         /// <summary> Specify the culture to display dates and text in. Default is CultureInfo.CurrentCulture.</summary>
         public System.Globalization.CultureInfo Culture { get; set; } = System.Globalization.CultureInfo.CurrentCulture;
 
@@ -113,7 +118,7 @@ namespace BlazorDateRangePicker
         public string WeekAbbreviation { get; set; } = string.Empty;
 
         /// <summary>The day of the week to start from</summary>
-        public DayOfWeek? FirstDayOfWeek { get; set; } = DayOfWeek.Monday;
+        public DayOfWeek? FirstDayOfWeek { get; set; }
 
         /// <summary>The earliest date that can be selected, inclusive. A value of null indicates that there is no minimum date.</summary>
         public DateTimeOffset? MinDate { get; set; }

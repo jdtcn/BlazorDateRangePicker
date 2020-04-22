@@ -195,6 +195,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |Config|string|null|Name of the named configuration to use with this picker instance.|
 |ShowOnlyOneCalendar|bool|false|Show only one calendar in the picker instead of two calendars.|
 |CloseOnOutsideClick|bool|true|Whether the picker should close on outside click.|
+|AutoAdjustCalendars|bool|true|Whether the picker should pick the months based on selected range.|
 
 
 ## Events
@@ -235,6 +236,13 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 2.3.0
+
+1. Fix an issue with month selection in calendars (#14).
+2. Add AutoAdjustCalendars property.
+3. Expose LeftCalendar and RightCalendar DateRangePicker options (ability to select the months manually).
+4. Fix an issue with FirstDayOfWeek property when the first day is not sunday or monday.
 
 ### 2.2.0
 
