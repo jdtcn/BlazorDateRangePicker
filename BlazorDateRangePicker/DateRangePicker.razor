@@ -165,7 +165,7 @@ else
         RightCalendar.Month = EndDate.HasValue ? EndDate.Value : DateTime.Now.AddMonths(1);
         if (LeftCalendar.Month.Year == RightCalendar.Month.Year && LeftCalendar.Month.Month == RightCalendar.Month.Month)
         {
-            RightCalendar.Month = RightCalendar.Month.AddDays(1);
+            RightCalendar.Month = RightCalendar.Month.AddMonths(1);
         }
 
         return base.OnInitializedAsync();
