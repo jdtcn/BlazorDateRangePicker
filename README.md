@@ -138,6 +138,34 @@ Using custom markup for picker.
 ````
 Set id="@context.ParentId" for outside click handling to root element.
 
+Custom buttons:
+
+````C#
+<DateRangePicker>
+    <ButtonsTemplate>
+        <button class="cancelBtn btn btn-sm btn-default" 
+            @onclick="@context.ClickCancel" type="button">Cancel</button>
+        <button class="cancelBtn btn btn-sm btn-default" 
+            @onclick="@(e => ResetClick(e, context))" type="button">Reset</button>
+        <button class="applyBtn btn btn-sm btn-primary" @onclick="@context.ClickApply"
+            disabled="@(context.StartDate == null || context.EndDate == null)" 
+            type="button">Apply</button>
+    </ButtonsTemplate>
+</DateRangePicker>
+
+@code {
+    void ResetClick(MouseEventArgs e, DateRangePicker picker)
+    {
+        StartDate = null;
+        EndDate = null;
+        // Close the picker
+        picker.Close();
+        // Fire OnRangeSelectEvent
+        picker.OnRangeSelect.InvokeAsync(new DateRange());
+    }
+}
+````
+
 ### One configuration for all pickers
 
 ````C#
@@ -196,7 +224,8 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |ShowOnlyOneCalendar|bool|false|Show only one calendar in the picker instead of two calendars.|
 |CloseOnOutsideClick|bool|true|Whether the picker should close on outside click.|
 |AutoAdjustCalendars|bool|true|Whether the picker should pick the months based on selected range.|
-
+|PickerTemplate|RenderFragment<DateRangePicker>|null|Custom input field template|
+|ButtonsTemplate|RenderFragment<DateRangePicker>|null|Custom picker buttons template|
 
 ## Events
 
@@ -237,6 +266,10 @@ public class DateRange
 
 ## Changelog
 
+### 2.4.0
+
+1. Add `ButtonsTemplate` property to make custom picker buttons possible (#17)
+
 ### 2.3.0
 
 1. Fix an issue with month selection in calendars (#14).
@@ -246,7 +279,7 @@ public class DateRange
 
 ### 2.2.0
 
-1. Fixed performance issue with js outsidle click handler.
+1. Fixed performance issue with js outside click handler.
 
 ### 2.1.0
 

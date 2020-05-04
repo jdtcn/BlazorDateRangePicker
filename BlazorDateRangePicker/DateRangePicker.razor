@@ -90,11 +90,16 @@ else
             </div>
         }
         <div class="drp-buttons">
-
-            <span class="drp-selected"></span>
-            <button class="cancelBtn @ButtonClasses @CancelButtonClasses" @onclick="ClickCancel" type="button">@CancelLabel</button>
-            <button class="applyBtn @ButtonClasses @ApplyButtonClasses" @onclick="ClickApply" disabled="@(StartDate == null || EndDate == null)" type="button">@ApplyLabel</button>
-
+            @if (ButtonsTemplate == null)
+            {
+                <span class="drp-selected"></span>
+                <button class="cancelBtn @ButtonClasses @CancelButtonClasses" @onclick="ClickCancel" type="button">@CancelLabel</button>
+                <button class="applyBtn @ButtonClasses @ApplyButtonClasses" @onclick="ClickApply" disabled="@(StartDate == null || EndDate == null)" type="button">@ApplyLabel</button>
+            }
+            else
+            {
+                @ButtonsTemplate(((object)this) as BlazorDateRangePicker.DateRangePicker);
+            }
         </div>
 
     </div>
@@ -103,6 +108,9 @@ else
 
     [Parameter]
     public RenderFragment<DateRangePicker> PickerTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<DateRangePicker> ButtonsTemplate { get; set; }
 
     private DateTimeOffset? HoverDate { get; set; }
 
@@ -276,7 +284,7 @@ else
         }
     }
 
-    private async Task ClickApply(MouseEventArgs e)
+    public async Task ClickApply(MouseEventArgs e)
     {
         if (StartDate.HasValue && EndDate.HasValue)
         {
@@ -288,7 +296,7 @@ else
         Close();
     }
 
-    private void ClickCancel(MouseEventArgs e)
+    public void ClickCancel(MouseEventArgs e)
     {
         StartDate = OldStartValue;
         EndDate = OldEndValue;
