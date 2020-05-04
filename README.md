@@ -141,7 +141,7 @@ Set id="@context.ParentId" for outside click handling to root element.
 Custom buttons:
 
 ````C#
-<DateRangePicker>
+<DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate">
     <ButtonsTemplate>
         <button class="cancelBtn btn btn-sm btn-default" 
             @onclick="@context.ClickCancel" type="button">Cancel</button>
@@ -154,6 +154,9 @@ Custom buttons:
 </DateRangePicker>
 
 @code {
+    DateTimeOffset? StartDate { get; set; }
+    DateTimeOffset? EndDate { get; set; }
+
     void ResetClick(MouseEventArgs e, DateRangePicker picker)
     {
         StartDate = null;
