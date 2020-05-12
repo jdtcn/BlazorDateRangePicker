@@ -238,7 +238,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnOpened|void|An event that is invoked when the DatePicker is opened.|
 |OnClosed|void|An event that is invoked when the DatePicker is closed.|
 |OnCancel|bool|An event that is invoked when user cancels the selection (`true` if by pressing "Cancel" button, `false` if by backdrop click).|
-
+|OnMonthChanged|void|An event that is invoked when left or right calendar's month changed.|
 
 ## Methods
 
@@ -268,6 +268,10 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 2.5.0
+
+1. Add `OnMonthChanged` event (#19)
 
 ### 2.4.0
 

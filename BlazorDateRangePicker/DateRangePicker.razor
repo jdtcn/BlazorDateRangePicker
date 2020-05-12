@@ -243,6 +243,7 @@ else
                 LeftCalendar.Month = RightCalendar.Month.AddMonths(-1);
             }
         }
+        OnMonthChanged.InvokeAsync(null);
     }
 
     private async Task ClickDate(DateTimeOffset date)

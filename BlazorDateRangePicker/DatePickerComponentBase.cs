@@ -272,6 +272,10 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<bool> OnCancel { get; set; }
 
+        /// <summary>An event that is invoked when left or right calendar's month changed.</summary>
+        [Parameter]
+        public EventCallback OnMonthChanged { get; set; }
+
         public CalendarType LeftCalendar { get; set; }
         public CalendarType RightCalendar { get; set; }
 
