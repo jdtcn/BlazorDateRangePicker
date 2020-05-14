@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-4">
                     <label>Produces:</label>
-                    <DateRangePicker/>
+                    <DateRangePicker />
                 </div>
                 <div class="col-8">
                     <label>Code:</label>
@@ -59,11 +59,11 @@ List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
                 <div class="col-12">
                     @if (events.Count > 0)
                     {
-                    <label>Events:</label>
+                        <label>Events:</label>
                     }
                     @foreach (var e in events)
                     {
-                    <p>@e</p>
+                        <p>@e</p>
                     }
                 </div>
             </div>
@@ -153,6 +153,22 @@ List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
                 <div class="col-8">
                     <label>Code:</label>
                     <pre><code lang="html">@("<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"ru-RU\"))\" />")</code></pre>
+                </div>
+            </div>
+            <hr />
+
+            <h4>Inline mode</h4>
+            <div class="row">
+                <div class="col-6 col-lg-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Inline="true" AutoApply="true" ShowOnlyOneCalendar="true">
+                        <PickerTemplate />
+                    </DateRangePicker>
+                </div>
+                <div class="col-6 col-lg-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Inline=\"true\" AutoApply=\"true\" ShowOnlyOneCalendar=\"true\">\n" +
+                "    <PickerTemplate>\n        @* Empty input template *@\n    </PickerTemplate>\n</DateRangePicker>")</code></pre>
                 </div>
             </div>
             <hr />

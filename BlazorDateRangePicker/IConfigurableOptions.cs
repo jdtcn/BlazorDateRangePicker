@@ -36,6 +36,7 @@ namespace BlazorDateRangePicker
         SideType? Opens { get; set; }
         Dictionary<string, DateRange> Ranges { get; set; }
         bool? ShowCustomRangeLabel { get; set; }
+        bool? Inline { get; set; }
         bool? ShowDropdowns { get; set; }
         bool? ShowISOWeekNumbers { get; set; }
         bool? ShowWeekNumbers { get; set; }

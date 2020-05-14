@@ -229,6 +229,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |AutoAdjustCalendars|bool|true|Whether the picker should pick the months based on selected range.|
 |PickerTemplate|RenderFragment<DateRangePicker>|null|Custom input field template|
 |ButtonsTemplate|RenderFragment<DateRangePicker>|null|Custom picker buttons template|
+|Inline|bool|false|Inline mode if true.|
 
 ## Events
 
@@ -268,6 +269,10 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 2.6.0
+
+1. Add inline mode (see `Inline` property, and last example in demo application) (#20)
 
 ### 2.5.0
 

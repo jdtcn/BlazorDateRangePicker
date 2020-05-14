@@ -180,6 +180,12 @@ namespace BlazorDateRangePicker
         [Parameter]
         public bool? ShowCustomRangeLabel { get; set; } = true;
 
+        /// <summary>
+        /// Inline mode
+        /// </summary>
+        [Parameter]
+        public bool? Inline { get; set; } = false;
+
         /// <summary> Specify the culture to display dates and text in. Default is CultureInfo.CurrentCulture.</summary>
         [Parameter]
         public System.Globalization.CultureInfo Culture { get; set; }

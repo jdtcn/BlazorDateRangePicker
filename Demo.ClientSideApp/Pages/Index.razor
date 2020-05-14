@@ -157,6 +157,22 @@ List&lt;string&gt; events { get; set; } = new List&lt;string&gt;();</code></pre>
             </div>
             <hr />
 
+            <h4>Inline mode</h4>
+            <div class="row">
+                <div class="col-6 col-lg-4">
+                    <label>Produces:</label>
+                    <DateRangePicker Inline="true" AutoApply="true" ShowOnlyOneCalendar="true">
+                        <PickerTemplate />
+                    </DateRangePicker>
+                </div>
+                <div class="col-6 col-lg-8">
+                    <label>Code:</label>
+                    <pre><code lang="html">@("<DateRangePicker Inline=\"true\" AutoApply=\"true\" ShowOnlyOneCalendar=\"true\">\n" +
+                "    <PickerTemplate>\n        @* Empty input template *@\n    </PickerTemplate>\n</DateRangePicker>")</code></pre>
+                </div>
+            </div>
+            <hr />
+
             <h4>Licence</h4>
 
             <p>The MIT License (MIT)</p>

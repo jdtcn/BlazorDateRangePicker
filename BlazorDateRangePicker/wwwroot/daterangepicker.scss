@@ -1,5 +1,5 @@
 ﻿.daterangepicker {
-    position: absolute;
+    position: fixed;
     color: inherit;
     background-color: #fff;
     border-radius: 4px;
@@ -8,10 +8,10 @@
     max-width: none;
     padding: 0;
     margin-top: 7px;
-    top: 100px;
-    left: 20px;
+    top: 0px;
+    left: 0px;
+    right: auto;
     z-index: 3001;
-    /*display: none;*/
     font-family: arial;
     font-size: 15px;
     line-height: 1em;
@@ -36,6 +36,15 @@
     border-right: 6px solid transparent;
     border-bottom: 6px solid #fff;
     border-left: 6px solid transparent;
+}
+
+.daterangepicker.inline:before, .daterangepicker.inline:after {
+    content: none;
+}
+
+.daterangepicker.inline {
+    position: inherit;
+    display: inline-block;
 }
 
 .daterangepicker.opensleft:before {

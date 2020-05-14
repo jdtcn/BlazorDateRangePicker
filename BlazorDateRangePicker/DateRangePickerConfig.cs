@@ -102,6 +102,11 @@ namespace BlazorDateRangePicker
         public bool? ShowCustomRangeLabel { get; set; } = true;
 
         /// <summary>
+        /// Inline mode
+        /// </summary>
+        public bool? Inline { get; set; } = false;
+
+        /// <summary>
         /// Whether the picker should close on outside click
         /// </summary>
         public bool? CloseOnOutsideClick { get; set; } = true;
