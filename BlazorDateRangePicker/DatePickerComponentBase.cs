@@ -249,16 +249,18 @@ namespace BlazorDateRangePicker
         public Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
 
         /// <summary>
-        /// String of CSS class name to apply to that custom date's calendar cell <seealso cref="CustomDateFunction"/>
+        /// String of CSS class name to apply to calendar cell when <seealso cref="CustomDateFunction"/> returns true
         /// </summary>
         [Parameter]
         public string CustomDateClass { get; set; }
 
         /// <summary>
-        /// A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.
+        /// A function to which each date from the calendars is passed before they are displayed, 
+        /// may return a bool value indicates whether <seealso cref="CustomDateClass"/> will be added to the cell, 
+        /// or a string with CSS class name to add to that date's calendar cell.
         /// </summary>
         [Parameter]
-        public Func<DateTimeOffset, bool> CustomDateFunction { get; set; }
+        public Func<DateTimeOffset, object> CustomDateFunction { get; set; }
 
         /// <summary>
         /// Triggered when the apply button is clicked, or when a predefined range is clicked

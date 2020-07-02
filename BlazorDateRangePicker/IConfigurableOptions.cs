@@ -22,7 +22,7 @@ namespace BlazorDateRangePicker
         string CancelLabel { get; set; }
         CultureInfo Culture { get; set; }
         string CustomDateClass { get; set; }
-        Func<DateTimeOffset, bool> CustomDateFunction { get; set; }
+        Func<DateTimeOffset, object> CustomDateFunction { get; set; }
         string CustomRangeLabel { get; set; }
         string DateFormat { get; set; }
         Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }

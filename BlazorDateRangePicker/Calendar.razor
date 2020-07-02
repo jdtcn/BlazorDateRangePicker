@@ -159,9 +159,9 @@
                     }
 
                     //apply custom classes for this date
-                    if (!string.IsNullOrEmpty(CustomDateClass) && IsCustomDate(dt))
+                    if (CustomDateFunction != null)
                     {
-                        classes.Add(CustomDateClass);
+                        classes.Add(GetCustomDateClass(dt));
                     }
 
                     //highlight dates in-between the selected dates when hover
@@ -198,7 +198,7 @@
     [Parameter] public DateTimeOffset? HoverDate { get; set; }
     [Parameter] public CultureInfo Culture { get; set; }
     [Parameter] public Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
-    [Parameter] public Func<DateTimeOffset, bool> CustomDateFunction { get; set; }
+    [Parameter] public Func<DateTimeOffset, object> CustomDateFunction { get; set; }
     [Parameter] public string CustomDateClass { get; set; }
 
     [Parameter] public DateTimeOffset? StartDate { get; set; }
@@ -249,16 +249,17 @@
         }
     }
 
-    public bool IsCustomDate(DateTimeOffset date)
+    public string GetCustomDateClass(DateTimeOffset date)
     {
-        if (CustomDateFunction != null)
+        if (CustomDateFunction == null) return string.Empty;
+
+        var customFunctionResult = CustomDateFunction(date);
+        return customFunctionResult switch
         {
-            return CustomDateFunction(date);
-        }
-        else
-        {
-            return false;
-        }
+            string className => className ?? string.Empty,
+            bool addName => addName ? CustomDateClass ?? string.Empty : string.Empty,
+            _ => string.Empty
+        };
     }
 
     private Task PreviousMonth(MouseEventArgs e)

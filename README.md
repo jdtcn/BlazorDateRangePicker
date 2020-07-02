@@ -31,40 +31,6 @@ Include these lines into your _Host.cshtml (or *index.html* for Blazor WebAssemb
 <link rel="stylesheet" href="_content/BlazorDateRangePicker/daterangepicker.min.css" />
 ```` 
 
-Alternatively, one can use [EmbeddedBlazorContent](https://github.com/SamProf/EmbeddedBlazorContent) library.
-
-<details>
-<summary>How?</summary>
-<p>
-
-````shell
-Install-Package EmbeddedBlazorContent
-````
-
-````C#
-#Startup.cs
-
-using EmbeddedBlazorContent;
-
-//Configure
-//after app.UseStaticFiles();
-app.UseEmbeddedBlazorContent(typeof(BlazorDateRangePicker.DateRangePicker).Assembly);
-````
-
-````C#
-# _Host.cshtml
-@using EmbeddedBlazorContent
-....
-<head>
-....
-@Html.EmbeddedBlazorContent()
-...
-</head>
-````
-
-</p>
-</details>
-
 ### Use the component:
 
 ````C#
@@ -218,7 +184,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |AutoApply|bool|false|Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked.|
 |LinkedCalendars|bool|false|When enabled, the two calendars displayed will always be for two sequential months (i.e. January and February), and both will be advanced when clicking the left or right arrows above the calendars. When disabled, the two calendars can be individually advanced and display any month/year.|
 |DaysEnabledFunction|Func<DateTimeOffset,bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not.|
-|CustomDateFunction|Func<DateTimeOffset,bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return a string or array of CSS class names to apply to that date's calendar cell.|
+|CustomDateFunction|Func<DateTimeOffset,object>|_ => true|A function to which each date from the calendars is passed before they are displayed, may return a bool value indicates whether the string will be added to the cell, or a string with CSS class name to add to that date's calendar cell.|
 |CustomDateClass|string|string.Empty|String of CSS class name to apply to that custom date's calendar cell.|
 |ApplyLabel|string|"Apply"|Apply button text.|
 |CancelLabel|string|"Cancel"|Cancel button text.|
@@ -269,6 +235,12 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 3.0.0
+
+Breaking change:
+
+1. CustomDateFunction changed from Func<DateTimeOffset, bool> to Func<DateTimeOffset, object> so that it can return either a string or bool.
 
 ### 2.6.0
 
