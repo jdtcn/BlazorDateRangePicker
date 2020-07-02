@@ -4,8 +4,6 @@
     * license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
 *@
 
-@inherits DatePickerComponentBase
-
 @if (PickerTemplate == null)
 {
     <input id="@ParentId" type="text" @attributes="CombinedAttributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
@@ -32,63 +30,35 @@ else
                 </ul>
             }
         </div>
-        <div class="drp-calendar left @(SingleDatePicker == true || ShowOnlyOneCalendar == true ? "single" : "")">
 
-            <div class="calendar-table">
-                <Calendar Side="@SideType.Left"
-                          CalendarData="@LeftCalendar"
-                          ShowWeekNumbers="@ShowWeekNumbers"
-                          ShowISOWeekNumbers="@ShowISOWeekNumbers"
-                          MinDate="@MinDate"
-                          MaxDate="@MaxDate"
-                          LinkedCalendars="@LinkedCalendars"
-                          ShowDropdowns="@ShowDropdowns"
-                          SingleDatePicker="@SingleDatePicker"
-                          WeekAbbreviation="@WeekAbbreviation"
-                          StartDate="@StartDate"
-                          OnMonthChanged="@(date => MonthChanged(date, SideType.Left))"
-                          OnClickDate="@(date => ClickDate(date))"
-                          HoverDate="@HoverDate"
-                          OnHoverDate="@(date => OnHoverDate(date))"
-                          Culture="@Culture"
-                          DaysEnabledFunction="@DaysEnabledFunction"
-                          CustomDateFunction="@CustomDateFunction"
-                          CustomDateClass="@CustomDateClass"
-                          MaxSpan="@MaxSpan"
-                          EndDate="@EndDate" />
-            </div>
-
-        </div>
-        @if (SingleDatePicker != true && ShowOnlyOneCalendar != true)
-        {
-            <div class="drp-calendar right">
+        <CascadingValue Value="this">
+            <div class="drp-calendar left @(SingleDatePicker == true || ShowOnlyOneCalendar == true ? "single" : "")">
 
                 <div class="calendar-table">
-                    <Calendar Side="@SideType.Right"
-                              CalendarData="@RightCalendar"
-                              ShowWeekNumbers="@ShowWeekNumbers"
-                              ShowISOWeekNumbers="@ShowISOWeekNumbers"
-                              MinDate="@MinDate"
-                              MaxDate="@MaxDate"
-                              LinkedCalendars="@LinkedCalendars"
-                              ShowDropdowns="@ShowDropdowns"
-                              SingleDatePicker="@SingleDatePicker"
-                              WeekAbbreviation="@WeekAbbreviation"
-                              StartDate="@StartDate"
-                              OnMonthChanged="@(date => MonthChanged(date, SideType.Right))"
+                    <Calendar Side="@SideType.Left"
+                              CalendarData="@LeftCalendar"
+                              OnMonthChanged="@(date => MonthChanged(date, SideType.Left))"
                               OnClickDate="@(date => ClickDate(date))"
-                              HoverDate="@HoverDate"
-                              OnHoverDate="@(date => OnHoverDate(date))"
-                              Culture="@Culture"
-                              DaysEnabledFunction="@DaysEnabledFunction"
-                              CustomDateFunction="@CustomDateFunction"
-                              CustomDateClass="@CustomDateClass"
-                              MaxSpan="@MaxSpan"
-                              EndDate="@EndDate" />
+                              OnHoverDate="@(date => OnHoverDate(date))" />
                 </div>
 
             </div>
-        }
+            @if (SingleDatePicker != true && ShowOnlyOneCalendar != true)
+            {
+                <div class="drp-calendar right">
+
+                    <div class="calendar-table">
+                        <Calendar Side="@SideType.Right"
+                                  CalendarData="@RightCalendar"
+                                  OnMonthChanged="@(date => MonthChanged(date, SideType.Right))"
+                                  OnClickDate="@(date => ClickDate(date))"
+                                  OnHoverDate="@(date => OnHoverDate(date))" />
+                    </div>
+
+                </div>
+            }
+        </CascadingValue>
+
         <div class="drp-buttons">
             @if (ButtonsTemplate == null)
             {
@@ -104,211 +74,3 @@ else
 
     </div>
 </div>
-@code {
-
-    [Parameter]
-    public RenderFragment<DateRangePicker> PickerTemplate { get; set; }
-
-    [Parameter]
-    public RenderFragment<DateRangePicker> ButtonsTemplate { get; set; }
-
-    private DateTimeOffset? HoverDate { get; set; }
-
-    private string EditText { get; set; }
-
-    public string FormattedRange
-    {
-        get
-        {
-            if (!string.IsNullOrEmpty(EditText))
-            {
-                return EditText;
-            }
-
-            if (SingleDatePicker == true && StartDate != null)
-            {
-                return $"{StartDate.Value.ToString(DateFormat)}";
-            }
-
-            if (StartDate != null && EndDate != null)
-            {
-                return $"{StartDate.Value.ToString(DateFormat)} - {EndDate.Value.ToString(DateFormat)}";
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-        set { }
-    }
-
-    private string RootStyles
-    {
-        get
-        {
-            var result = new List<string>();
-            if (Ranges?.Any() == true) { result.Add("show-ranges"); }
-            if (AutoApply == true) { result.Add("auto-apply"); }
-            if (Ranges?.Any() != true || AlwaysShowCalendars == true || CalendarsVisible) { result.Add("show-calendar"); }
-
-            if (Inline != true)
-            {
-                if (Drops == DropsType.Up) { result.Add("drop-up"); }
-                result.Add($"opens{Enum.GetName(typeof(SideType), Opens).ToLower()}");
-            }
-            else
-            {
-                result.Add("inline");
-            }
-
-            return string.Join(" ", result);
-        }
-    }
-
-    public async Task OnTextInput(ChangeEventArgs e)
-    {
-        EditText = e.Value.ToString();
-        if (SingleDatePicker != true && !e.Value.ToString().Contains("-")) { return; }
-        var dateStrings = e.Value.ToString().Split('-').Select(s => s.Trim()).ToList();
-        if (SingleDatePicker == true)
-        {
-            dateStrings = new List<string> { e.Value.ToString(), string.Empty };
-        }
-        if (dateStrings.Count != 2) { return; }
-
-        var startDateParsed = DateTimeOffset.TryParseExact(dateStrings[0], DateFormat, Culture, System.Globalization.DateTimeStyles.None, out var startDate);
-        var endDateParsed = DateTimeOffset.TryParseExact(dateStrings[1], DateFormat, Culture, System.Globalization.DateTimeStyles.None, out var endDate);
-
-        if (endDateParsed && endDate > MaxDate)
-        {
-            endDate = MaxDate.Value.Date;
-        }
-
-        if (startDateParsed && startDate < MinDate)
-        {
-            startDate = MinDate.Value.Date.AddDays(1).AddTicks(-1);
-        }
-
-        if (startDateParsed && SingleDatePicker == true)
-        {
-            StartDate = startDate.Date;
-            EndDate = startDate.Date;
-            await ClickApply(null);
-            EditText = null;
-        }
-
-        if (startDateParsed && endDateParsed && startDate < endDate
-            && (!MinDate.HasValue || startDate > MinDate)
-            && (!MaxDate.HasValue || endDate < MaxDate))
-        {
-            StartDate = startDate.Date;
-            EndDate = endDate.Date.AddDays(1).AddTicks(-1);
-            await ClickApply(null);
-            EditText = null;
-        }
-    }
-
-    public void LostFocus(FocusEventArgs e)
-    {
-        EditText = null;
-    }
-
-    private async Task ClickRange(MouseEventArgs e, string label)
-    {
-        ChosenLabel = label;
-        if (label == CustomRangeLabel)
-        {
-            ShowCalendars();
-        }
-        else
-        {
-            var dates = Ranges[label];
-            StartDate = dates.Start.Date;
-            EndDate = dates.End.Date.AddDays(1).AddTicks(-1);
-
-            if (AlwaysShowCalendars != true)
-            { HideCalendars(); }
-            await ClickApply(e);
-        }
-    }
-
-    private void MonthChanged(DateTimeOffset date, SideType side)
-    {
-        if (side == SideType.Left)
-        {
-            LeftCalendar.Month = date;
-            if (LinkedCalendars == true)
-            {
-                RightCalendar.Month = LeftCalendar.Month.AddMonths(1);
-            }
-        }
-        else
-        {
-            RightCalendar.Month = date;
-            if (LinkedCalendars == true)
-            {
-                LeftCalendar.Month = RightCalendar.Month.AddMonths(-1);
-            }
-        }
-        OnMonthChanged.InvokeAsync(null);
-    }
-
-    private async Task ClickDate(DateTimeOffset date)
-    {
-        HoverDate = null;
-        if (EndDate.HasValue || StartDate == null || date < StartDate)
-        { //picking start
-            EndDate = null;
-            StartDate = date.Date;
-        }
-        else if (!EndDate.HasValue && date < StartDate)
-        {
-            //special case: clicking the same date for start/end,
-            //but the time of the end date is before the start date
-            EndDate = StartDate;
-        }
-        else
-        { // picking end
-            EndDate = date.Date.AddDays(1).AddTicks(-1);
-            if (AutoApply == true)
-            {
-                await ClickApply(null);
-            }
-        }
-
-        if (SingleDatePicker == true)
-        {
-            StartDate = date.Date;
-            EndDate = StartDate;
-            await ClickApply(null);
-        }
-    }
-
-    private void OnHoverDate(DateTimeOffset date)
-    {
-        if (!EndDate.HasValue)
-        {
-            HoverDate = date;
-        }
-    }
-
-    public async Task ClickApply(MouseEventArgs e)
-    {
-        if (StartDate.HasValue && EndDate.HasValue)
-        {
-            StateHasChanged();
-            await StartDateChanged.InvokeAsync(StartDate.Value);
-            await EndDateChanged.InvokeAsync(EndDate.Value);
-            await OnRangeSelect.InvokeAsync(new DateRange { Start = StartDate.Value, End = EndDate.Value });
-        }
-        Close();
-    }
-
-    public void ClickCancel(MouseEventArgs e)
-    {
-        StartDate = OldStartValue;
-        EndDate = OldEndValue;
-        Close();
-        OnCancel.InvokeAsync(true);
-    }
-}
