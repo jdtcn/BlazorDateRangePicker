@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using EmbeddedBlazorContent;
 using BlazorDateRangePicker;
 using System.Net.Http;
 
@@ -56,7 +55,6 @@ namespace Demo.ServerSideApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseEmbeddedBlazorContent(typeof(BlazorDateRangePicker.DateRangePicker).Assembly);
 
             app.UseRouting();
 
