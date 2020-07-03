@@ -42,7 +42,7 @@ namespace BlazorDateRangePicker
             }
         }
 
-        internal List<List<DateTimeOffset>> Calendar { get; set; }
+        internal List<List<CalendarItem>> Calendar { get; set; }
 
         internal CalendarType(DayOfWeek firstDayOfWeek)
         {
@@ -51,10 +51,10 @@ namespace BlazorDateRangePicker
 
         private void CalculateCalendar()
         {
-            var calendar = new List<List<DateTimeOffset>>();
+            var calendar = new List<List<CalendarItem>>();
             for (var i = 0; i < 6; i++)
             {
-                calendar.Add(new List<DateTimeOffset>());
+                calendar.Add(new List<CalendarItem>());
             }
 
             var startDay = DaysInLastMonth - (int)DayOfWeek + (int)FirstDayOfWeek + 1;
@@ -77,31 +77,27 @@ namespace BlazorDateRangePicker
                     col = 0;
                     row++;
                 }
-                calendar[row].Add(new DateTime(curDate.Year, curDate.Month, curDate.Day, Month.Hour, Month.Minute, Month.Second));
+                calendar[row].Add(new CalendarItem { Day = new DateTime(curDate.Year, curDate.Month, curDate.Day, Month.Hour, Month.Minute, Month.Second) });
 
-                if (MinDate.HasValue && calendar[row][col].Date == MinDate.Value.Date && calendar[row][col] < MinDate && Side == SideType.Left)
+                if (MinDate.HasValue && calendar[row][col].Day.Date == MinDate.Value.Date && calendar[row][col].Day < MinDate && Side == SideType.Left)
                 {
-                    calendar[row][col] = MinDate.Value;
+                    calendar[row][col].Day = MinDate.Value;
                 }
 
-                if (MaxDate.HasValue && calendar[row][col].Date == MaxDate.Value.Date && calendar[row][col] > MaxDate && Side == SideType.Right)
+                if (MaxDate.HasValue && calendar[row][col].Day.Date == MaxDate.Value.Date && calendar[row][col].Day > MaxDate && Side == SideType.Right)
                 {
-                    calendar[row][col] = MaxDate.Value;
+                    calendar[row][col].Day = MaxDate.Value;
                 }
             }
             Calendar = calendar;
         }
+    }
 
-        internal List<DateTimeOffset> this[int index]
-        {
-            get
-            {
-                return Calendar[index];
-            }
-            set
-            {
-                Calendar[index] = value;
-            }
-        }
+    public class CalendarItem
+    {
+        public DateTimeOffset Day { get; set; }
+        public Action Hover { get; set; }
+        public Action Click { get; set; }
+        public bool Disabled { get; set; }
     }
 }

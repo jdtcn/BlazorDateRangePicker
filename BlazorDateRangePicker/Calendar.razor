@@ -15,8 +15,8 @@
             <th colspan="5" class="month">
                 @if (Picker.ShowDropdowns == true)
                 {
-                    var currentMonth = CalendarData[1][1].Month;
-                    var currentYear = CalendarData[1][1].Year;
+                    var currentMonth = CalendarData.Month.Month;
+                    var currentYear = CalendarData.Month.Year;
                     var inMinYear = currentYear == MinYear;
                     var inMaxYear = currentYear == MaxYear;
                     <select @key="CalendarData.Month" class="monthselect" @onchange="@(m => MonthSelected(m))">
@@ -39,7 +39,7 @@
                 }
                 else
                 {
-                    @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData[1][1].Month)<text>&nbsp;</text>@CalendarData[1][1].Year
+                    @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData.Month.Month)<text>&nbsp;</text>@CalendarData.Month.Year
                 }
             </th>
             <th class="@(NextBtnVisible ? "next available" : "")" @onclick="@(_ => NextBtnVisible ? NextMonth() : null)"><span></span></th>
@@ -60,30 +60,35 @@
         </tr>
     </thead>
     <tbody>
-        @for (int row = 0; row < 6; row++)
+        @foreach (var row in CalendarData.Calendar)
         {
             <tr>
                 @if (Picker.ShowWeekNumbers == true)
                 {
                     <td class="week">
-                        @GetWeekOfYear(CalendarData[row][0].DateTime)
+                        @GetWeekOfYear(row[0].Day.DateTime)
                     </td>
                 }
                 else if (Picker.ShowISOWeekNumbers == true)
                 {
                     <td class="week">
-                        @GetIso8601WeekOfYear(CalendarData[row][0].DateTime)
+                        @GetIso8601WeekOfYear(row[0].Day.DateTime)
                     </td>
                 }
-
-                @for (int col = 0; col < 7; col++)
+               
+                @foreach (var dt in row)
                 {
-                    var dt = CalendarData[row][col];
-                    var month = CalendarData[1][1].Month;
+                    var month = CalendarData.Month.Month;
 
-                    var disabled = GetCellStateAndClasses(dt, month, out string classNames);
+                    dt.Disabled = GetCellStateAndClasses(dt.Day, month, out string classNames);
 
-                    <td class="@classNames" @onmouseover="@(_ => OnMouseOverDate(dt))" @onclick="@(_ => ClickDate(disabled, dt))">@dt.Day</td>
+                    if (dt.Hover == null) dt.Hover = () => OnMouseOverDate(dt.Day);
+                    if (dt.Click == null) dt.Click = () => ClickDate(dt);
+
+                    <td @key="dt" 
+                        class="@classNames" 
+                        @onmouseover="@dt.Hover" 
+                        @onclick="@dt.Click">@dt.Day.Day</td>
                 }
             </tr>
         }

@@ -33,28 +33,24 @@ else
 
         <CascadingValue Value="this">
             <div class="drp-calendar left @(SingleDatePicker == true || ShowOnlyOneCalendar == true ? "single" : "")">
-
                 <div class="calendar-table">
                     <Calendar Side="@SideType.Left"
                               CalendarData="@LeftCalendar"
-                              OnMonthChanged="@(date => MonthChanged(date, SideType.Left))"
-                              OnClickDate="@(date => ClickDate(date))"
-                              OnHoverDate="@(date => OnHoverDate(date))" />
+                              OnMonthChanged="LeftMonthChanged"
+                              OnClickDate="ClickDate"
+                              OnHoverDate="OnHoverDate" />
                 </div>
-
             </div>
             @if (SingleDatePicker != true && ShowOnlyOneCalendar != true)
             {
                 <div class="drp-calendar right">
-
                     <div class="calendar-table">
                         <Calendar Side="@SideType.Right"
                                   CalendarData="@RightCalendar"
-                                  OnMonthChanged="@(date => MonthChanged(date, SideType.Right))"
-                                  OnClickDate="@(date => ClickDate(date))"
-                                  OnHoverDate="@(date => OnHoverDate(date))" />
+                                  OnMonthChanged="RightMonthChanged"
+                                  OnClickDate="ClickDate"
+                                  OnHoverDate="OnHoverDate" />
                     </div>
-
                 </div>
             }
         </CascadingValue>

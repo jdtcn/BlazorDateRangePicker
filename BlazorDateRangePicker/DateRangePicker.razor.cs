@@ -490,6 +490,16 @@ namespace BlazorDateRangePicker
             }
         }
 
+        private void LeftMonthChanged(DateTimeOffset date)
+        {
+            MonthChanged(date, SideType.Left);
+        }
+
+        private void RightMonthChanged(DateTimeOffset date)
+        {
+            MonthChanged(date, SideType.Right);
+        }
+
         private void MonthChanged(DateTimeOffset date, SideType side)
         {
             if (side == SideType.Left)

@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorDateRangePicker
 {
@@ -43,11 +44,11 @@ namespace BlazorDateRangePicker
             }
         }
 
-        private bool PrevBtnVisible => 
-            (!MinDate.HasValue || MinDate<CalendarData.FirstDay) 
+        private bool PrevBtnVisible =>
+            (!MinDate.HasValue || MinDate < CalendarData.FirstDay)
             && (Picker.LinkedCalendars != true || Side == SideType.Left);
-        private bool NextBtnVisible => 
-            (!MaxDate.HasValue || MaxDate > CalendarData.LastDay) 
+        private bool NextBtnVisible =>
+            (!MaxDate.HasValue || MaxDate > CalendarData.LastDay)
             && (Picker.LinkedCalendars != true || Side == SideType.Right || Picker.SingleDatePicker == true);
 
         private List<string> DayNames { get; set; } = new List<string>();
@@ -123,24 +124,17 @@ namespace BlazorDateRangePicker
             return OnMonthChanged.InvokeAsync(new DateTime(year, d.Month, d.Day, d.Hour, d.Minute, d.Second));
         }
 
-        private Task ClickDate(bool disabled, DateTimeOffset date)
+        private void ClickDate(CalendarItem dt)
         {
-            if (disabled)
-            {
-                return Task.CompletedTask;
-            }
-            return OnClickDate.InvokeAsync(date);
+            if (dt.Disabled) return;
+            OnClickDate.InvokeAsync(dt.Day);
         }
 
-        private Task OnMouseOverDate(DateTimeOffset date)
+        private void OnMouseOverDate(DateTimeOffset date)
         {
             if (Picker.HoverDate != date)
             {
-                return OnHoverDate.InvokeAsync(date);
-            }
-            else
-            {
-                return Task.CompletedTask;
+                OnHoverDate.InvokeAsync(date);
             }
         }
 
@@ -197,7 +191,7 @@ namespace BlazorDateRangePicker
             }
 
             // Don't allow selection of date if a custom function decides it's invalid
-            if (this.IsDayDisabled(dt))
+            if (IsDayDisabled(dt))
             {
                 classes.Add("off");
                 classes.Add("disabled");
