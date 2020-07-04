@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlazorDateRangePicker
 {
@@ -149,7 +150,12 @@ namespace BlazorDateRangePicker
         /// <summary>
         /// A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not. 
         /// </summary>
-        public Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; } = _ => true;
+        public Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
+
+        /// <summary>
+        /// A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not. 
+        /// </summary>
+        public Func<DateTimeOffset, Task<bool>> DaysEnabledFunctionAsync { get; set; }
 
         /// <summary>
         /// String of CSS class name to apply to calendar cell when <seealso cref="CustomDateFunction"/> returns true

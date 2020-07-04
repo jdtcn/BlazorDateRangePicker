@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace BlazorDateRangePicker
 {
@@ -26,6 +27,7 @@ namespace BlazorDateRangePicker
         string CustomRangeLabel { get; set; }
         string DateFormat { get; set; }
         Func<DateTimeOffset, bool> DaysEnabledFunction { get; set; }
+        Func<DateTimeOffset, Task<bool>> DaysEnabledFunctionAsync { get; set; }
         DropsType? Drops { get; set; }
         DateTimeOffset? EndDate { get; set; }
         DayOfWeek? FirstDayOfWeek { get; set; }

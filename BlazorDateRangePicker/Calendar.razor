@@ -22,7 +22,7 @@
                     <select @key="CalendarData.Month" class="monthselect" @onchange="@(m => MonthSelected(m))">
                         @for (var m = 1; m < 13; m++)
                         {
-                            var enabled = (!inMinYear || (m >= MinDate?.Month)) && (!inMaxYear || (m <= MaxDate?.Month));
+                            var enabled = (!inMinYear || (m >= Picker.MinDate?.Month)) && (!inMaxYear || (m <= Picker.MaxDate?.Month));
                             var selected = m == currentMonth;
                             <option @key="m" selected="@selected" disabled="@(!enabled)" value="@m">
                                 @Picker.Culture.DateTimeFormat.GetMonthName(m)
@@ -39,7 +39,7 @@
                 }
                 else
                 {
-                    @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData.Month.Month)<text>&nbsp;</text>@CalendarData.Month.Year
+                    @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData?.Month.Month ?? 1)<text>&nbsp;</text>@CalendarData?.Month.Year
                 }
             </th>
             <th class="@(NextBtnVisible ? "next available" : "")" @onclick="@(_ => NextBtnVisible ? NextMonth() : null)"><span></span></th>
@@ -60,6 +60,8 @@
         </tr>
     </thead>
     <tbody>
+        @if (CalendarData?.Calendar != null)
+        {
         @foreach (var row in CalendarData.Calendar)
         {
             <tr>
@@ -80,17 +82,16 @@
                 {
                     var month = CalendarData.Month.Month;
 
-                    dt.Disabled = GetCellStateAndClasses(dt.Day, month, out string classNames);
-
-                    if (dt.Hover == null) dt.Hover = () => OnMouseOverDate(dt.Day);
-                    if (dt.Click == null) dt.Click = () => ClickDate(dt);
+                    if (dt.Hover == null) dt.Hover = async () => await OnMouseOverDate(dt.Day);
+                    if (dt.Click == null) dt.Click = async () => await ClickDate(dt);
 
                     <td @key="dt" 
-                        class="@classNames" 
+                        class="@(Picker.Loading ? "disabled" : dt.ClassNames)" 
                         @onmouseover="@dt.Hover" 
-                        @onclick="@dt.Click">@dt.Day.Day</td>
+                        @onclick="@dt.Click">@(Picker.Loading ? "L" : $"{dt.Day.Day}")</td>
                 }
             </tr>
+        }
         }
     </tbody>
 </table>
