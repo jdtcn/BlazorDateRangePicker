@@ -19,7 +19,7 @@
                     var currentYear = CalendarData.Month.Year;
                     var inMinYear = currentYear == MinYear;
                     var inMaxYear = currentYear == MaxYear;
-                    <select @key="CalendarData.Month" class="monthselect" @onchange="@(m => MonthSelected(m))">
+                    <select class="monthselect" @onchange="MonthSelected">
                         @for (var m = 1; m < 13; m++)
                         {
                             var enabled = (!inMinYear || (m >= Picker.MinDate?.Month)) && (!inMaxYear || (m <= Picker.MaxDate?.Month));
@@ -30,7 +30,7 @@
                         }
                     </select>
 
-                    <select @key="CalendarData.Month.Year" class="yearselect" @onchange="@(y => YearSelected(y))">
+                    <select class="yearselect" @onchange="YearSelected">
                         @for (var y = MinYear; y <= MaxYear; y++)
                         {
                             <option @key="y" value="@y" selected="@(y == currentYear)">@y</option>
@@ -39,7 +39,7 @@
                 }
                 else
                 {
-                    @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData?.Month.Month ?? 1)<text>&nbsp;</text>@CalendarData?.Month.Year
+                    @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData.Month.Month)<text>&nbsp;</text>@CalendarData.Month.Year
                 }
             </th>
             <th class="@(NextBtnVisible ? "next available" : "")" @onclick="@(_ => NextBtnVisible ? NextMonth() : null)"><span></span></th>
@@ -60,8 +60,6 @@
         </tr>
     </thead>
     <tbody>
-        @if (CalendarData?.Calendar != null)
-        {
         @foreach (var row in CalendarData.Calendar)
         {
             <tr>
@@ -80,18 +78,14 @@
                
                 @foreach (var dt in row)
                 {
-                    var month = CalendarData.Month.Month;
+                    if (dt.Hover == null) dt.Hover = () => OnMouseOverDate(dt.Day);
+                    if (dt.Click == null) dt.Click = () => ClickDate(dt);
 
-                    if (dt.Hover == null) dt.Hover = async () => await OnMouseOverDate(dt.Day);
-                    if (dt.Click == null) dt.Click = async () => await ClickDate(dt);
-
-                    <td @key="dt" 
-                        class="@(Picker.Loading ? "disabled" : dt.ClassNames)" 
+                    <td class="@(Picker.Loading ? "disabled" : dt.ClassNames)" 
                         @onmouseover="@dt.Hover" 
-                        @onclick="@dt.Click">@(Picker.Loading ? "L" : $"{dt.Day.Day}")</td>
+                        @onclick="@dt.Click">@dt.Day.Day</td>
                 }
             </tr>
-        }
         }
     </tbody>
 </table>

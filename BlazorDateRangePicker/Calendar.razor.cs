@@ -24,14 +24,14 @@ namespace BlazorDateRangePicker
         [Parameter] public EventCallback<DateTimeOffset> OnClickDate { get; set; }
         [Parameter] public EventCallback<DateTimeOffset> OnHoverDate { get; set; }
 
-        private int MinYear => Picker.MinDate?.Year ?? 1900;
-        private int MaxYear => Picker.MaxDate?.Year ?? DateTime.Now.AddYears(100).Year;
+        private int MinYear => Picker.MinDate?.Year ?? 1950;
+        private int MaxYear => Picker.MaxDate?.Year ?? DateTime.Now.AddYears(50).Year;
 
         private bool PrevBtnVisible =>
-            (!Picker.MinDate.HasValue || Picker.MinDate < CalendarData?.FirstDay)
+            (!Picker.MinDate.HasValue || Picker.MinDate < CalendarData.FirstDay)
             && (Picker.LinkedCalendars != true || Side == SideType.Left);
         private bool NextBtnVisible =>
-            (!Picker.MaxDate.HasValue || Picker.MaxDate > CalendarData?.LastDay)
+            (!Picker.MaxDate.HasValue || Picker.MaxDate > CalendarData.LastDay)
             && (Picker.LinkedCalendars != true || Side == SideType.Right || Picker.SingleDatePicker == true);
 
         private List<string> DayNames { get; set; } = new List<string>();
@@ -55,7 +55,6 @@ namespace BlazorDateRangePicker
         protected override void OnInitialized()
         {
             DayNames = GetDayNames();
-            base.OnInitialized();
         }
 
         private Task PreviousMonth()
@@ -79,21 +78,25 @@ namespace BlazorDateRangePicker
         {
             var year = int.Parse(e.Value.ToString());
             var d = CalendarData.Month;
-            return OnMonthChanged.InvokeAsync(new DateTime(year, d.Month, d.Day, d.Hour, d.Minute, d.Second));
+            var newMonth = new DateTimeOffset(year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Offset);
+            if (newMonth > Picker.MaxDate) newMonth = Picker.MaxDate.Value;
+            else if (newMonth < Picker.MinDate) newMonth = Picker.MinDate.Value;
+            return OnMonthChanged.InvokeAsync(newMonth);
         }
 
-        private async Task ClickDate(CalendarItem dt)
+        private Task ClickDate(CalendarItem dt)
         {
-            if (dt.Disabled) return;
-            await OnClickDate.InvokeAsync(dt.Day);
+            if (dt.Disabled) return Task.CompletedTask;
+            return OnClickDate.InvokeAsync(dt.Day);
         }
 
-        private async Task OnMouseOverDate(DateTimeOffset date)
+        private Task OnMouseOverDate(DateTimeOffset date)
         {
             if (Picker.HoverDate != date)
             {
-                await OnHoverDate.InvokeAsync(date);
+                return OnHoverDate.InvokeAsync(date);
             }
+            return Task.CompletedTask;
         }
 
         private int GetWeekOfYear(DateTime time)

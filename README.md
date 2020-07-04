@@ -183,8 +183,9 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |SingleDatePicker|bool|false|Show only a single calendar to choose one date, instead of a range picker with two calendars. The start and end dates provided to your callback will be the same single date chosen.|
 |AutoApply|bool|false|Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked.|
 |LinkedCalendars|bool|false|When enabled, the two calendars displayed will always be for two sequential months (i.e. January and February), and both will be advanced when clicking the left or right arrows above the calendars. When disabled, the two calendars can be individually advanced and display any month/year.|
-|DaysEnabledFunction|Func<DateTimeOffset,bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not.|
-|CustomDateFunction|Func<DateTimeOffset,object>|_ => true|A function to which each date from the calendars is passed before they are displayed, may return a bool value indicates whether the string will be added to the cell, or a string with CSS class name to add to that date's calendar cell.|
+|DaysEnabledFunction|Func<DateTimeOffset, bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not.|
+|DaysEnabledFunctionAsync|Func<DateTimeOffset, Task<bool>>|_ => true|Same as DaysEnabledFunction but with async support.|
+|CustomDateFunction|Func<DateTimeOffset, object>|_ => true|A function to which each date from the calendars is passed before they are displayed, may return a bool value indicates whether the string will be added to the cell, or a string with CSS class name to add to that date's calendar cell. May return string, bool, Task<string>, Task<bool>|
 |CustomDateClass|string|string.Empty|String of CSS class name to apply to that custom date's calendar cell.|
 |ApplyLabel|string|"Apply"|Apply button text.|
 |CancelLabel|string|"Cancel"|Cancel button text.|
@@ -206,6 +207,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnClosed|void|An event that is invoked when the DatePicker is closed.|
 |OnCancel|bool|An event that is invoked when user cancels the selection (`true` if by pressing "Cancel" button, `false` if by backdrop click).|
 |OnMonthChanged|void|An event that is invoked when left or right calendar's month changed.|
+|OnMonthChangedAsync|Task|An event that is invoked when left or right calendar's month changed and supports CancellationToken. Use this event handler to prepare the data for CustomDateFunction.|
 
 ## Methods
 
@@ -236,11 +238,11 @@ public class DateRange
 
 ## Changelog
 
-### 3.0.0
+### 2.7.0
 
-Breaking change:
-
-1. CustomDateFunction changed from Func<DateTimeOffset, bool> to Func<DateTimeOffset, object> so that it can return either a string or bool.
+1. Breaking change! CustomDateFunction changed from Func<DateTimeOffset, bool> to Func<DateTimeOffset, object> so that it can return string, bool, Task<string>, Task<bool>.
+2. OnMonthChangedAsync event added to support data loading indication.
+3. Fixed issue with compilerconfig.json file (#27).
 
 ### 2.6.0
 

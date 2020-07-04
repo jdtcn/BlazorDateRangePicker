@@ -28,7 +28,7 @@ namespace BlazorDateRangePicker
                 if (Picker.MaxSpan.HasValue && Picker.TStartDate.HasValue && !Picker.TEndDate.HasValue)
                 {
                     var maxLimit = Picker.TStartDate.Value.Add(Picker.MaxSpan.Value);
-                    if (!Picker.MaxDate.HasValue || maxLimit < MaxDate)
+                    if (!Picker.MaxDate.HasValue || maxLimit < Picker.MaxDate)
                     {
                         return maxLimit;
                     }
@@ -75,7 +75,7 @@ namespace BlazorDateRangePicker
                 startDay = DaysInLastMonth - 6;
             }
 
-            var curDate = new DateTime(LastYear, LastMonth, startDay, 12, Month.Minute, Month.Second);
+            var curDate = new DateTimeOffset(LastYear, LastMonth, startDay, 12, 0, 0, Month.Offset);
 
             int col = 0, row = 0;
             for (var i = 0; i < 42; i++, col++, curDate = curDate.AddDays(1))
@@ -86,23 +86,13 @@ namespace BlazorDateRangePicker
                     row++;
                 }
 
-                var day = new DateTime(curDate.Year, curDate.Month, curDate.Day, 12, Month.Minute, Month.Second);
+                var day = new DateTimeOffset(curDate.Year, curDate.Month, curDate.Day, 12, 0, 0, Month.Offset);
                 if (calendar[row].Count <= col)
                     calendar[row].Add(new CalendarItem { Day = day });
-                else
+                else if (calendar[row][col].Day != day)
                     calendar[row][col].Day = day;
 
                 await UpdateCellClasses(calendar[row][col]);
-
-                if (MinDate.HasValue && calendar[row][col].Day.Date == MinDate.Value.Date && calendar[row][col].Day < MinDate && Side == SideType.Left)
-                {
-                    calendar[row][col].Day = MinDate.Value;
-                }
-
-                if (MaxDate.HasValue && calendar[row][col].Day.Date == MaxDate.Value.Date && calendar[row][col].Day > MaxDate && Side == SideType.Right)
-                {
-                    calendar[row][col].Day = MaxDate.Value;
-                }
             }
             Calendar = calendar;
         }
