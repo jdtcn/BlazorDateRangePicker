@@ -150,7 +150,7 @@ namespace BlazorDateRangePicker
         /// </summary>
         [Parameter]
         public DateTimeOffset? StartDate { get; set; }
-        internal DateTimeOffset? TStartDate { get; set; }
+        public DateTimeOffset? TStartDate { get; set; }
 
         [Parameter]
         public EventCallback<DateTimeOffset?> StartDateChanged { set; get; }
@@ -160,7 +160,7 @@ namespace BlazorDateRangePicker
         /// </summary>
         [Parameter]
         public DateTimeOffset? EndDate { get; set; }
-        internal DateTimeOffset? TEndDate { get; set; }
+        public DateTimeOffset? TEndDate { get; set; }
 
         [Parameter]
         public EventCallback<DateTimeOffset?> EndDateChanged { set; get; }
@@ -236,6 +236,12 @@ namespace BlazorDateRangePicker
         /// </summary>
         [Parameter]
         public TimeSpan? MaxSpan { get; set; }
+
+        /// <summary>
+        /// The minimum TimeSpan between the selected start and end dates. A value of null indicates that there is no limit.
+        /// </summary>
+        [Parameter]
+        public TimeSpan? MinSpan { get; set; }
 
         /// <summary>
         /// Picker popup visibility. Use Open() instead.
@@ -321,13 +327,17 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<CancellationToken> OnMonthChangedAsync { get; set; }
 
+        /// <summary>An event that is invoked when StartDate is selected</summary>
+        [Parameter]
+        public EventCallback OnSelectionStart { get; set; }
+
         public CalendarType LeftCalendar { get; set; }
         public CalendarType RightCalendar { get; set; }
 
         internal string ChosenLabel { get; set; }
         internal bool CalendarsVisible { get; set; }
         internal bool Loading { get; set; }
-        internal DateTimeOffset? HoverDate { get; set; }
+        public DateTimeOffset? HoverDate { get; set; }
 
         private string EditText { get; set; }
 
@@ -429,7 +439,7 @@ namespace BlazorDateRangePicker
             }
         }
 
-        public async Task OnTextInput(ChangeEventArgs e)
+        public virtual async Task OnTextInput(ChangeEventArgs e)
         {
             EditText = e.Value.ToString();
             if (SingleDatePicker != true && !e.Value.ToString().Contains("-")) { return; }
@@ -460,9 +470,20 @@ namespace BlazorDateRangePicker
                 }
             }
 
-            if (endDateParsed && endDate > maxDate)
+            var minDate = MinDate;
+            if (MinSpan.HasValue)
             {
-                endDate = maxDate.Value.Date;
+                var minLimit = startDate.Add(MinSpan.Value);
+                if (!minDate.HasValue || minLimit > minDate)
+                {
+                    minDate = minLimit;
+                }
+            }
+
+            if (endDateParsed)
+            {
+                if(endDate > maxDate) endDate = maxDate.Value.Date;
+                if(endDate < minDate) endDate = minDate.Value.Date;
             }
 
             if (startDateParsed && SingleDatePicker == true)
@@ -475,8 +496,8 @@ namespace BlazorDateRangePicker
             }
 
             if (startDateParsed && endDateParsed && startDate <= endDate
-                && (!MinDate.HasValue || startDate >= MinDate)
-                && (!maxDate.HasValue || endDate <= maxDate))
+                && (!minDate.HasValue || startDate >= MinDate)
+                && (!maxDate.HasValue || endDate <= MaxDate))
             {
                 TStartDate = startDate.Date;
                 TEndDate = endDate.Date.AddDays(1).AddTicks(-1);
@@ -570,6 +591,7 @@ namespace BlazorDateRangePicker
                 //picking start
                 TEndDate = null;
                 TStartDate = date.Date;
+                await OnSelectionStart.InvokeAsync(null);
             }
             else if (!TEndDate.HasValue && date < TStartDate)
             {

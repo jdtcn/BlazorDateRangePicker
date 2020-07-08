@@ -34,6 +34,7 @@ namespace BlazorDateRangePicker
         bool? LinkedCalendars { get; set; }
         DateTimeOffset? MaxDate { get; set; }
         TimeSpan? MaxSpan { get; set; }
+        TimeSpan? MinSpan { get; set; }
         DateTimeOffset? MinDate { get; set; }
         SideType? Opens { get; set; }
         Dictionary<string, DateRange> Ranges { get; set; }

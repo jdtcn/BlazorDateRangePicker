@@ -114,7 +114,7 @@ Custom buttons:
         <button class="cancelBtn btn btn-sm btn-default" 
             @onclick="@(e => ResetClick(e, context))" type="button">Reset</button>
         <button class="applyBtn btn btn-sm btn-primary" @onclick="@context.ClickApply"
-            disabled="@(context.StartDate == null || context.EndDate == null)" 
+            disabled="@(context.TStartDate == null || context.TEndDate == null)" 
             type="button">Apply</button>
     </ButtonsTemplate>
 </DateRangePicker>
@@ -134,6 +134,8 @@ Custom buttons:
     }
 }
 ````
+
+Use Picker.TStartDate and Picker.TEndDate properties to get current picker state before a user clicks the 'apply' button.
 
 ### One configuration for all pickers
 
@@ -167,6 +169,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |EndDate|DateTimeOffset?|null|The end date of the initially selected date range.|
 |MinDate|DateTimeOffset?|null|The earliest date a user may select.|
 |MaxDate|DateTimeOffset?|null|The latest date a user may select.|
+|MinSpan|TimeSpan?|null|The minimum span between the selected start and end dates.|
 |MaxSpan|TimeSpan?|null|The maximum span between the selected start and end dates.|
 |ShowDropdowns|bool|true|Show year and month select boxes above calendars to jump to a specific month and year.|
 |ShowWeekNumbers|bool|false|Show localized week numbers at the start of each week on the calendars.|
@@ -184,7 +187,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |AutoApply|bool|false|Hide the apply and cancel buttons, and automatically apply a new date range as soon as two dates are clicked.|
 |LinkedCalendars|bool|false|When enabled, the two calendars displayed will always be for two sequential months (i.e. January and February), and both will be advanced when clicking the left or right arrows above the calendars. When disabled, the two calendars can be individually advanced and display any month/year.|
 |DaysEnabledFunction|Func<DateTimeOffset, bool>|_ => true|A function that is passed each date in the two calendars before they are displayed, and may return true or false to indicate whether that date should be available for selection or not.|
-|DaysEnabledFunctionAsync|Func<DateTimeOffset, Task<bool>>|_ => true|Same as DaysEnabledFunction but with async support.|
+|DaysEnabledFunctionAsync|Func< DateTimeOffset, Task< bool>>|_ => true|Same as DaysEnabledFunction but with async support.|
 |CustomDateFunction|Func<DateTimeOffset, object>|_ => true|A function to which each date from the calendars is passed before they are displayed, may return a bool value indicates whether the string will be added to the cell, or a string with CSS class name to add to that date's calendar cell. May return string, bool, Task<string>, Task<bool>|
 |CustomDateClass|string|string.Empty|String of CSS class name to apply to that custom date's calendar cell.|
 |ApplyLabel|string|"Apply"|Apply button text.|
@@ -208,6 +211,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnCancel|bool|An event that is invoked when user cancels the selection (`true` if by pressing "Cancel" button, `false` if by backdrop click).|
 |OnMonthChanged|void|An event that is invoked when left or right calendar's month changed.|
 |OnMonthChangedAsync|Task|An event that is invoked when left or right calendar's month changed and supports CancellationToken. Use this event handler to prepare the data for CustomDateFunction.|
+|OnSelectionStart|void|An event that is invoked when StartDate is selected|
 
 ## Methods
 
@@ -237,6 +241,11 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 2.8.0
+
+1. Add OnSelectionStart event (#29)
+2. Add MinSpan property (#29)
 
 ### 2.7.0
 

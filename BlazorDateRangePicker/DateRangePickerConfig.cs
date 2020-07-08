@@ -138,6 +138,11 @@ namespace BlazorDateRangePicker
         public TimeSpan? MaxSpan { get; set; }
 
         /// <summary>
+        /// The minimum TimeSpan between the selected start and end dates. A value of null indicates that there is no limit.
+        /// </summary>
+        public TimeSpan? MinSpan { get; set; }
+
+        /// <summary>
         /// Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.
         /// </summary>
         public SideType? Opens { get; set; } = SideType.Right;

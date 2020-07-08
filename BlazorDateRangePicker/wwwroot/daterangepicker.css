@@ -160,6 +160,11 @@
   font-size: 80%;
   color: #ccc; }
 
+.daterangepicker td.disabled, .daterangepicker option.disabled {
+  color: #999;
+  cursor: not-allowed;
+  text-decoration: line-through; }
+
 .daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
   background-color: #fff;
   border-color: transparent;
@@ -187,11 +192,6 @@
 
 .daterangepicker th.month {
   width: auto; }
-
-.daterangepicker td.disabled, .daterangepicker option.disabled {
-  color: #999;
-  cursor: not-allowed;
-  text-decoration: line-through; }
 
 .daterangepicker select.monthselect, .daterangepicker select.yearselect {
   font-size: 12px;

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlazorDateRangePicker
@@ -20,22 +21,6 @@ namespace BlazorDateRangePicker
         internal DayOfWeek FirstDayOfWeek { get; set; }
 
         internal SideType Side { get; set; }
-        internal DateTimeOffset? MinDate { get => Side == SideType.Left ? Picker.MinDate : Picker.TStartDate; }
-        internal DateTimeOffset? MaxDate
-        {
-            get
-            {
-                if (Picker.MaxSpan.HasValue && Picker.TStartDate.HasValue && !Picker.TEndDate.HasValue)
-                {
-                    var maxLimit = Picker.TStartDate.Value.Add(Picker.MaxSpan.Value);
-                    if (!Picker.MaxDate.HasValue || maxLimit < Picker.MaxDate)
-                    {
-                        return maxLimit;
-                    }
-                }
-                return Picker.MaxDate;
-            }
-        }
 
         internal DateTimeOffset FirstDay => new DateTime(Month.Year, Month.Month, 1);
         internal DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
@@ -124,7 +109,22 @@ namespace BlazorDateRangePicker
                 disabled = true;
             }
             // Don't allow selection of dates after the maximum date
-            if (MaxDate.HasValue && dt > MaxDate)
+            if (Picker.MaxDate.HasValue && dt > Picker.MaxDate)
+            {
+                classes.Add("off");
+                classes.Add("disabled");
+                disabled = true;
+            }
+
+            if (Picker.MinSpan.HasValue && Picker.TStartDate.HasValue && Picker.TEndDate == null 
+                && dt - Picker.TStartDate >= TimeSpan.Zero && dt - Picker.TStartDate < Picker.MinSpan)
+            {
+                classes.Add("disabled");
+                disabled = true;
+            }
+
+            if (Picker.MaxSpan.HasValue && Picker.TStartDate.HasValue && Picker.TEndDate == null
+                && dt - Picker.TStartDate > Picker.MaxSpan)
             {
                 classes.Add("off");
                 classes.Add("disabled");
@@ -134,7 +134,6 @@ namespace BlazorDateRangePicker
             // Don't allow selection of date if a custom function decides it's invalid
             if (await IsDayDisabled(dt))
             {
-                classes.Add("off");
                 classes.Add("disabled");
                 disabled = true;
             }
@@ -177,7 +176,7 @@ namespace BlazorDateRangePicker
             }
 
             day.Disabled = disabled;
-            day.ClassNames = string.Join(" ", classes);
+            day.ClassNames = string.Join(" ", classes.Distinct());
         }
 
         private async Task<bool> IsDayDisabled(DateTimeOffset date)
