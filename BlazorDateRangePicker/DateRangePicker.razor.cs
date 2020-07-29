@@ -662,11 +662,12 @@ namespace BlazorDateRangePicker
             var selectedRange = Ranges?.FirstOrDefault(r =>
                 r.Value.Start.Date == TStartDate?.Date &&
                 r.Value.End.Date == TEndDate?.Date);
-            if (selectedRange != null)
+            if (selectedRange?.Value != null)
             {
                 ChosenLabel = selectedRange.Value.Key;
+                if (AlwaysShowCalendars != true) CalendarsVisible = false;
             }
-            else
+            else if (CalendarsVisible || AlwaysShowCalendars == true)
             {
                 ChosenLabel = CustomRangeLabel;
                 CalendarsVisible = true;

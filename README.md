@@ -211,7 +211,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnCancel|bool|An event that is invoked when user cancels the selection (`true` if by pressing "Cancel" button, `false` if by backdrop click).|
 |OnMonthChanged|void|An event that is invoked when left or right calendar's month changed.|
 |OnMonthChangedAsync|Task|An event that is invoked when left or right calendar's month changed and supports CancellationToken. Use this event handler to prepare the data for CustomDateFunction.|
-|OnSelectionStart|void|An event that is invoked when StartDate is selected|
+|OnSelectionStart|DateTimeOffset|An event that is invoked when StartDate is selected|
 
 ## Methods
 
@@ -241,6 +241,13 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+### 2.9.0
+
+1. Fix issue with two-way dates binding (#32)
+2. Fix issue with date range label selection
+3. Fix issue with single date selection mode
+4. `OnSelectionStart` event now returns selected start date
 
 ### 2.8.0
 
