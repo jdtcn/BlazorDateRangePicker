@@ -329,7 +329,7 @@ namespace BlazorDateRangePicker
 
         /// <summary>An event that is invoked when StartDate is selected</summary>
         [Parameter]
-        public EventCallback OnSelectionStart { get; set; }
+        public EventCallback<DateTimeOffset> OnSelectionStart { get; set; }
 
         public CalendarType LeftCalendar { get; set; }
         public CalendarType RightCalendar { get; set; }
@@ -382,6 +382,10 @@ namespace BlazorDateRangePicker
 
         protected override async Task OnParametersSetAsync()
         {
+            TStartDate = StartDate;
+            TEndDate = EndDate;
+            if (SingleDatePicker == true) TEndDate = StartDate;
+
             await LeftCalendar.CalculateCalendar();
             await RightCalendar.CalculateCalendar();
         }
@@ -589,15 +593,10 @@ namespace BlazorDateRangePicker
             if (TEndDate.HasValue || TStartDate == null || date < TStartDate)
             {
                 //picking start
+                await OnSelectionStart.InvokeAsync(date.Date);
+                await Task.Yield();
                 TEndDate = null;
                 TStartDate = date.Date;
-                await OnSelectionStart.InvokeAsync(null);
-            }
-            else if (!TEndDate.HasValue && date < TStartDate)
-            {
-                //special case: clicking the same date for start/end,
-                //but the time of the end date is before the start date
-                TEndDate = TStartDate;
             }
             else
             {
