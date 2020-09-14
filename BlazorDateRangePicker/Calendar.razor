@@ -83,7 +83,16 @@
 
                     <td class="@(Picker.Loading ? "disabled" : dt.ClassNames)" 
                         @onmouseover="@dt.Hover" 
-                        @onclick="@dt.Click">@dt.Day.Day</td>
+                        @onclick="@dt.Click">
+                        @if (Picker.DayTemplate != null)
+                        {
+                            @Picker.DayTemplate(dt)
+                        }
+                        else
+                        {
+                            @dt.Day.Day
+                        }
+                    </td>
                 }
             </tr>
         }

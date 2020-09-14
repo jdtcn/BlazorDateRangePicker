@@ -85,6 +85,12 @@ namespace BlazorDateRangePicker
         public RenderFragment<DateRangePicker> ButtonsTemplate { get; set; }
 
         /// <summary>
+        /// Custom picker input template
+        /// </summary>
+        [Parameter]
+        public RenderFragment<CalendarItem> DayTemplate { get; set; }
+
+        /// <summary>
         /// Set predefined date ranges the user can select from. 
         /// Each RangeItem.Name is the label for the range, and its Start and End value representing the bounds of the range.
         /// </summary>
