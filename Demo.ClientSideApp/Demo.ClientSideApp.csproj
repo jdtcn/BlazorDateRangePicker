@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorDateRangePicker\BlazorDateRangePicker.csproj" />
+    <ProjectReference Include="..\Demo.Shared\Demo.Shared.csproj" />
   </ItemGroup>
 
 </Project>

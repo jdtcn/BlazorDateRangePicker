@@ -1,0 +1,102 @@
+﻿@page "/customDate"
+
+@using System.Threading
+
+<style>
+    .dthighlight {
+        background-color: aquamarine !important;
+    }
+</style>
+
+<DateRangePicker @ref="Picker" style="width: 300px;"
+                 LinkedCalendars="true"
+                 AutoAdjustCalendars="false"
+                 MinDate="DateTime.Now.AddYears(-1)"
+                 MaxDate="DateTime.Now.AddYears(1)"
+                 ShowDropdowns="true"
+                 ShowWeekNumbers="true"
+                 WeekAbbreviation="НE"
+                 MinSpan="TimeSpan.FromDays(5)"
+                 MaxSpan="TimeSpan.FromDays(15)"
+                 DaysEnabledFunction="DaysEnabledFunction"
+                 OnMonthChangedAsync="OnMonthChanged"
+                 CustomDateFunction="CustomDateFunction"
+                 OnSelectionStart="OnSelectionStart"
+                 OnRangeSelect="OnRangeSelect"
+                 @bind-StartDate="StartDate"
+                 @bind-EndDate="EndDate">
+    <DayTemplate Context="dt">
+        D-@(dt.Day.Day)
+        <br/>
+        $ 200
+    </DayTemplate>
+</DateRangePicker>
+<hr />
+<p>Start: @StartDate</p>
+<p>End: @EndDate</p>
+
+<p>Events:</p>
+<ul>
+    @foreach (var ev in Events)
+    {
+        <li>@ev</li>
+    }
+</ul>
+
+<button @onclick="SetDates">set</button>
+
+@code {
+    DateRangePicker Picker;
+
+    DateTimeOffset? StartDate { get; set; }
+    DateTimeOffset? EndDate { get; set; }
+
+    List<string> Events { get; set; } = new List<string>();
+
+    List<DateTimeOffset> DisabledDays { get; set; } = new List<DateTimeOffset>();
+
+    private bool DaysEnabledFunction(DateTimeOffset day)
+    {
+        return !DisabledDays.Any(d => d.Day == day.Day);
+    }
+
+    private object CustomDateFunction(DateTimeOffset day)
+    {
+        //await Task.Delay(1);
+
+        if (DisabledDays.Any(d => d.Day == day.Day - 1)) return "dthighlight";
+        return string.Empty;
+    }
+
+    private async Task OnMonthChanged(CancellationToken ct)
+    {
+        var leftMonth = Picker.LeftCalendar.Month;
+        var rightMonth = Picker.RightCalendar.Month;
+        Events.Add($"OnMonthChanged: {leftMonth:MM.yyyy} & {rightMonth:MM.yyyy}");
+
+        await Task.Delay(500, ct);
+
+        Events.Add($"Completed OnMonthChanged: {leftMonth:MM.yyyy} & {rightMonth:MM.yyyy}");
+
+        DisabledDays = new List<DateTimeOffset> {
+            new DateTime(leftMonth.Year, leftMonth.Month, leftMonth.Month),
+            new DateTime(rightMonth.Year, rightMonth.Month, rightMonth.Month)
+        };
+    }
+
+    private void OnSelectionStart(DateTimeOffset date)
+    {
+        Events.Add($"On selection start = {date}");
+    }
+
+    private void OnRangeSelect(DateRange range)
+    {
+        Events.Add($"On range select");
+    }
+
+    private void SetDates()
+    {
+        StartDate = DateTime.Now;
+        EndDate = DateTime.Now.AddDays(10);
+    }
+}

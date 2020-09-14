@@ -1,0 +1,42 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+.bd-navbar {
+    background-color: #336fb0;
+    z-index: 1041;
+}
+
+    .bd-navbar .navbar-nav-svg {
+        width: 24px;
+        height: 24px;
+    }
+
+
+.bd-sidebar .nav > .active:hover > a, .bd-sidebar .nav > a.active {
+    font-weight: 600;
+    color: rgba(0,0,0,.85);
+    background-color: transparent;
+}
+
+.bd-sidebar .nav > a:hover {
+    color: rgba(0,0,0,.85);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.bd-sidebar .nav > a {
+    display: block;
+    padding: .25rem 1.5rem;
+    font-size: 90%;
+    color: rgba(0,0,0,.65);
+}
+
+.btn-bd-light:active, .btn-bd-light:hover, .show > .btn-bd-light {
+    color: #336fb0;
+    background-color: #fff;
+    border-color: #336fb0;
+}
+
+.hljs {
+    padding: 0;
+    background: transparent;
+}

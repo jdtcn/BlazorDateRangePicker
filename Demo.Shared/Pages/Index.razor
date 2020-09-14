@@ -1,0 +1,63 @@
+﻿@page "/"
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Index.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h1 class="bd-title">Date Range Picker</h1>
+</div>
+
+<p class="bd-lead">
+    Features include limiting the selectable date range, localizable strings and date formats, a single date picker mode, an inline mode, customizable picker layout, and predefined date ranges.
+</p>
+
+<h2><span class="bd-content-title">Quick start</span></h2>
+
+<p>To add the picker to your project download library from NuGet in the NuGet Package Manager, or by executing the following command in the Package Manager Console:</p>
+
+<Example Text="Install-Package BlazorDateRangePicker" />
+
+<h3><span class="bd-content-title">CSS</span></h3>
+
+<p>
+    Then Copy-paste the stylesheet
+    <code class="language-plaintext highlighter-rouge">&lt;link&gt;</code>
+    into your <code class="language-plaintext highlighter-rouge">&lt;head&gt;</code>
+    to load CSS. For complex implementations, custom CSS may be necessary.
+</p>
+
+<Example Text="@Css" />
+
+<h3><span class="bd-content-title">JS</span></h3>
+
+<p>
+    This library require the use of JavaScript for popoup positioning and outside click handling. Place the following
+    <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code>
+    near the end of your _Host.cshtml (or index.html for Blazor WebAssembly) pages, right before the closing
+    <code class="language-plaintext highlighter-rouge">&lt;/body&gt;</code>.
+</p>
+
+<Example Text="@Js" />
+
+<h3>Using directive</h3>
+
+<p>Add this line to the page where you want to use the picker. If you're using the picker on many pages add this line to <code class="language-plaintext highlighter-rouge">_Imports.razor</code>.</p>
+
+<Example Text="@Import" />
+
+<h3>Use the component</h3>
+
+<p>Then attach a date range picker to whatever page you want.</p>
+
+<Example Text="<DateRangePicker />">
+    <DateRangePicker Drops="DropsType.Up" />
+</Example>
+
+<p>
+    You can customize Date Range Picker with options, and get notified when the user interacts with picker by subscribing to events.
+</p>
+
+@code {
+    private string Css = "<link rel=\"stylesheet\" href=\"_content/BlazorDateRangePicker/daterangepicker.min.css\" />";
+    private string Js = "<script src=\"_content/BlazorDateRangePicker/clickAndPositionHandler.js\"></script>";
+    private string Import = "@using BlazorDateRangePicker";
+}

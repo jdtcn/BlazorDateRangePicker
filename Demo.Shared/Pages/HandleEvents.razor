@@ -1,0 +1,48 @@
+﻿@page "/handleEvents"
+
+<h4>Subscribe to OnRangeSelect event</h4>
+
+<p>You can get notified when the user interacts with picker by subscribing to events.</p>
+
+<Example Text="@ExampleText">
+    <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" OnRangeSelect="OnRangeSelect" />
+
+    <div class="col-12">
+        Start: @StartDate, End: @EndDate
+    </div>
+    <div class="col-12">
+        @if (events.Count > 0)
+        {
+            <label>Events:</label>
+        }
+        @foreach (var e in events)
+        {
+            <p>@e</p>
+        }
+    </div>
+</Example>
+
+@code {
+    List<string> events { get; set; } = new List<string>();
+
+    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
+    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
+
+    public void OnRangeSelect(DateRange range)
+    {
+        events.Add($"Range {StartDate} - {EndDate} selected");
+    }
+
+    private string ExampleText =
+        "<DateRangePicker OnRangeSelect=\"OnRangeSelect\"\n" +
+        "    @bind-StartDate=\"StartDate\" @bind-EndDate=\"EndDate\">\n</DateRangePicker>\n\n" +
+        "@code {\n" +
+        "    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);\n" +
+        "    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);\n" +
+        "    List<string> events { get; set; } = new List<string>();\n\n" +
+        "    public void OnRangeSelect(DateRange range)\n" +
+        "    {\n" +
+        "        events.Add($\"Range {range.Start} - {range.End} selected\");\n" +
+        "    }\n" +
+        "}";
+}

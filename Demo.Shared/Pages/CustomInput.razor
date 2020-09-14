@@ -1,0 +1,26 @@
+﻿@page "/customInput"
+
+<h4>Custom input markup</h4>
+
+<Example Text="@ExampleSource">
+    <DateRangePicker>
+        <PickerTemplate>
+            <div id="@context.ParentId" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;">
+                <i class="oi oi-calendar"></i>&nbsp;
+                <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? "Choose dates..." : "")</span>
+                <i class="oi oi-chevron-bottom float-right"></i>
+            </div>
+        </PickerTemplate>
+    </DateRangePicker>
+</Example>
+
+@code {
+    private string ExampleSource =
+        "<DateRangePicker>\n" +
+        "    <PickerTemplate>\n" +
+        "        <div id=\"@context.ParentId\" @onclick=\"context.Toggle\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;\">\n" +
+        "            <i class=\"oi oi-calendar\"></i>&nbsp;\n" +
+        "            <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? \"Choose dates...\" : \"\")</span>\n" +
+        "            <i class=\"oi oi-chevron-bottom float-right\"></i>\n" +
+        "        </div>\n    </PickerTemplate>\n</DateRangePicker>";
+}

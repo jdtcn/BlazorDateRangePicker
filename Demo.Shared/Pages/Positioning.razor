@@ -1,0 +1,32 @@
+﻿@page "/positioning"
+
+<h4>Popup alignment</h4>
+
+<p>The picker can be aligned to the left, to the right (default), or centered under the HTML element it's attached to</p>
+
+<Example Text="@ExampleTextLeft">
+    <DateRangePicker Opens="SideType.Left" />
+</Example>
+
+<Example Text="@ExampleTextCenter">
+    <DateRangePicker Opens="SideType.Center" />
+</Example>
+
+<Example Text="@ExampleTextRight">
+    <DateRangePicker Opens="SideType.Right" />
+</Example>
+
+<h4>Popup direction</h4>
+
+<p>Whether the picker appears below (default) or above the HTML element it's attached to</p>
+
+<Example Text="@ExampleTextUp">
+    <DateRangePicker Drops="DropsType.Up" />
+</Example>
+
+@code {
+    private string ExampleTextLeft = "<DateRangePicker Opens=\"SideType.Left\" />";
+    private string ExampleTextCenter = "<DateRangePicker Opens=\"SideType.Center\" />";
+    private string ExampleTextRight = "<DateRangePicker Opens=\"SideType.Right\" />";
+    private string ExampleTextUp = "<DateRangePicker Drops=\"DropsType.Up\" />";
+}

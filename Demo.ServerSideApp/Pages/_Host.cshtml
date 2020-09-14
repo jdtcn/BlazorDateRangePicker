@@ -9,17 +9,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Demo.ServerSideApp</title>
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/site.css" />
-    <link rel="stylesheet" href="highlight/default.css" />
+    <link rel="stylesheet" href="_content/Demo.Shared/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="_content/Demo.Shared/css/bootstrap/docs.min.css" />
+    <link rel="stylesheet" href="_content/Demo.Shared/highlight/vs.css" />
     <link rel="stylesheet" href="_content/BlazorDateRangePicker/daterangepicker.min.css" />
+    <link rel="stylesheet" href="_content/Demo.Shared/css/site.css" />
 </head>
 <body>
     <app>@(await Html.RenderComponentAsync<App>(RenderMode.Server))</app>
 
     <script src="_framework/blazor.server.js"></script>
-    <script src="highlight/highlight.pack.js"></script>
-    <script src="highlight/highlightInterop.js"></script>
+    <script src="_content/Demo.Shared/highlight/highlight.pack.js"></script>
+    <script src="_content/Demo.Shared/highlight/cshtml-razor.js"></script>
+    <script src="_content/Demo.Shared/highlight/highlightInterop.js"></script>
     <script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
+    <script>
+        hljs.registerLanguage('cshtml-razor', window.hljsDefineCshtmlRazor);
+        hljs.initHighlightingOnLoad();
+    </script>
 </body>
 </html>

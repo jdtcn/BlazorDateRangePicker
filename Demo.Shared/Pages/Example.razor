@@ -1,0 +1,32 @@
+﻿@inject IClipboard Clipboard
+
+@if (ChildContent != null)
+{
+    <div class="bd-example">
+        @ChildContent
+    </div>
+}
+
+<div class="bd-clipboard">
+    <button type="button" class="btn-clipboard" title="Copy to clipboard" @onclick="CopyText">Copy</button>
+</div>
+
+@if (!string.IsNullOrEmpty(Text))
+{
+    <figure class="highlight">
+        <pre><code lang="html">@Text</code></pre>
+    </figure>
+}
+
+@code{
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+    private Task CopyText()
+    {
+        return Clipboard.SetTextAsync(Text);
+    }
+}

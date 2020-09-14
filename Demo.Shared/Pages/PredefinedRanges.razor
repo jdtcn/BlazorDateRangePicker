@@ -1,0 +1,35 @@
+﻿@page "/predefinedRanges"
+
+<h4>Predefined Date Ranges</h4>
+
+<Example Text="@ExampleText">
+    <DateRangePicker Ranges="DateRanges" />
+</Example>
+
+@code{
+    Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {
+            { "This month", new DateRange
+                {
+                    Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                    End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)
+                }
+            } ,
+            { "Previous month" , new DateRange
+                {
+                    Start = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, 1),
+                    End = new DateTime(DateTime.Now.AddMonths(-1).Year, DateTime.Now.AddMonths(-1).Month, 1).AddMonths(1).AddTicks(-1)
+                }
+            }
+     };
+
+    private string ExampleText = 
+        "<DateRangePicker Ranges=\"DateRanges\" />\n\n" +
+        "@code { \n    Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {\n" +
+        "        { \"This month\", new DateRange\n" +
+        "                {\n" +
+        "                    Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),\n" +
+        "                    End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)\n" +
+        "                }\n" +
+        "            }, ...\n" +
+        "        };\n    }\n}";
+}

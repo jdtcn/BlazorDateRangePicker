@@ -1,0 +1,11 @@
+﻿@page "/localization"
+
+<h4>Localization</h4>
+
+<Example Text="@ExampleText">
+    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))" />
+</Example>
+
+@code {
+    private string ExampleText = "<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"ru-RU\"))\" />";
+}
