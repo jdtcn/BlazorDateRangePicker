@@ -199,6 +199,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |AutoAdjustCalendars|bool|true|Whether the picker should pick the months based on selected range.|
 |PickerTemplate|RenderFragment<DateRangePicker>|null|Custom input field template|
 |ButtonsTemplate|RenderFragment<DateRangePicker>|null|Custom picker buttons template|
+|DayTemplate|RenderFragment<CalendarItem>|null|Custom day cell template|
 |Inline|bool|false|Inline mode if true.|
 
 ## Events
@@ -241,6 +242,16 @@ public class DateRange
 >The End property is the end of a selected day (dateTime.Date.AddDays(1).AddTicks(-1)).
 
 ## Changelog
+
+## 3.0.0-rc1
+
+1. Release for .NET 5.0
+
+## 2.10.0
+
+1. Add `DayTemplate` property to customize picker day cell
+
+2. Demo applications refactored and updated with new examples 
 
 ### 2.9.0
 
@@ -298,7 +309,7 @@ In .NET Core 3.0.0 projects you should stay on 1.\*.\* version
 
 The MIT License (MIT)
 
-Copyright (c) 2019 Sergey Zaikin
+Copyright (c) 2019-2020 Sergey Zaikin
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
