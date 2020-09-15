@@ -1,13 +1,40 @@
 ﻿@page "/customInput"
 
-<h4>Custom input markup</h4>
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/CustomInput.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Custom input markup</h3>
+</div>
 
 <Example Text="@ExampleSource">
     <DateRangePicker>
         <PickerTemplate>
-            <div id="@context.ParentId" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;">
+            <div id="@context.ParentId" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: .45rem 10px; border: 1px solid #ccc; border-radius: 5px;">
                 <i class="oi oi-calendar"></i>&nbsp;
-                <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? "Choose dates..." : "")</span>
+                <span>
+                    @if (context.TStartDate == null && context.TEndDate == null)
+                    {
+                        <span>Select dates...</span>
+                    }
+                    else if (context.TStartDate != null && context.TEndDate == null)
+                    {
+                        if (context.HoverDate > context.TStartDate)
+                        {
+                            @($"{context.TStartDate.Value.ToString(context.DateFormat)} - {context.HoverDate.Value.ToString(context.DateFormat)}")
+                            @($" - ({(context.HoverDate.Value.Subtract(context.TStartDate.Value).Days).ToString()} nights)")
+                        }
+                        else
+                        {
+                            <span>@context.TStartDate.Value.ToString("dd/MM/yyyy")</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>
+                            @context.FormattedRange @($" - ({(context.TEndDate.Value.Subtract(context.TStartDate.Value).Days).ToString()} nights)")
+                        </span>
+                    }
+                </span>
                 <i class="oi oi-chevron-bottom float-right"></i>
             </div>
         </PickerTemplate>
@@ -18,9 +45,34 @@
     private string ExampleSource =
         "<DateRangePicker>\n" +
         "    <PickerTemplate>\n" +
-        "        <div id=\"@context.ParentId\" @onclick=\"context.Toggle\" style=\"background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;\">\n" +
+        "        <div id=\"@context.ParentId\" @onclick=\"context.Toggle\" style=\"background: #fff; cursor: pointer; padding: .45rem 10px; border: 1px solid #ccc; border-radius: 5px;\">\n" +
         "            <i class=\"oi oi-calendar\"></i>&nbsp;\n" +
-        "            <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? \"Choose dates...\" : \"\")</span>\n" +
+        "            <span>\n" +
+        "                @if (context.TStartDate == null && context.TEndDate == null)\n" +
+        "                {\n" +
+        "                    <span>Select dates...</span>\n" +
+        "                }\n" +
+        "                else if (context.TStartDate != null && context.TEndDate == null)\n" +
+        "                {\n" +
+        "                    if (context.HoverDate > context.TStartDate)\n" +
+        "                    {\n" +
+        "                        @($\"{context.TStartDate.Value.ToString(context.DateFormat)} - {context.HoverDate.Value.ToString(context.DateFormat)}\")\n" +
+        "                        @($\" - ({(context.HoverDate.Value.Subtract(context.TStartDate.Value).Days).ToString()} nights)\")\n" +
+        "                    }\n" +
+        "                    else\n" +
+        "                    {\n" +
+        "                        <span>@context.TStartDate.Value.ToString(\"dd/MM/yyyy\")</span>\n" +
+        "                    }\n" +
+        "                }\n" +
+        "                else\n" +
+        "                {\n" +
+        "                    <span>\n" +
+        "                        @context.FormattedRange @($\" - ({(context.TEndDate.Value.Subtract(context.TStartDate.Value).Days).ToString()} nights)\")\n" +
+        "                    </span>\n" +
+        "                }\n" +
+        "            </span>\n" +
         "            <i class=\"oi oi-chevron-bottom float-right\"></i>\n" +
-        "        </div>\n    </PickerTemplate>\n</DateRangePicker>";
+        "        </div>\n" +
+        "    </PickerTemplate>\n" +
+        "</DateRangePicker>";
 }

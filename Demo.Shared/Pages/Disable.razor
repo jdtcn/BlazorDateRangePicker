@@ -1,0 +1,80 @@
+﻿@page "/disable"
+
+@using System.Threading
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Disable.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Disable some days</h3>
+</div>
+
+<p>
+    There is a function 
+    <code class="language-plaintext highlighter-rouge">DaysEnabledFunction</code>
+    (and <code class="language-plaintext highlighter-rouge">DaysEnabledFunctionAsync</code>) 
+    that is passed each date in the two calendars before they are displayed, 
+    and it may return true or false to indicate whether that date should be available for selection or not.
+</p>
+
+<p>
+    <code class="language-plaintext highlighter-rouge">OnMonthChanged</code>
+    event is used to prepare data for 
+    <code class="language-plaintext highlighter-rouge">DaysEnabledFunction</code>
+</p>
+
+<Example Text="@ExampleText">
+    <DateRangePicker @ref="Picker"
+                     DaysEnabledFunction="DaysEnabledFunction"
+                     OnMonthChangedAsync="OnMonthChangedAsync" />
+</Example>
+
+@code {
+    DateRangePicker Picker;
+
+    List<DateTimeOffset> DisabledDays { get; set; } = new List<DateTimeOffset>();
+
+    private bool DaysEnabledFunction(DateTimeOffset day)
+    {
+        return !DisabledDays.Any(d => d.Day == day.Day);
+    }
+
+    private async Task OnMonthChangedAsync(CancellationToken ct)
+    {
+        var leftMonth = Picker.LeftCalendar.Month;
+        var rightMonth = Picker.RightCalendar.Month;
+
+        // Simulate hard work (db request, etc)
+        await Task.Delay(500, ct);
+
+        // For example, disable the dates that matching with selected month numbers
+        DisabledDays = new List<DateTimeOffset> {
+            new DateTime(leftMonth.Year, leftMonth.Month, leftMonth.Month),
+            new DateTime(rightMonth.Year, rightMonth.Month, rightMonth.Month)
+        };
+    }
+
+    private string ExampleText = 
+        "<DateRangePicker @ref=\"Picker\"\n" +
+        "                 DaysEnabledFunction=\"DaysEnabledFunction\"\n" +
+        "                 OnMonthChangedAsync=\"OnMonthChangedAsync\" />\n\n" +
+        "@code {\n" +
+        "    DateRangePicker Picker;\n\n" +
+        "    List<DateTimeOffset> DisabledDays { get; set; } = new List<DateTimeOffset>();\n\n" +
+        "    private bool DaysEnabledFunction(DateTimeOffset day)\n" +
+        "    {\n" +
+        "        return !DisabledDays.Any(d => d.Day == day.Day);\n" +
+        "    }\n\n" +
+        "    private async Task OnMonthChangedAsync(CancellationToken ct)\n" +
+        "    {\n" +
+        "        var leftMonth = Picker.LeftCalendar.Month;\n" +
+        "        var rightMonth = Picker.RightCalendar.Month;\n\n" +
+        "        // Simulate hard work (db request, etc)\n" +
+        "        await Task.Delay(500, ct);\n\n" +
+        "        // For example, disable the dates that matching with selected month numbers\n" +
+        "        DisabledDays = new List<DateTimeOffset> {\n" +
+        "            new DateTime(leftMonth.Year, leftMonth.Month, leftMonth.Month),\n" +
+        "            new DateTime(rightMonth.Year, rightMonth.Month, rightMonth.Month)\n" +
+        "        };\n" +
+        "    }\n" +
+        "}";
+}

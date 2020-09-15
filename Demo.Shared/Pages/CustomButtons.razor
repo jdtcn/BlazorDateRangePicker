@@ -1,0 +1,89 @@
+﻿@page "/customButtons"
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/CustomButtons.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Custom buttons template</h3>
+</div>
+
+<p>
+    Override
+    <code class="language-plaintext highlighter-rouge">ButtonsTemplate</code>
+    template if you want to add additional buttons.
+</p>
+
+<Example Text="@ExampleText">
+    <DateRangePicker @ref="Picker" @bind-StartDate="StartDate" @bind-EndDate="EndDate">
+        <ButtonsTemplate>
+            <button class="btn btn-sm btn-outline-success" type="button">
+                Some button
+            </button>
+            <button class="cancelBtn btn btn-sm btn-default"
+                    @onclick="@context.ClickCancel" type="button">
+                Cancel
+            </button>
+            <button class="cancelBtn btn btn-sm btn-default"
+                    @onclick="@(e => ResetClick(e, context))" type="button">
+                Reset
+            </button>
+            <button class="applyBtn btn btn-sm btn-primary" @onclick="@context.ClickApply"
+                    disabled="@(context.TStartDate == null || context.TEndDate == null)"
+                    type="button">
+                Apply
+            </button>
+        </ButtonsTemplate>
+    </DateRangePicker>
+</Example>
+
+@code {
+    DateRangePicker Picker;
+
+    DateTimeOffset? StartDate { get; set; }
+    DateTimeOffset? EndDate { get; set; }
+
+    async Task ResetClick(MouseEventArgs e, DateRangePicker picker)
+    {
+        StartDate = null;
+        EndDate = null;
+        // Close the picker
+        await Picker.Close();
+        // Fire OnRangeSelectEvent
+        await Picker.OnRangeSelect.InvokeAsync(new DateRange());
+    }
+
+    private string ExampleText =
+        "<DateRangePicker @ref=\"Picker\" @bind-StartDate=\"StartDate\" @bind-EndDate=\"EndDate\">\n" +
+        "    <ButtonsTemplate>\n" +
+        "        <button class=\"btn btn-sm btn-outline-success\" type=\"button\">\n" +
+        "            Some button\n" +
+        "        </button>\n" +
+        "        <button class=\"cancelBtn btn btn-sm btn-default\"\n" +
+        "                @onclick=\"@context.ClickCancel\" type=\"button\">\n" +
+        "            Cancel\n" +
+        "        </button>\n" +
+        "        <button class=\"cancelBtn btn btn-sm btn-default\"\n" +
+        "                @onclick=\"@(e => ResetClick(e, context))\" type=\"button\">\n" +
+        "            Reset\n" +
+        "        </button>\n" +
+        "        <button class=\"applyBtn btn btn-sm btn-primary\" @onclick=\"@context.ClickApply\"\n" +
+        "                disabled=\"@(context.TStartDate == null || context.TEndDate == null)\"\n" +
+        "                type=\"button\">\n" +
+        "            Apply\n" +
+        "        </button>\n" +
+        "    </ButtonsTemplate>\n" +
+        "</DateRangePicker>\n\n" +
+        "@code {\n" +
+        "    DateRangePicker Picker;\n\n" +
+        "    DateTimeOffset? StartDate { get; set; }\n" +
+        "    DateTimeOffset? EndDate { get; set; }\n\n" +
+        "    async Task ResetClick(MouseEventArgs e, DateRangePicker picker)\n" +
+        "    {\n" +
+        "        StartDate = null;\n" +
+        "        EndDate = null;\n" +
+        "        // Close the picker\n" +
+        "        await Picker.Close();\n" +
+        "        // Fire OnRangeSelectEvent\n" +
+        "        await Picker.OnRangeSelect.InvokeAsync(new DateRange());\n" +
+        "    }\n" +
+        "}";
+}

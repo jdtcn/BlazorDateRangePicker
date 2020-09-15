@@ -4,13 +4,13 @@
     * license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
 *@
 
-@if (PickerTemplate == null)
+@if (PickerTemplate == null && Inline != true)
 {
     <input id="@ParentId" type="text" @attributes="CombinedAttributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
 }
-else
+else if (PickerTemplate != null)
 {
-    @PickerTemplate(((object)this) as BlazorDateRangePicker.DateRangePicker);
+    @PickerTemplate(this);
 }
 <div style="visibility:@(Inline == true || Visible ? "visible" : "hidden");">
     <div id="@Id" class="daterangepicker @RootStyles">

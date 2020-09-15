@@ -1,0 +1,56 @@
+﻿@page "/limits"
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Limits.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Limiting the selectable date range</h3>
+</div>
+
+<p>Use these properties to limit selectable date range</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">MinDate</code></td>
+            <td>DateTimeOffset?</td>
+            <td>The earliest date a user may select.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">MaxDate</code></td>
+            <td>DateTimeOffset?</td>
+            <td>The latest date a user may select.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">MinSpan</code></td>
+            <td>TimeSpan?</td>
+            <td>The minimum span between the selected start and end dates.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">MaxSpan</code></td>
+            <td>TimeSpan?</td>
+            <td>The maximum span between the selected start and end dates.</td>
+        </tr>
+    </tbody>
+</table>
+
+<Example Text="@ExampleText">
+    <DateRangePicker MinDate="DateTime.Now.AddYears(-1)"
+                     MaxDate="DateTime.Now.AddYears(1)"
+                     MinSpan="TimeSpan.FromDays(5)"
+                     MaxSpan="TimeSpan.FromDays(15)" />
+</Example>
+
+@code {
+    private string ExampleText = 
+        "<DateRangePicker MinDate=\"DateTime.Now.AddYears(-1)\"\n" +
+        "                 MaxDate=\"DateTime.Now.AddYears(1)\"\n" +
+        "                 MinSpan=\"TimeSpan.FromDays(5)\"\n" +
+        "                 MaxSpan=\"TimeSpan.FromDays(15)\" />";
+}
