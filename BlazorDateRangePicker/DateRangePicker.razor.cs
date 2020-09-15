@@ -655,7 +655,7 @@ namespace BlazorDateRangePicker
             HoverDate = null;
 
             await Close();
-            await OnCancel.InvokeAsync(true);
+            await OnCancel.InvokeAsync(e != null);
         }
 
         /// <summary>
