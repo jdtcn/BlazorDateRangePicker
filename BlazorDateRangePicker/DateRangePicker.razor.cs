@@ -346,6 +346,7 @@ namespace BlazorDateRangePicker
         public DateTimeOffset? HoverDate { get; set; }
 
         private string EditText { get; set; }
+        private bool ShouldUpdateDates { get; set; } = true;
 
         protected override void OnInitialized()
         {
@@ -388,10 +389,12 @@ namespace BlazorDateRangePicker
 
         protected override async Task OnParametersSetAsync()
         {
-            TStartDate = StartDate;
-            TEndDate = EndDate;
-            if (SingleDatePicker == true) TEndDate = StartDate;
-
+            if (ShouldUpdateDates)
+            {
+                TStartDate = StartDate;
+                TEndDate = EndDate;
+                if (SingleDatePicker == true) TEndDate = StartDate;
+            }
             await LeftCalendar.CalculateCalendar();
             await RightCalendar.CalculateCalendar();
         }
@@ -545,32 +548,34 @@ namespace BlazorDateRangePicker
 
         private async Task LeftMonthChanged(DateTimeOffset date)
         {
-            await MonthChanged(date, SideType.Left);
+            var leftMonth = date;
+            var rightMonth = LinkedCalendars == true 
+                ? date.AddMonths(1) 
+                : (DateTimeOffset?)null;
+            await MonthChanged(leftMonth, rightMonth);
         }
 
         private async Task RightMonthChanged(DateTimeOffset date)
         {
-            await MonthChanged(date, SideType.Right);
+            var rightMonth = date;
+            var leftMonth = LinkedCalendars == true
+                ? date.AddMonths(-1)
+                : (DateTimeOffset?)null;
+
+            await MonthChanged(leftMonth, rightMonth);
         }
 
         private CancellationTokenSource RunningTaskToken;
-        private async Task MonthChanged(DateTimeOffset date, SideType? side = null)
+        private async Task MonthChanged(DateTimeOffset? leftDate, DateTimeOffset? rightDate)
         {
-            if (side == null || side == SideType.Left)
+            ShouldUpdateDates = false;
+            if (leftDate.HasValue)
             {
-                await LeftCalendar.ChangeMonth(date);
-                if (LinkedCalendars == true || side == null)
-                {
-                    await RightCalendar.ChangeMonth(date.AddMonths(1));
-                }
+                await LeftCalendar.ChangeMonth(leftDate.Value);
             }
-            else
+            if (rightDate.HasValue)
             {
-                await RightCalendar.ChangeMonth(date);
-                if (LinkedCalendars == true)
-                {
-                    await LeftCalendar.ChangeMonth(date.AddMonths(-1));
-                }
+                await RightCalendar.ChangeMonth(rightDate.Value);
             }
 
             Loading = true;
@@ -591,6 +596,7 @@ namespace BlazorDateRangePicker
                 Loading = false;
                 StateHasChanged();
             }
+            ShouldUpdateDates = true;
         }
 
         private async Task ClickDate(DateTimeOffset date)
@@ -690,16 +696,25 @@ namespace BlazorDateRangePicker
 
         public async Task AdjustCalendars()
         {
-            var newMonth = TStartDate ?? DateTime.Today;
+            var newLeftMonth = TStartDate ?? DateTime.Today;
+            var newRightMonth = LinkedCalendars == true 
+                ? newLeftMonth.AddMonths(1) 
+                : (TEndDate ?? newLeftMonth.AddMonths(1));
+
             var needAdjust =
-                LeftCalendar?.Month.Month != newMonth.Month
-                || LeftCalendar?.Month.Year != newMonth.Year
-                || RightCalendar?.Month.Month != newMonth.Month + 1
-                || RightCalendar?.Month.Year != newMonth.Year;
+                LeftCalendar?.Month.Month != newLeftMonth.Month
+                || LeftCalendar?.Month.Year != newLeftMonth.Year
+                || RightCalendar?.Month.Month != newRightMonth.Month
+                || RightCalendar?.Month.Year != newRightMonth.Year;
 
             if (needAdjust)
             {
-                await MonthChanged(newMonth, null);
+                if (newLeftMonth.Month == newRightMonth.Month 
+                    && newLeftMonth.Year == newRightMonth.Year)
+                {
+                    newRightMonth = newRightMonth.AddMonths(1);
+                }
+                await MonthChanged(newLeftMonth, newRightMonth);
             }
         }
 
