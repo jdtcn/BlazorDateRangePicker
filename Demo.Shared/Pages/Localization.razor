@@ -2,10 +2,46 @@
 
 <h4>Localization</h4>
 
+<p>
+    Use
+    <code class="language-plaintext highlighter-rouge">ApplyLabel</code>,
+    <code class="language-plaintext highlighter-rouge">CancelLabel</code> and
+    <code class="language-plaintext highlighter-rouge">CustomRangeLabel</code>
+    to change picker labels. Alternatively one can use custom
+    <code class="language-plaintext highlighter-rouge">ButtonsTemplate</code>.
+</p>
+
+<p>
+    Use
+    <code class="language-plaintext highlighter-rouge">Culture</code>
+    property to set picker culture other than CurrentUICulture.
+</p>
+
 <Example Text="@ExampleText">
-    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))" />
+    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))"
+                     ApplyLabel="My Apply Label"
+                     CancelLabel="My Cancel Label"
+                     CustomRangeLabel="My Custom range" />
 </Example>
 
+<p>It's convenient to set these properties application-wide in one place:</p>
+
+<Example Text="@ExampleConfig" />
+
 @code {
-    private string ExampleText = "<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"ru-RU\"))\" />";
+    private string ExampleText =
+        "<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"ru-RU\"))\">\n" +
+        "                 ApplyLabel=\"My Apply Label\"\n" +
+        "                 CancelLabel=\"My Cancel Label\"\n" +
+        "                 CustomRangeLabel=\"My Custom range\" />";
+
+    private string ExampleConfig =
+        "#Startup.cs\n\n" +
+        "using BlazorDateRangePicker;\n\n" +
+        "//ConfigureServices\n" +
+        "services.AddDateRangePicker(config =>\n" +
+        "{\n" +
+        "    config.ApplyLabel = \"My Apply Label\";\n" +
+        "    ...\n" +
+        "});";
 }

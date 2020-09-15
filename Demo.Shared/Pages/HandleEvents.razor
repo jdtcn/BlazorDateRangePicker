@@ -1,48 +1,166 @@
 ﻿@page "/handleEvents"
 
-<h4>Subscribe to OnRangeSelect event</h4>
+<style>
+    .bd-example > .alert + .alert {
+        margin-top: 0.3rem;
+    }
+
+    .alert {
+        padding: 0.15rem 0.65rem;
+        margin-bottom: 0.2rem;
+    }
+</style>
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/HandleEvents.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Subscribe to events</h3>
+</div>
 
 <p>You can get notified when the user interacts with picker by subscribing to events.</p>
 
-<Example Text="@ExampleText">
-    <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" OnRangeSelect="OnRangeSelect" />
+<table>
+    <thead>
+        <tr>
+            <th>Event</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnRangeSelect</code></td>
+            <td>DateRange</td>
+            <td>Triggered when the apply button is clicked, or when a predefined range is clicked.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnOpened</code></td>
+            <td>void</td>
+            <td>An event that is invoked when the DatePicker is opened.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnClosed</code></td>
+            <td>void</td>
+            <td>An event that is invoked when the DatePicker is closed.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnCancel</code></td>
+            <td>bool</td>
+            <td>An event that is invoked when user cancels the selection (true if by pressing "Cancel" button, false if by backdrop click).</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnMonthChanged</code></td>
+            <td>void</td>
+            <td>An event that is invoked when left or right calendar's month changed.</td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnMonthChangedAsync</code></td>
+            <td>Task</td>
+            <td>
+                An event that is invoked when left or right calendar's month changed and supports CancellationToken.
+                Use this event handler to prepare the data for CustomDateFunction because it's supports loading indication.
+            </td>
+        </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnSelectionStart</code></td>
+            <td>DateTimeOffset</td>
+            <td>An event that is invoked when StartDate is selected.</td>
+        </tr>
+    </tbody>
+</table>
 
-    <div class="col-12">
-        Start: @StartDate, End: @EndDate
-    </div>
-    <div class="col-12">
-        @if (events.Count > 0)
-        {
-            <label>Events:</label>
-        }
-        @foreach (var e in events)
-        {
-            <p>@e</p>
-        }
-    </div>
+<Example Text="@ExampleText">
+    <DateRangePicker @ref="Picker"
+                     OnRangeSelect="OnRangeSelect"
+                     OnMonthChanged="OnMonthChanged"
+                     OnSelectionStart="OnSelectionStart"
+                     OnOpened="OnOpened"
+                     OnClosed="OnClosed"
+                     OnCancel="OnCancel" />
+
+    @if (events.Count > 0)
+    {
+        <h6 class="pt-2">Events:</h6>
+    }
+    @foreach (var e in events)
+    {
+        <div class="alert alert-secondary" role="alert"><small>@e.Item2</small><small class="float-right">@e.Item1</small></div>
+    }
 </Example>
 
 @code {
-    List<string> events { get; set; } = new List<string>();
+    DateRangePicker Picker;
 
-    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
-    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
+    List<(DateTime, string)> events { get; set; } = new List<(DateTime, string)>();
+
+    private void OnOpened()
+    {
+        events.Add((DateTime.Now, $"OnOpened"));
+    }
+
+    private void OnClosed()
+    {
+        events.Add((DateTime.Now, $"OnClosed"));
+    }
+
+    private void OnCancel(bool byButton)
+    {
+        events.Add((DateTime.Now, $"OnCancel: {(byButton ? "by 'cancel' button" : "by backdrop click")}"));
+    }
+
+    private void OnMonthChanged()
+    {
+        var leftMonth = Picker.LeftCalendar.Month;
+        var rightMonth = Picker.RightCalendar.Month;
+        events.Add((DateTime.Now, $"OnMonthChanged: LeftMonth = {leftMonth:MM.yyyy}, RightMonth = {rightMonth:MM.yyyy}"));
+    }
+
+    private void OnSelectionStart(DateTimeOffset date)
+    {
+        events.Add((DateTime.Now, $"OnSelectionStart: {date}"));
+    }
 
     public void OnRangeSelect(DateRange range)
     {
-        events.Add($"Range {StartDate} - {EndDate} selected");
+        events.Add((DateTime.Now, $"OnRangeSelect: {range.Start} - {range.End}"));
     }
 
     private string ExampleText =
-        "<DateRangePicker OnRangeSelect=\"OnRangeSelect\"\n" +
-        "    @bind-StartDate=\"StartDate\" @bind-EndDate=\"EndDate\">\n</DateRangePicker>\n\n" +
+        "<DateRangePicker @ref=\"Picker\"\n" +
+        "             OnRangeSelect=\"OnRangeSelect\"\n" +
+        "             OnMonthChanged=\"OnMonthChanged\"\n" +
+        "             OnSelectionStart=\"OnSelectionStart\"\n" +
+        "             OnOpened=\"OnOpened\"\n" +
+        "             OnClosed=\"OnClosed\"\n" +
+        "             OnCancel=\"OnCancel\" />\n\n" +
         "@code {\n" +
-        "    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);\n" +
-        "    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);\n" +
-        "    List<string> events { get; set; } = new List<string>();\n\n" +
+        "    DateRangePicker Picker;\n\n" +
+        "    List<(DateTime, string)> events { get; set; } = new List<(DateTime, string)>();\n\n" +
+        "    private void OnOpened()\n" +
+        "    {\n" +
+        "        events.Add((DateTime.Now, $\"OnOpened\"));\n" +
+        "    }\n" +
+        "    private void OnClosed()\n" +
+        "    {\n" +
+        "        events.Add((DateTime.Now, $\"OnClosed\"));\n" +
+        "    }\n\n" +
+        "    private void OnCancel(bool byButton)\n" +
+        "    {\n" +
+        "        events.Add((DateTime.Now, $\"OnCancel: {(byButton ? \"by 'cancel' button\" : \"by backdrop click\")}\"));\n" +
+        "    }\n\n" +
+        "    private void OnMonthChanged()\n" +
+        "    {\n" +
+        "        var leftMonth = Picker.LeftCalendar.Month;\n" +
+        "        var rightMonth = Picker.RightCalendar.Month;\n" +
+        "        events.Add((DateTime.Now, $\"OnMonthChanged: LeftMonth = {leftMonth:MM.yyyy}, RightMonth = {rightMonth:MM.yyyy}\"));\n" +
+        "    }\n\n" +
+        "    private void OnSelectionStart(DateTimeOffset date)\n" +
+        "    {\n" +
+        "        events.Add((DateTime.Now, $\"OnSelectionStart: {date}\"));\n" +
+        "    }\n\n" +
         "    public void OnRangeSelect(DateRange range)\n" +
         "    {\n" +
-        "        events.Add($\"Range {range.Start} - {range.End} selected\");\n" +
+        "        events.Add((DateTime.Now, $\"OnRangeSelect: {range.Start} - {range.End}\"));\n" +
         "    }\n" +
         "}";
 }
