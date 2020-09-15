@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo.ServerSideApp</title>
+    <title>BlazorDateRangePicker</title>
     <base href="~/" />
     <link rel="stylesheet" href="_content/Demo.Shared/css/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="_content/Demo.Shared/css/bootstrap/docs.min.css" />
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="_content/Demo.Shared/css/site.css" />
 </head>
 <body>
-    <app>@(await Html.RenderComponentAsync<App>(RenderMode.Server))</app>
+    <component type="typeof(App)" render-mode="Server" />
 
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/Demo.Shared/highlight/highlight.pack.js"></script>
