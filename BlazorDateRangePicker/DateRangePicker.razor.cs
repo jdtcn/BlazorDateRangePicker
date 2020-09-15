@@ -690,7 +690,17 @@ namespace BlazorDateRangePicker
 
         public async Task AdjustCalendars()
         {
-            await MonthChanged(TStartDate ?? DateTime.Now, null);
+            var newMonth = TStartDate ?? DateTime.Today;
+            var needAdjust =
+                LeftCalendar?.Month.Month != newMonth.Month
+                || LeftCalendar?.Month.Year != newMonth.Year
+                || RightCalendar?.Month.Month != newMonth.Month + 1
+                || RightCalendar?.Month.Year != newMonth.Year;
+
+            if (needAdjust)
+            {
+                await MonthChanged(newMonth, null);
+            }
         }
 
         /// <summary>
