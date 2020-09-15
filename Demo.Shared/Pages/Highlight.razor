@@ -1,0 +1,89 @@
+﻿@page "/highlight"
+
+@using System.Threading
+
+<style>
+    .dthighlight {
+        background-color: aquamarine !important;
+    }
+</style>
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Highlight.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Highlight some days</h3>
+</div>
+
+<p>
+    You can add any css classes to dates with
+    <code class="language-plaintext highlighter-rouge">CustomDateFunction</code>
+    function, it uses same approach as <a href="disable">disable function</a>.
+</p>
+
+<p>
+    Define custom css classes somewhere in your stylesheets.
+</p>
+
+<Example Text="@ExampleText">
+    <DateRangePicker @ref="Picker"
+                     CustomDateFunction="CustomDateFunction"
+                     OnMonthChangedAsync="OnMonthChangedAsync" />
+</Example>
+
+@code {
+    DateRangePicker Picker;
+
+    List<DateTimeOffset> HighlightDays { get; set; } = new List<DateTimeOffset>();
+
+    private object CustomDateFunction(DateTimeOffset day)
+    {
+        if (HighlightDays.Any(d => d.Day == day.Day)) return "dthighlight";
+        return string.Empty;
+    }
+
+    private async Task OnMonthChangedAsync(CancellationToken ct)
+    {
+        var leftMonth = Picker.LeftCalendar.Month;
+        var rightMonth = Picker.RightCalendar.Month;
+
+        // Simulate hard work (db request, etc)
+        await Task.Delay(500, ct);
+
+        // For example, highlight the dates that matching with selected month numbers
+        HighlightDays = new List<DateTimeOffset> {
+            new DateTime(leftMonth.Year, leftMonth.Month, leftMonth.Month),
+            new DateTime(rightMonth.Year, rightMonth.Month, rightMonth.Month)
+        };
+    }
+
+    private string ExampleText =
+        "<style>\n" +
+        "   .dthighlight {\n" +
+        "       background-color: aquamarine !important;\n" +
+        "   }\n" +
+        "</style>\n\n" +
+        "<DateRangePicker @ref=\"Picker\"\n" +
+        "                 CustomDateFunction=\"CustomDateFunction\"\n" +
+        "                 OnMonthChangedAsync=\"OnMonthChangedAsync\" />\n\n" +
+        "@code {\n" +
+        "    DateRangePicker Picker;\n\n" +
+        "    List<DateTimeOffset> HighlightDays { get; set; } = new List<DateTimeOffset>();\n\n" +
+        "    private object CustomDateFunction(DateTimeOffset day)\n" +
+        "    {\n" +
+        "        if (HighlightDays.Any(d => d.Day == day.Day - 1)) return \"dthighlight\";\n" +
+        "        return string.Empty;\n" +
+        "    }\n\n" +
+        "    private async Task OnMonthChangedAsync(CancellationToken ct)\n" +
+        "    {\n" +
+        "        var leftMonth = Picker.LeftCalendar.Month;\n" +
+        "        var rightMonth = Picker.RightCalendar.Month;\n\n" +
+        "        // Simulate hard work (db request, etc)\n" +
+        "        await Task.Delay(500, ct);\n\n" +
+        "        // For example, highlight the dates that matching with selected month numbers\n" +
+        "        HighlightDays = new List<DateTimeOffset> {\n" +
+        "            new DateTime(leftMonth.Year, leftMonth.Month, leftMonth.Month),\n" +
+        "            new DateTime(rightMonth.Year, rightMonth.Month, rightMonth.Month)\n" +
+        "        };\n" +
+        "    }\n" +
+        "}";
+}
