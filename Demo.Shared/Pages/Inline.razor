@@ -3,16 +3,9 @@
 <h4>Inline mode</h4>
 
 <Example Text="@ExampleText">
-    <DateRangePicker Inline="true" AutoApply="true" ShowOnlyOneCalendar="true">
-        <PickerTemplate />
-    </DateRangePicker>
+    <DateRangePicker Inline="true" AutoApply="true" ShowOnlyOneCalendar="true" />
 </Example>
 
 @code {
-    private string ExampleText =
-        "<DateRangePicker Inline=\"true\" AutoApply=\"true\" ShowOnlyOneCalendar=\"true\">\n" +
-        "    <PickerTemplate>\n" +
-        "        @* Empty input template *@\n" +
-        "    </PickerTemplate>\n" +
-        "</DateRangePicker>";
+    private string ExampleText = "<DateRangePicker Inline=\"true\" AutoApply=\"true\" ShowOnlyOneCalendar=\"true\" />";
 }
