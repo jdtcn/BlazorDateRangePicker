@@ -247,7 +247,11 @@ public class DateRange
 
 1. Release for .NET 5.0
 
-## 2.10.0
+## 2.11.0
+
+1. Fix month/year select box issue (#34, #35)
+
+### 2.10.0
 
 1. Add `DayTemplate` property to customize picker day cell
 
