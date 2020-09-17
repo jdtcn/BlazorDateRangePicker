@@ -15,25 +15,23 @@
             <th colspan="5" class="month">
                 @if (Picker.ShowDropdowns == true)
                 {
-                    var currentMonth = CalendarData.Month.Month;
-                    var currentYear = CalendarData.Month.Year;
-                    var inMinYear = currentYear == MinYear;
-                    var inMaxYear = currentYear == MaxYear;
-                    <select class="monthselect" @onchange="MonthSelected">
+                    var inMinYear = CurrentYear == MinYear;
+                    var inMaxYear = CurrentYear == MaxYear;
+                    <select class="monthselect" @bind="@CurrentMonth">
                         @for (var m = 1; m < 13; m++)
                         {
                             var enabled = (!inMinYear || (m >= Picker.MinDate?.Month)) && (!inMaxYear || (m <= Picker.MaxDate?.Month));
-                            var selected = m == currentMonth;
+                            var selected = m == CurrentMonth;
                             <option @key="m" selected="@selected" disabled="@(!enabled)" value="@m">
                                 @Picker.Culture.DateTimeFormat.GetMonthName(m)
                             </option>
                         }
                     </select>
 
-                    <select class="yearselect" @onchange="YearSelected">
+                    <select class="yearselect" @bind="CurrentYear">
                         @for (var y = MinYear; y <= MaxYear; y++)
                         {
-                            <option @key="y" value="@y" selected="@(y == currentYear)">@y</option>
+                            <option @key="y" value="@y" selected="@(y == CurrentYear)">@y</option>
                         }
                     </select>
                 }

@@ -27,6 +27,18 @@ namespace BlazorDateRangePicker
         private int MinYear => Picker.MinDate?.Year ?? 1950;
         private int MaxYear => Picker.MaxDate?.Year ?? DateTime.Now.AddYears(50).Year;
 
+        private int CurrentMonth
+        {
+            get => CalendarData.Month.Month;
+            set => MonthSelected(value);
+        }
+
+        private int CurrentYear
+        {
+            get => CalendarData.Month.Year;
+            set => YearSelected(value);
+        }
+
         private bool PrevBtnVisible =>
             (!Picker.MinDate.HasValue || Picker.MinDate < CalendarData.FirstDay)
             && (Picker.LinkedCalendars != true || Side == SideType.Left);
@@ -67,16 +79,14 @@ namespace BlazorDateRangePicker
             return OnMonthChanged.InvokeAsync(CalendarData.Month.AddMonths(1));
         }
 
-        private Task MonthSelected(ChangeEventArgs e)
+        private Task MonthSelected(int month)
         {
-            var month = int.Parse(e.Value.ToString());
             var d = CalendarData.Month;
             return OnMonthChanged.InvokeAsync(new DateTime(d.Year, month, d.Day, d.Hour, d.Minute, d.Second));
         }
 
-        private Task YearSelected(ChangeEventArgs e)
+        private Task YearSelected(int year)
         {
-            var year = int.Parse(e.Value.ToString());
             var d = CalendarData.Month;
             var newMonth = new DateTimeOffset(year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Offset);
             if (newMonth > Picker.MaxDate) newMonth = Picker.MaxDate.Value;
