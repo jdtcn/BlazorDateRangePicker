@@ -337,6 +337,10 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<DateTimeOffset> OnSelectionStart { get; set; }
 
+        /// <summary>An event that is invoked when EndDate is selected but before apply button is clicked</summary>
+        [Parameter]
+        public EventCallback<DateTimeOffset> OnSelectionEnd { get; set; }
+
         public CalendarType LeftCalendar { get; set; }
         public CalendarType RightCalendar { get; set; }
 
@@ -346,7 +350,6 @@ namespace BlazorDateRangePicker
         public DateTimeOffset? HoverDate { get; set; }
 
         private string EditText { get; set; }
-        private bool ShouldUpdateDates { get; set; } = true;
 
         protected override void OnInitialized()
         {
@@ -374,8 +377,8 @@ namespace BlazorDateRangePicker
                 FirstDayOfWeek = Culture.DateTimeFormat.FirstDayOfWeek;
             }
 
-            LeftCalendar = new CalendarType(this);
-            RightCalendar = new CalendarType(this);
+            LeftCalendar = new CalendarType(this, SideType.Left);
+            RightCalendar = new CalendarType(this, SideType.Right);
 
             TStartDate = StartDate?.Date;
             TEndDate = EndDate?.Date.AddDays(1).AddTicks(-1);
@@ -387,14 +390,28 @@ namespace BlazorDateRangePicker
             return Task.CompletedTask;
         }
 
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var paramsDict = parameters.ToDictionary();
+
+            if (paramsDict.ContainsKey(nameof(EndDate))
+                && (DateTimeOffset?)paramsDict[nameof(EndDate)] != EndDate)
+            {
+                TEndDate = (DateTimeOffset?)paramsDict[nameof(EndDate)];
+            }
+
+            if (paramsDict.ContainsKey(nameof(StartDate))
+                && (DateTimeOffset?)paramsDict[nameof(StartDate)] != StartDate)
+            {
+                TStartDate = (DateTimeOffset?)paramsDict[nameof(StartDate)];
+                if (SingleDatePicker == true) TEndDate = TStartDate;
+            }
+
+            await base.SetParametersAsync(parameters);
+        }
+
         protected override async Task OnParametersSetAsync()
         {
-            if (ShouldUpdateDates)
-            {
-                TStartDate = StartDate;
-                TEndDate = EndDate;
-                if (SingleDatePicker == true) TEndDate = StartDate;
-            }
             await LeftCalendar.CalculateCalendar();
             await RightCalendar.CalculateCalendar();
         }
@@ -568,7 +585,8 @@ namespace BlazorDateRangePicker
         private CancellationTokenSource RunningTaskToken;
         private async Task MonthChanged(DateTimeOffset? leftDate, DateTimeOffset? rightDate)
         {
-            ShouldUpdateDates = false;
+            Loading = true;
+
             if (leftDate.HasValue)
             {
                 await LeftCalendar.ChangeMonth(leftDate.Value);
@@ -578,7 +596,6 @@ namespace BlazorDateRangePicker
                 await RightCalendar.ChangeMonth(rightDate.Value);
             }
 
-            Loading = true;
             if (RunningTaskToken != null)
             {
                 RunningTaskToken.Cancel();
@@ -596,7 +613,6 @@ namespace BlazorDateRangePicker
                 Loading = false;
                 StateHasChanged();
             }
-            ShouldUpdateDates = true;
         }
 
         private async Task ClickDate(DateTimeOffset date)
@@ -605,15 +621,15 @@ namespace BlazorDateRangePicker
             if (TEndDate.HasValue || TStartDate == null || date < TStartDate)
             {
                 //picking start
-                await OnSelectionStart.InvokeAsync(date.Date);
-                await Task.Yield();
                 TEndDate = null;
                 TStartDate = date.Date;
+                await OnSelectionStart.InvokeAsync(date.Date);
             }
             else
             {
                 // picking end
                 TEndDate = date.Date.AddDays(1).AddTicks(-1);
+                await OnSelectionEnd.InvokeAsync(TEndDate.Value);
                 if (AutoApply == true)
                 {
                     await ClickApply(null);
