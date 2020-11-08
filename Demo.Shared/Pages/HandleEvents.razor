@@ -66,6 +66,11 @@
             <td>DateTimeOffset</td>
             <td>An event that is invoked when StartDate is selected.</td>
         </tr>
+        <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnSelectionEnd</code></td>
+            <td>DateTimeOffset</td>
+            <td>An event that is invoked when EndDate is selected but before the user clicks apply button.</td>
+        </tr>
     </tbody>
 </table>
 
@@ -74,6 +79,7 @@
                      OnRangeSelect="OnRangeSelect"
                      OnMonthChanged="OnMonthChanged"
                      OnSelectionStart="OnSelectionStart"
+                     OnSelectionEnd="OnSelectionEnd"
                      OnOpened="OnOpened"
                      OnClosed="OnClosed"
                      OnCancel="OnCancel" />
@@ -118,6 +124,11 @@
     private void OnSelectionStart(DateTimeOffset date)
     {
         events.Add((DateTime.Now, $"OnSelectionStart: {date}"));
+    }
+
+    private void OnSelectionEnd(DateTimeOffset date)
+    {
+        events.Add((DateTime.Now, $"OnSelectionEnd: {date}"));
     }
 
     public void OnRangeSelect(DateRange range)

@@ -213,6 +213,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnMonthChanged|void|An event that is invoked when left or right calendar's month changed.|
 |OnMonthChangedAsync|Task|An event that is invoked when left or right calendar's month changed and supports CancellationToken. Use this event handler to prepare the data for CustomDateFunction.|
 |OnSelectionStart|DateTimeOffset|An event that is invoked when StartDate is selected|
+|OnSelectionEnd|DateTimeOffset|An event that is invoked when EndDate is selected but before "Apply" button is clicked|
 
 ## Methods
 
@@ -243,13 +244,20 @@ public class DateRange
 
 ## Changelog
 
-## 3.0.0-rc1
 
-1. Release for .NET 5.0
+##  2.12.0 (netcore 3.1) and 3.0.0-rc2 (net 5)
 
-## 2.11.0
+1. Added new `OnSelectionEnd` event
+2. Added new demo example which demonstrates how to override day click handlers
+3. Exposed some internals that might be useful for picker customization
+
+### 2.11.0
 
 1. Fix month/year select box issue (#34, #35)
+
+### 3.0.0-rc1
+
+1. Release for .NET 5.0
 
 ### 2.10.0
 

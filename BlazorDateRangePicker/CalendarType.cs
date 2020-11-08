@@ -20,23 +20,24 @@ namespace BlazorDateRangePicker
         private DayOfWeek DayOfWeek => FirstDay.DayOfWeek;
         internal DayOfWeek FirstDayOfWeek { get; set; }
 
-        internal SideType Side { get; set; }
+        internal SideType Side { get; private set; }
 
         internal DateTimeOffset FirstDay => new DateTime(Month.Year, Month.Month, 1);
         internal DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
 
         public DateTimeOffset Month { get; private set; } = DateTime.Today;
 
-        internal List<List<CalendarItem>> Calendar { get; set; }
+        public List<List<CalendarItem>> Calendar { get; set; } = new List<List<CalendarItem>>();
         private DateRangePicker Picker { get; set; }
 
-        internal CalendarType(DateRangePicker picker)
+        public CalendarType(DateRangePicker picker, SideType side)
         {
             Picker = picker;
+            Side = side;
             FirstDayOfWeek = Picker.FirstDayOfWeek.Value;
         }
 
-        internal async Task ChangeMonth(DateTimeOffset month)
+        public async Task ChangeMonth(DateTimeOffset month)
         {
             Month = month;
             await CalculateCalendar();
@@ -73,7 +74,7 @@ namespace BlazorDateRangePicker
 
                 var day = new DateTimeOffset(curDate.Year, curDate.Month, curDate.Day, 12, 0, 0, Month.Offset);
                 if (calendar[row].Count <= col)
-                    calendar[row].Add(new CalendarItem { Day = day });
+                    calendar[row].Add(new CalendarItem { Day = day, Side = Side });
                 else if (calendar[row][col].Day != day)
                     calendar[row][col].Day = day;
 
@@ -216,6 +217,7 @@ namespace BlazorDateRangePicker
 
     public class CalendarItem
     {
+        public SideType Side { get; set; }
         public DateTimeOffset Day { get; set; }
         public Action Hover { get; set; }
         public Action Click { get; set; }
