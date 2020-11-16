@@ -6,14 +6,14 @@
 
 @if (PickerTemplate == null && Inline != true)
 {
-    <input id="@ParentId" type="text" @attributes="CombinedAttributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
+    <input id="@Id" type="text" @attributes="CombinedAttributes" value="@FormattedRange" @oninput="OnTextInput" @onfocusin="Open" @onfocusout="LostFocus" />
 }
 else if (PickerTemplate != null)
 {
     @PickerTemplate(this);
 }
 <div style="visibility:@(Inline == true || Visible ? "visible" : "hidden");">
-    <div id="@Id" class="daterangepicker @RootStyles">
+    <div id="@ContainerId" class="daterangepicker @RootStyles">
 
         <div class="ranges">
             @if (Ranges != null && Ranges.Any())

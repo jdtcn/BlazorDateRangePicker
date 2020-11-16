@@ -9,7 +9,7 @@
 <Example Text="@ExampleSource">
     <DateRangePicker>
         <PickerTemplate>
-            <div id="@context.ParentId" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: .45rem 10px; border: 1px solid #ccc; border-radius: 5px;">
+            <div id="@context.Id" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: .45rem 10px; border: 1px solid #ccc; border-radius: 5px;">
                 <i class="oi oi-calendar"></i>&nbsp;
                 <span>
                     @if (context.TStartDate == null && context.TEndDate == null)
@@ -45,7 +45,7 @@
     private string ExampleSource =
         "<DateRangePicker>\n" +
         "    <PickerTemplate>\n" +
-        "        <div id=\"@context.ParentId\" @onclick=\"context.Toggle\" style=\"background: #fff; cursor: pointer; padding: .45rem 10px; border: 1px solid #ccc; border-radius: 5px;\">\n" +
+        "        <div id=\"@context.Id\" @onclick=\"context.Toggle\" style=\"background: #fff; cursor: pointer; padding: .45rem 10px; border: 1px solid #ccc; border-radius: 5px;\">\n" +
         "            <i class=\"oi oi-calendar\"></i>&nbsp;\n" +
         "            <span>\n" +
         "                @if (context.TStartDate == null && context.TEndDate == null)\n" +

@@ -94,7 +94,7 @@ Using custom markup for picker.
 
 <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("en-US"))">
     <PickerTemplate>
-        <div id="@context.ParentId" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;">
+        <div id="@context.Id" @onclick="context.Toggle" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 250px; border: 1px solid #ccc;">
             <i class="oi oi-calendar"></i>&nbsp;
             <span>@context.FormattedRange @(string.IsNullOrEmpty(context.FormattedRange) ? "Choose dates..." : "")</span>
             <i class="oi oi-chevron-bottom float-right"></i>
@@ -102,7 +102,7 @@ Using custom markup for picker.
     </PickerTemplate>
 </DateRangePicker>
 ````
-Set id="@context.ParentId" for outside click handling to root element.
+Set id="@context.Id" for outside click handling to root element.
 
 Custom buttons:
 
@@ -244,8 +244,11 @@ public class DateRange
 
 ## Changelog
 
+##  2.13.0 (netcore 3.1) and 3.1.0 (net 5)
 
-##  2.12.0 (netcore 3.1) and 3.0.0 (net 5)
+1. Added ability to change input field `id` attribute (#41)
+
+###  2.12.0 (netcore 3.1) and 3.0.0 (net 5)
 
 1. Added new `OnSelectionEnd` event
 2. Added new demo example which demonstrates how to override day click handlers
