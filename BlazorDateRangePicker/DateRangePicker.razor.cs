@@ -27,12 +27,14 @@ namespace BlazorDateRangePicker
         /// <summary>
         /// Guid for container id used for JSInterop 
         /// </summary>
-        public string Id { get; } = Guid.NewGuid().ToString();
+        public string ContainerId { get; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// Guid for parent id used for JSInterop 
+        /// Id for input field used for JSInterop 
         /// </summary>
-        public string ParentId { get; } = Guid.NewGuid().ToString();
+        [Parameter]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string ParentId => Id;
 
         /// <summary>
         /// Attach a named properties config object to this instance of datepicker
@@ -701,8 +703,8 @@ namespace BlazorDateRangePicker
                 CalendarsVisible = true;
             }
 
-            await JSRuntime.InvokeAsync<object>("clickAndPositionHandler.addClickOutsideEvent", Id, ParentId, DotNetObjectReference.Create(this));
-            await JSRuntime.InvokeAsync<object>("clickAndPositionHandler.getPickerPosition", Id, ParentId,
+            await JSRuntime.InvokeAsync<object>("clickAndPositionHandler.addClickOutsideEvent", ContainerId, Id, DotNetObjectReference.Create(this));
+            await JSRuntime.InvokeAsync<object>("clickAndPositionHandler.getPickerPosition", ContainerId, Id,
                 Enum.GetName(typeof(DropsType), Drops).ToLower(), Enum.GetName(typeof(SideType), Opens).ToLower());
 
             Visible = true;
