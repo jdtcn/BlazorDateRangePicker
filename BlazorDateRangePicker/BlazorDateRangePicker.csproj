@@ -1,32 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0;net5.0</TargetFramework>
-		<OutputType>Library</OutputType>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-		<IsPackable>true</IsPackable>
-		<RazorLangVersion>3.0</RazorLangVersion>
-		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<LangVersion>preview</LangVersion>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0;net5.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <IsPackable>true</IsPackable>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <LangVersion>preview</LangVersion>
 
-		<Version>2.13.0</Version>
-		<Authors>Sergey Zaikin</Authors>
-		<PackageId>BlazorDateRangePicker</PackageId>
-		<Title>Blazor Date Range Picker</Title>
-		<Description>A fully managed port of daterangepicker.js for Blazor</Description>
-		<PackageProjectUrl>https://github.com/jdtcn/BlazorDateRangePicker</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/jdtcn/BlazorDateRangePicker</RepositoryUrl>
-		<PackageTags>blazor;daterangepicker;datepicker</PackageTags>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	</PropertyGroup>
+    <Version>2.13.0</Version>
+    <Authors>Sergey Zaikin</Authors>
+    <PackageId>BlazorDateRangePicker</PackageId>
+    <Title>Blazor Date Range Picker</Title>
+    <Description>A fully managed port of daterangepicker.js for Blazor</Description>
+    <PackageProjectUrl>https://github.com/jdtcn/BlazorDateRangePicker</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jdtcn/BlazorDateRangePicker</RepositoryUrl>
+    <PackageTags>blazor;daterangepicker;datepicker</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
-		<EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
-		<EmbeddedResource Include="wwwroot\**\*min.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
-		<EmbeddedResource Include="wwwroot\**" Exclude="**\*.js;**\*min.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
+  <ItemGroup>
+    <!-- .js/.css files will be referenced via <script>/<link> tags; other content files will just be included in the app's 'dist' directory without any tags referencing them -->
+    <EmbeddedResource Include="wwwroot\**\*.js" LogicalName="blazor:js:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="wwwroot\**\*min.css" LogicalName="blazor:css:%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="wwwroot\**" Exclude="**\*.js;**\*min.css" LogicalName="blazor:file:%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard2.0'))">
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.0" />
@@ -36,7 +36,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
     <None Include="compilerconfig.json" />
