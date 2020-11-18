@@ -34,6 +34,11 @@
             <td>Triggered when the apply button is clicked, or when a predefined range is clicked.</td>
         </tr>
         <tr>
+            <td><code class="language-plaintext highlighter-rouge">OnReset</code></td>
+            <td>void</td>
+            <td>Triggered when the apply button is clicked, or when a predefined range is clicked.</td>
+        </tr>
+        <tr>
             <td><code class="language-plaintext highlighter-rouge">OnOpened</code></td>
             <td>void</td>
             <td>An event that is invoked when the DatePicker is opened.</td>
@@ -80,6 +85,7 @@
                      OnMonthChanged="OnMonthChanged"
                      OnSelectionStart="OnSelectionStart"
                      OnSelectionEnd="OnSelectionEnd"
+                     OnReset="OnReset"
                      OnOpened="OnOpened"
                      OnClosed="OnClosed"
                      OnCancel="OnCancel" />
@@ -107,6 +113,11 @@
     private void OnClosed()
     {
         events.Add((DateTime.Now, $"OnClosed"));
+    }
+
+    private void OnReset()
+    {
+        events.Add((DateTime.Now, $"OnReset"));
     }
 
     private void OnCancel(bool byButton)
@@ -141,6 +152,7 @@
         "             OnRangeSelect=\"OnRangeSelect\"\n" +
         "             OnMonthChanged=\"OnMonthChanged\"\n" +
         "             OnSelectionStart=\"OnSelectionStart\"\n" +
+        "             OnReset=\"OnReset\"\n" +
         "             OnOpened=\"OnOpened\"\n" +
         "             OnClosed=\"OnClosed\"\n" +
         "             OnCancel=\"OnCancel\" />\n\n" +
@@ -150,7 +162,11 @@
         "    private void OnOpened()\n" +
         "    {\n" +
         "        events.Add((DateTime.Now, $\"OnOpened\"));\n" +
-        "    }\n" +
+        "    }\n\n" +
+        "    private void OnReset()\n" +
+        "    {\n" +
+        "        events.Add((DateTime.Now, $\"OnReset\"));\n" +
+        "    }\n\n" +
         "    private void OnClosed()\n" +
         "    {\n" +
         "        events.Add((DateTime.Now, $\"OnClosed\"));\n" +

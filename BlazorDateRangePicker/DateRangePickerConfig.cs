@@ -173,5 +173,10 @@ namespace BlazorDateRangePicker
         /// or a string with CSS class name to add to that date's calendar cell.
         /// </summary>
         public Func<DateTimeOffset, object> CustomDateFunction { get; set; } = _ => false;
+
+        /// <summary>
+        /// Whether the picker should set dates to null when the user cleans the input
+        /// </summary>
+        public bool? ResetOnClear { get; set; } = true;
     }
 }

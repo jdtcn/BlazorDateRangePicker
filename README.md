@@ -201,6 +201,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |ButtonsTemplate|RenderFragment<DateRangePicker>|null|Custom picker buttons template|
 |DayTemplate|RenderFragment<CalendarItem>|null|Custom day cell template|
 |Inline|bool|false|Inline mode if true.|
+|ResetOnClear|bool|true|Whether the picker should set dates to null when the user clears the input.|
 
 ## Events
 
@@ -210,6 +211,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |OnOpened|void|An event that is invoked when the DatePicker is opened.|
 |OnClosed|void|An event that is invoked when the DatePicker is closed.|
 |OnCancel|bool|An event that is invoked when user cancels the selection (`true` if by pressing "Cancel" button, `false` if by backdrop click).|
+|OnReset|void|An event that is invoked when the DatePicker is cleared.|
 |OnMonthChanged|void|An event that is invoked when left or right calendar's month changed.|
 |OnMonthChangedAsync|Task|An event that is invoked when left or right calendar's month changed and supports CancellationToken. Use this event handler to prepare the data for CustomDateFunction.|
 |OnSelectionStart|DateTimeOffset|An event that is invoked when StartDate is selected|
@@ -222,6 +224,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |Open|Show picker popup.|
 |Close|Close picker popup.|
 |Toggle|Toggle picker popup state.|
+|Reset|Rest picker.|
 |virtual InvokeClickOutside|A JSInvocable callback to handle outside click. When inherited can be overridden to modify outside click closing behavior.|
 
 ## Types
@@ -244,7 +247,14 @@ public class DateRange
 
 ## Changelog
 
-##  2.13.0 (netcore 3.1) and 3.1.0 (net 5)
+## 3.2.0 (netcore 3.1 and net 5)
+
+1. Added ability to reset the picker by clearing the picker input (#42)
+2. Added `ResetOnClear` property
+3. Added `OnReset` event
+4. Added `Reset` method
+
+###  2.13.0 (netcore 3.1) and 3.1.0 (net 5)
 
 1. Added ability to change input field `id` attribute (#41)
 

@@ -49,5 +49,6 @@ namespace BlazorDateRangePicker
         bool? CloseOnOutsideClick { get; set; }
         bool? AutoAdjustCalendars { get; set; }
         bool? ShowOnlyOneCalendar { get; set; }
+        bool? ResetOnClear { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace BlazorDateRangePicker
         /// <summary>
         /// Guid for container id used for JSInterop 
         /// </summary>
-        public string ContainerId { get; } = Guid.NewGuid().ToString();
+        public string ContainerId { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// Id for input field used for JSInterop 
@@ -117,6 +117,12 @@ namespace BlazorDateRangePicker
         /// </summary>
         [Parameter]
         public bool? ShowOnlyOneCalendar { get; set; }
+
+        /// <summary>
+        /// Whether the picker should set dates to null when the user cleans the input
+        /// </summary>
+        [Parameter]
+        public bool? ResetOnClear { get; set; }
 
         /// <summary>
         /// Normally, if you use the ranges option to specify pre-defined date ranges, 
@@ -315,6 +321,13 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<DateRange> OnRangeSelect { get; set; }
 
+
+        /// <summary>
+        /// Triggered when the picker reset by user
+        /// </summary>
+        [Parameter]
+        public EventCallback OnReset { get; set; }
+
         /// <summary>An event that is invoked when the DatePicker is opened.</summary>
         [Parameter]
         public EventCallback OnOpened { get; set; }
@@ -471,16 +484,15 @@ namespace BlazorDateRangePicker
             }
         }
 
-        public virtual async Task OnTextInput(ChangeEventArgs e)
+        public virtual Task OnTextInput(ChangeEventArgs e)
         {
             EditText = e.Value.ToString();
-            if (SingleDatePicker != true && !e.Value.ToString().Contains("-")) { return; }
-            var dateStrings = e.Value.ToString().Split('-').Select(s => s.Trim()).ToList();
-            if (SingleDatePicker == true)
+
+            var dateStrings = EditText.Split('-').Select(s => s.Trim()).ToList();
+            if (dateStrings.Count != 2)
             {
-                dateStrings = new List<string> { e.Value.ToString(), string.Empty };
+                dateStrings = new List<string> { EditText, string.Empty };
             }
-            if (dateStrings.Count != 2) { return; }
 
             var startDateParsed = DateTimeOffset.TryParseExact(dateStrings[0], DateFormat, Culture,
                 System.Globalization.DateTimeStyles.None, out var startDate);
@@ -514,8 +526,8 @@ namespace BlazorDateRangePicker
 
             if (endDateParsed)
             {
-                if(endDate > maxDate) endDate = maxDate.Value.Date;
-                if(endDate < minDate) endDate = minDate.Value.Date;
+                if (endDate > maxDate) endDate = maxDate.Value.Date;
+                if (endDate < minDate) endDate = minDate.Value.Date;
             }
 
             if (startDateParsed && SingleDatePicker == true)
@@ -523,20 +535,24 @@ namespace BlazorDateRangePicker
                 TStartDate = startDate.Date;
                 TEndDate = startDate.Date;
                 EditText = null;
-                await ClickApply(null);
-                await Task.Delay(1);
+                return ClickApply(null);
             }
-
-            if (startDateParsed && endDateParsed && startDate <= endDate
+            else if (startDateParsed && endDateParsed && startDate <= endDate
                 && (!minDate.HasValue || startDate >= MinDate)
                 && (!maxDate.HasValue || endDate <= MaxDate))
             {
                 TStartDate = startDate.Date;
                 TEndDate = endDate.Date.AddDays(1).AddTicks(-1);
                 EditText = null;
-                await ClickApply(null);
-                await Task.Delay(1);
+                return ClickApply(null);
             }
+            else if (string.IsNullOrEmpty(EditText) && ResetOnClear == true)
+            {
+                EditText = null;
+                return Reset();
+            }
+
+            return Task.CompletedTask;
         }
 
         public void LostFocus(FocusEventArgs e)
@@ -544,12 +560,22 @@ namespace BlazorDateRangePicker
             EditText = null;
         }
 
-        private async Task ClickRange(MouseEventArgs e, string label)
+        public virtual async Task Reset()
+        {
+            TStartDate = null;
+            TEndDate = null;
+
+            await ClickApply(null);
+            await OnReset.InvokeAsync(null);
+        }
+
+        private Task ClickRange(MouseEventArgs e, string label)
         {
             ChosenLabel = label;
             if (label == CustomRangeLabel)
             {
                 CalendarsVisible = true;
+                return Task.CompletedTask;
             }
             else
             {
@@ -561,27 +587,27 @@ namespace BlazorDateRangePicker
                 {
                     CalendarsVisible = false;
                 }
-                await ClickApply(e);
+                return ClickApply(e);
             }
         }
 
-        private async Task LeftMonthChanged(DateTimeOffset date)
+        private Task LeftMonthChanged(DateTimeOffset date)
         {
             var leftMonth = date;
-            var rightMonth = LinkedCalendars == true 
-                ? date.AddMonths(1) 
+            var rightMonth = LinkedCalendars == true
+                ? date.AddMonths(1)
                 : (DateTimeOffset?)null;
-            await MonthChanged(leftMonth, rightMonth);
+            return MonthChanged(leftMonth, rightMonth);
         }
 
-        private async Task RightMonthChanged(DateTimeOffset date)
+        private Task RightMonthChanged(DateTimeOffset date)
         {
             var rightMonth = date;
             var leftMonth = LinkedCalendars == true
                 ? date.AddMonths(-1)
                 : (DateTimeOffset?)null;
 
-            await MonthChanged(leftMonth, rightMonth);
+            return MonthChanged(leftMonth, rightMonth);
         }
 
         private CancellationTokenSource RunningTaskToken;
@@ -661,14 +687,21 @@ namespace BlazorDateRangePicker
 
         public async Task ClickApply(MouseEventArgs e)
         {
+            StartDate = TStartDate;
+            await StartDateChanged.InvokeAsync(TStartDate);
+
+            EndDate = TEndDate;
+            await EndDateChanged.InvokeAsync(TEndDate);
+
             if (TStartDate.HasValue && TEndDate.HasValue)
             {
-                StartDate = TStartDate;
-                EndDate = TEndDate;
-                await StartDateChanged.InvokeAsync(TStartDate.Value);
-                await EndDateChanged.InvokeAsync(TEndDate.Value);
-                await OnRangeSelect.InvokeAsync(new DateRange { Start = TStartDate.Value, End = TEndDate.Value });
+                await OnRangeSelect.InvokeAsync(new DateRange
+                {
+                    Start = TStartDate.Value,
+                    End = TEndDate.Value
+                });
             }
+
             await Close();
         }
 
@@ -715,8 +748,8 @@ namespace BlazorDateRangePicker
         public async Task AdjustCalendars()
         {
             var newLeftMonth = TStartDate ?? DateTime.Today;
-            var newRightMonth = LinkedCalendars == true 
-                ? newLeftMonth.AddMonths(1) 
+            var newRightMonth = LinkedCalendars == true
+                ? newLeftMonth.AddMonths(1)
                 : (TEndDate ?? newLeftMonth.AddMonths(1));
 
             var needAdjust =
@@ -727,7 +760,7 @@ namespace BlazorDateRangePicker
 
             if (needAdjust)
             {
-                if (newLeftMonth.Month == newRightMonth.Month 
+                if (newLeftMonth.Month == newRightMonth.Month
                     && newLeftMonth.Year == newRightMonth.Year)
                 {
                     newRightMonth = newRightMonth.AddMonths(1);

@@ -22,10 +22,10 @@
 </p>
 
 <Example Text="@ExampleText">
-    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("ru"))"
-                     ApplyLabel="My Apply Label"
-                     CancelLabel="My Cancel Label"
-                     CustomRangeLabel="My Custom range" />
+    <DateRangePicker Culture="@(System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))"
+                     ApplyLabel="Appliquer"
+                     CancelLabel="Annuler"
+                     CustomRangeLabel="Ma gamme personnalisée" />
 </Example>
 
 <p>It's convenient to set these properties application-wide in one place:</p>
@@ -34,10 +34,10 @@
 
 @code {
     private string ExampleText =
-        "<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"ru-RU\"))\">\n" +
-        "                 ApplyLabel=\"My Apply Label\"\n" +
-        "                 CancelLabel=\"My Cancel Label\"\n" +
-        "                 CustomRangeLabel=\"My Custom range\" />";
+        "<DateRangePicker Culture=\"@(System.Globalization.CultureInfo.GetCultureInfo(\"fr-FR\"))\">\n" +
+        "                 ApplyLabel=\"Appliquer\"\n" +
+        "                 CancelLabel=\"Annuler\"\n" +
+        "                 CustomRangeLabel=\"Ma gamme personnalisée\" />";
 
     private string ExampleConfig =
         "#Startup.cs\n\n" +
