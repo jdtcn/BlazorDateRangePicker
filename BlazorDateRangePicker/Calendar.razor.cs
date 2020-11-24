@@ -82,13 +82,13 @@ namespace BlazorDateRangePicker
         private Task MonthSelected(int month)
         {
             var d = CalendarData.Month;
-            return OnMonthChanged.InvokeAsync(new DateTime(d.Year, month, d.Day, d.Hour, d.Minute, d.Second));
+            return OnMonthChanged.InvokeAsync(new DateTime(d.Year, month, 1, 12, 0, 0));
         }
 
         private Task YearSelected(int year)
         {
             var d = CalendarData.Month;
-            var newMonth = new DateTimeOffset(year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Offset);
+            var newMonth = new DateTimeOffset(year, d.Month, 1, 12, 0, 0, d.Offset);
             if (newMonth > Picker.MaxDate) newMonth = Picker.MaxDate.Value;
             else if (newMonth < Picker.MinDate) newMonth = Picker.MinDate.Value;
             return OnMonthChanged.InvokeAsync(newMonth);

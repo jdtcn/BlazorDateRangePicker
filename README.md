@@ -247,18 +247,22 @@ public class DateRange
 
 ## Changelog
 
-## 3.2.0 (netcore 3.1 and net 5)
+## 3.3.0
+
+1. Fixed issue with month & year selection (#45)
+
+### 3.2.0
 
 1. Added ability to reset the picker by clearing the picker input (#42)
 2. Added `ResetOnClear` property
 3. Added `OnReset` event
 4. Added `Reset` method
 
-###  2.13.0 (netcore 3.1) and 3.1.0 (net 5)
+###  2.13.0
 
 1. Added ability to change input field `id` attribute (#41)
 
-###  2.12.0 (netcore 3.1) and 3.0.0 (net 5)
+###  2.12.0
 
 1. Added new `OnSelectionEnd` event
 2. Added new demo example which demonstrates how to override day click handlers

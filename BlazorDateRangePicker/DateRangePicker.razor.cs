@@ -419,7 +419,13 @@ namespace BlazorDateRangePicker
                 && (DateTimeOffset?)paramsDict[nameof(StartDate)] != StartDate)
             {
                 TStartDate = (DateTimeOffset?)paramsDict[nameof(StartDate)];
-                if (SingleDatePicker == true) TEndDate = TStartDate;
+                var singleDatePicker = paramsDict.ContainsKey(nameof(SingleDatePicker))
+                    && (bool)paramsDict[nameof(SingleDatePicker)] == true;
+                if (SingleDatePicker == true || singleDatePicker)
+                {
+                    EndDate = TStartDate;
+                    TEndDate = TStartDate;
+                }
             }
 
             await base.SetParametersAsync(parameters);
