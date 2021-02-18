@@ -1,0 +1,43 @@
+﻿@page "/form"
+@using System.ComponentModel.DataAnnotations;
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Form.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Example of DateRangePicker usage as a form control</h3>
+</div>
+
+<Example Text="@ExampleText">
+
+    <EditForm Model="@exampleModel" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+
+        <DateInput @bind-Value="@exampleModel.Range" />
+        <div class="invalid-feedback">
+            <ValidationMessage For="@(()=>exampleModel.Range)" />
+        </div>
+
+        <button class="btn btn-primary mt-2 mb-2" type="submit">Submit</button>
+    </EditForm>
+
+    <p>Form value:</p>
+    <pre>@System.Text.Json.JsonSerializer.Serialize(exampleModel)</pre>
+
+</Example>
+
+@code {
+    private ExampleModel exampleModel = new ExampleModel();
+
+    private void HandleValidSubmit()
+    {
+        // Do stuff...
+    }
+
+    public class ExampleModel
+    {
+        [Required]
+        public DateRange Range { get; set; }
+    }
+
+    private string ExampleText = "<DateInput @bind-Value=\"@exampleModel.Range\" />";
+}

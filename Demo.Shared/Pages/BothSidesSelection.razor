@@ -1,0 +1,109 @@
+﻿@page "/bothSidesSelection"
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/BothSidesSelection.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Both sides selection</h3>
+</div>
+
+<p>
+    This example demonstrates how to enable both sides range selection by overring day click function.
+</p>
+
+<Example Text="@ExampleText">
+    <DateRangePicker @ref="Picker" OnMonthChanged="MonthChanged" CustomDateFunction="CustomHover" />
+</Example>
+
+@code {
+    DateRangePicker Picker { get; set; }
+
+    private void MonthChanged()
+    {
+        UpdateClickHandlers();
+    }
+
+    private string CustomHover(DateTimeOffset dt)
+    {
+        if (dt >= Picker?.HoverDate && dt < Picker?.TStartDate)
+        {
+            return "in-range";
+        }
+        return string.Empty;
+    }
+
+    private void UpdateClickHandlers()
+    {
+        var days = Enumerable
+            .Concat(Picker.LeftCalendar.Calendar, Picker.RightCalendar.Calendar)
+            .SelectMany(d => d);
+
+        foreach (var day in days)
+        {
+            var dayClick = day.Click;
+
+            day.Click = async () =>
+            {
+                if (Picker.TStartDate.HasValue && !Picker.TEndDate.HasValue && day.Day < Picker.TStartDate)
+                {
+                    Picker.TEndDate = Picker.TStartDate;
+                    Picker.TStartDate = day.Day;
+                    await Picker.LeftCalendar.CalculateCalendar();
+                    await Picker.RightCalendar.CalculateCalendar();
+                    StateHasChanged();
+                }
+                else
+                {
+                    dayClick.Invoke();
+                }
+            };
+        }
+    }
+    private string ExampleText = "<DateRangePicker @ref=\"Picker\" OnMonthChanged=\"MonthChanged\" CustomDateFunction=\"CustomHover\" />" +
+@"
+
+DateRangePicker Picker { get; set; }
+
+private void MonthChanged()
+{
+    UpdateClickHandlers();
+}
+
+private string CustomHover(DateTimeOffset dt)
+{
+    if (dt >= Picker?.HoverDate && dt < Picker?.TStartDate)
+    {
+		" + "return \"in-range\";" + @"
+    }
+    return string.Empty;
+}
+
+private void UpdateClickHandlers()
+{
+    var days = Enumerable
+        .Concat(Picker.LeftCalendar.Calendar, Picker.RightCalendar.Calendar)
+        .SelectMany(d => d);
+
+    foreach (var day in days)
+    {
+        var dayClick = day.Click;
+
+        day.Click = async () =>
+        {
+            if (Picker.TStartDate.HasValue && !Picker.TEndDate.HasValue && day.Day < Picker.TStartDate)
+            {
+                Picker.TEndDate = Picker.TStartDate;
+                Picker.TStartDate = day.Day;
+                await Picker.LeftCalendar.CalculateCalendar();
+                await Picker.RightCalendar.CalculateCalendar();
+                StateHasChanged();
+            }
+            else
+            {
+                dayClick.Invoke();
+            }
+        };
+    }
+}
+";
+
+}

@@ -1,0 +1,28 @@
+﻿@inherits InputBase<DateRange>
+
+<DateRangePicker class="@("is-" + CssClass + " form-control")" 
+                 StartDate="Value?.Start" EndDate="Value?.End" 
+                 OnRangeSelect="OnRangeSelect" OnReset="OnReset" />
+
+@code {
+    private Task OnReset()
+    {
+        Value = null;
+        return ValueChanged.InvokeAsync(Value);
+    }
+
+    private Task OnRangeSelect(DateRange range)
+    {
+        if (Value == null) Value = new DateRange();
+        Value.Start = range.Start;
+        Value.End = range.End;
+        return ValueChanged.InvokeAsync(Value);
+    }
+
+    protected override bool TryParseValueFromString(string value, out DateRange result, out string validationErrorMessage)
+    {
+        result = new DateRange();
+        validationErrorMessage = string.Empty;
+        return false;
+    }
+}
