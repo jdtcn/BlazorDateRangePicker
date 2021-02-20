@@ -6,7 +6,7 @@
 </select>
 <span> : </span>
 <select class="minuteselect" @bind="Minute">
-    @foreach (var minute in Enumerable.Range(0, 60))
+    @foreach (var minute in MinutesRange)
     {
         if (minute % Picker.TimePickerIncrement != 0) continue;
         <option value="@minute" selected="@(Minute == minute)">@minute.ToString().PadLeft(2, '0')</option>
@@ -17,7 +17,7 @@
 {
     <span> : </span>
     <select class="minuteselect" @bind="Second">
-        @foreach (var sec in Enumerable.Range(0, 60))
+        @foreach (var sec in SecondsRange)
         {
             <option value="@sec" selected="@(Second == sec)">@sec.ToString().PadLeft(2, '0')</option>
         }
@@ -26,6 +26,7 @@
 
 @if (Picker.TimePicker24Hour == false)
 {
+    <span>&nbsp;</span>
     <select class="ampmselect" @bind="AmPm">
         <option value="@(AmPmEnum.AM)">AM</option>
         <option value="@(AmPmEnum.PM)">PM</option>

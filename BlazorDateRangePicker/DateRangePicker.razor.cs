@@ -336,6 +336,12 @@ namespace BlazorDateRangePicker
         public DropsType? Drops { get; set; }
 
         /// <summary>
+        /// Returns time available for selection. 
+        /// </summary>
+        [Parameter]
+        public Func<DateTimeOffset?, Task<TimeSettings>> TimeEnabledFunction { get; set; }
+
+        /// <summary>
         /// A function that is passed each date in the two calendars before they are displayed, 
         /// may return true or false to indicate whether that date should be available for selection or not. 
         /// </summary>

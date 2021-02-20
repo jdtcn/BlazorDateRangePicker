@@ -57,6 +57,14 @@
 
 <Example Text="@ExampleText7">
     <DateRangePicker SingleDatePicker="true" TimePicker="true" TimePicker24Hour="true"
+                     DateFormat="@($"{DateFormat} HH:mm")" />
+</Example>
+
+<p>TimeEnabled function</p>
+
+<Example Text="@ExampleText8">
+    <DateRangePicker TimePicker="true" TimePicker24Hour="true" TimeEnabledFunction="TimeEnabledFunction"
+                     InitialStartTime="StartTime" InitialEndTime="EndTime"
                      DateFormat="@($"{DateFormat} HH:mm")" Drops="DropsType.Up" />
 </Example>
 
@@ -66,8 +74,8 @@
     private TimeSpan RundStartTime = TimeSpan.FromHours(2).Add(TimeSpan.FromMinutes(15));
     private TimeSpan RoundEndTime = TimeSpan.FromHours(15).Add(TimeSpan.FromMinutes(45));
 
-    private TimeSpan StartTime = TimeSpan.FromHours(2);
-    private TimeSpan EndTime = DateTime.Now.TimeOfDay;
+    private TimeSpan StartTime = TimeSpan.FromHours(8);
+    private TimeSpan EndTime = TimeSpan.FromHours(11);
 
     private DateTimeOffset? InitialStartDate { get; set; } = DateTime.Now.AddDays(-1).Date.Add(TimeSpan.FromHours(2));
     private DateTimeOffset? InitialEndDate { get; set; } = DateTime.Now.AddDays(1).Date.Add(TimeSpan.FromHours(15));
@@ -81,6 +89,19 @@
         RoundEndDate = range.End.Date.Add(TimeSpan.FromHours(range.End.Hour).Add(TimeSpan.FromMinutes((range.End.Minute / 15) * 15)));
     }
 
+    private Task<TimeSettings> TimeEnabledFunction(DateTimeOffset? day)
+    {
+        var res = new TimeSettings
+        {
+            Hours = day?.Day % 2 == 0
+                ? new int[] { 7, 8, 9, 10, 11, 12 }
+                : new int[] { 8, 9, 10, 11 },
+            Minutes = new int[] { 0, 15, 30, 45 },
+            Seconds = new int[] { 0, 60 }
+        };
+        return Task.FromResult(res);
+    }
+
     private string ExampleText1 = "<DateRangePicker Culture=\"@CultureInfo.GetCultureInfo(\"en-US\")\" \n    TimePicker=\"true\" TimePicker24Hour=\"false\" \n    DateFormat=\"@($\"{DateFormat} hh:mm tt\")\" />";
     private string ExampleText2 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
     private string ExampleText3 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" TimePickerIncrement=\"15\"\n" +
@@ -91,4 +112,17 @@
     private string ExampleText5 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    InitialStartTime=\"StartTime\" InitialEndTime=\"EndTime\" DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
     private string ExampleText6 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    @bind-StartDate=\"InitialStartDate\" @bind-EndDate=\"InitialEndDate\" \n    DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
     private string ExampleText7 = "<DateRangePicker SingleDatePicker=\"true\" TimePicker=\"true\" TimePicker24Hour=\"true\" \n    DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
+    private string ExampleText8 = "<DateRangePicker TimeEnabledFunction=\"TimeEnabledFunction\" />\n" +
+    @"private Task<TimeSettings> TimeEnabledFunction(DateTimeOffset? day)\n
+{
+    var res = new TimeSettings
+    {
+        Hours = day?.Day % 2 == 0
+                ? new int[] { 8, 9, 10, 11 },
+                : new int[] { 7, 8, 9, 10, 11, 12 }
+        Minutes = new int[] { 0, 15, 30, 45 },
+        Seconds = new int[] { 0, 60 }
+    };
+    return Task.FromResult(res);
+}";
 }

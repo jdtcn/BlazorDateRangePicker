@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
+using System.Threading.Tasks;
 
 namespace BlazorDateRangePicker
 {
@@ -17,11 +18,31 @@ namespace BlazorDateRangePicker
         [Parameter] public SideType Side { get; set; }
         [Parameter] public TimeSpan Time { get; set; }
         [Parameter] public EventCallback<TimeSpan?> TimeChanged { get; set; }
+        [Parameter] public DateTimeOffset? Day { get; set; }
 
-        private IEnumerable<int> HoursRange =>
-            Enumerable.Range(
+        protected override void OnInitialized()
+        {
+            HoursRange = Enumerable.Range(
                 Picker.TimePicker24Hour == true ? 0 : 1,
                 Picker.TimePicker24Hour == true ? 24 : 12);
+            MinutesRange = Enumerable.Range(0, 60);
+            SecondsRange = Enumerable.Range(0, 60);
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            if (Picker.TimeEnabledFunction != null)
+            {
+                var timeEnabled = await Picker.TimeEnabledFunction(Day);
+                HoursRange = timeEnabled.Hours;
+                MinutesRange = timeEnabled.Minutes;
+                SecondsRange = timeEnabled.Seconds;
+            };
+        }
+
+        private IEnumerable<int> HoursRange { get; set; }
+        private IEnumerable<int> MinutesRange { get; set; }
+        private IEnumerable<int> SecondsRange { get; set; }
 
         private AmPmEnum AmPm
         {

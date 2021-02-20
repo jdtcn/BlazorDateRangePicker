@@ -208,7 +208,8 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |TimePickerSeconds|bool|false|Show seconds in the timePicker.|
 |InitialStartTime|TimeSpan|TimeSpan.Zero|Initial start time value to show in the picker before any date selected|
 |InitialEndTime|TimeSpan|TimeSpan.FromDays(1).AddTicks(-1)|Initial end time value to show in the picker before any date selected|
-		
+|TimeEnabledFunction|Func<DateTimeOffset?, Task<TimeSettings>>|null|Returns time available for selection.|
+
 ## Events
 
 | Name | Type | Description |
