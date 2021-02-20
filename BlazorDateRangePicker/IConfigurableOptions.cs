@@ -56,5 +56,6 @@ namespace BlazorDateRangePicker
         bool? TimePickerSeconds { get; set; }
         TimeSpan? InitialStartTime { get; set; }
         TimeSpan? InitialEndTime { get; set; }
+        bool? Prerender { get; set; }
     }
 }

@@ -276,6 +276,12 @@ namespace BlazorDateRangePicker
         public bool? AutoAdjustCalendars { get; set; }
 
         /// <summary>
+        /// Prerender component html before picker opening.
+        /// </summary>
+        [Parameter]
+        public bool? Prerender { get; set; }
+
+        /// <summary>
         /// Adds select boxes to choose times in addition to dates.
         /// </summary>
         [Parameter]
@@ -402,6 +408,7 @@ namespace BlazorDateRangePicker
         private string EditText { get; set; }
         private TimeSpan StartTime { get; set; }
         private TimeSpan EndTime { get; set; }
+        public bool Render { get; set; }
 
         protected override void OnInitialized()
         {
@@ -442,6 +449,9 @@ namespace BlazorDateRangePicker
                 FirstDayOfWeek = Culture.DateTimeFormat.FirstDayOfWeek;
             }
 
+            if (Inline == true) Prerender = true;
+            Render = Prerender == true;
+
             LeftCalendar = new CalendarType(this, SideType.Left);
             RightCalendar = new CalendarType(this, SideType.Right);
 
@@ -451,7 +461,7 @@ namespace BlazorDateRangePicker
 
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender) return AdjustCalendars();
+            if (firstRender && Prerender == true) return AdjustCalendars();
             return Task.CompletedTask;
         }
 
@@ -789,6 +799,10 @@ namespace BlazorDateRangePicker
         /// </summary>
         public async Task Open()
         {
+            Render = true;
+
+            await Task.Yield();
+
             if (Visible) return;
 
             StartTime = TStartDate.HasValue
@@ -819,11 +833,13 @@ namespace BlazorDateRangePicker
 
             Visible = true;
             await OnOpened.InvokeAsync(null);
-            if (AutoAdjustCalendars == true) await AdjustCalendars();
+            if (AutoAdjustCalendars == true || Prerender != true) await AdjustCalendars();
         }
 
         public async Task AdjustCalendars()
         {
+            Prerender = true;
+
             var newLeftMonth = TStartDate ?? DateTime.Today;
             var newRightMonth = LinkedCalendars == true
                 ? newLeftMonth.AddMonths(1)

@@ -208,5 +208,10 @@ namespace BlazorDateRangePicker
         /// Initial time value to show in the picker before any date selected
         /// </summary>
         public TimeSpan? InitialEndTime { get; set; }
+
+        /// <summary>
+        /// Prerender component html before picker opening.
+        /// </summary>
+        public bool? Prerender { get; set; } = true;
     }
 }

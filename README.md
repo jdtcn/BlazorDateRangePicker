@@ -256,6 +256,7 @@ public class DateRange
 ## 3.5.0
 
 1. Added time picker
+2. Added Prerender property (ability to render DOM only after click on the input) (#52)
 
 ### 3.4.0
 
