@@ -1,0 +1,11 @@
+﻿@Content
+
+@code{
+    RenderFragment Content { get; set; }
+
+    public void SetContent(RenderFragment content)
+    {
+        Content = content;
+        StateHasChanged();
+    }
+}

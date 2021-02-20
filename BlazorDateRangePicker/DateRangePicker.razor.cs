@@ -75,6 +75,12 @@ namespace BlazorDateRangePicker
         }
 
         /// <summary>
+        /// Picker positioning container
+        /// </summary>
+        [Parameter]
+        public PickerContainer Container { get; set; }
+
+        /// <summary>
         /// Custom picker input template
         /// </summary>
         [Parameter]

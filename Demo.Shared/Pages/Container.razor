@@ -1,0 +1,34 @@
+﻿@page "/container"
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Container.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Resolving positioning issues</h3>
+</div>
+
+<Example Text="@ExampleText">
+
+    <p>When the picker is placed inside absolutely positioned container position calculations may be incorrect.</p>
+    <p>In that case you should use <b>PickerContainer</b> component placed outside promblem node</p>
+
+    <div class="popover fade show bs-popover-right" role="tooltip" x-placement="right"
+         style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(120px, 330px, 0px);">
+        <div class="arrow" style="top: 34px;"></div>
+        <h3 class="popover-header">Popover title</h3>
+        <div class="popover-body">
+            <DateRangePicker Container="CustomContainer" Drops="DropsType.Up" class="form-control form-control-sm" SingleDatePicker="true" />
+            And here's some amazing content. It's very engaging. Right?
+        </div>
+    </div>
+
+</Example>
+
+<PickerContainer @ref="CustomContainer" />
+
+@code {
+    PickerContainer CustomContainer { get; set; }
+
+    private string ExampleText =
+        "<div class=\"popover\">\n    <DateRangePicker Container=\"CustomContainer\" />\n</div>\n\n" +
+        "<PickerContainer @ref=\"CustomContainer\" />";
+}

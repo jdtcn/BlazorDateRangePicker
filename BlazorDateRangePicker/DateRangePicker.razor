@@ -13,10 +13,8 @@ else if (PickerTemplate != null)
     @PickerTemplate(this)
 }
 
-@if(Render == true) 
-{
-
-<div style="visibility:@(Inline == true || Visible ? "visible" : "hidden");">
+@{ RenderFragment picker = 
+@<div style="visibility:@(Inline == true || Visible ? "visible" : "hidden");">
     <div id="@ContainerId" class="daterangepicker @RootStyles">
 
         <div class="ranges">
@@ -85,6 +83,17 @@ else if (PickerTemplate != null)
         </div>
 
     </div>
-</div>
+</div>;
+}
 
+@if(Render == true) 
+{
+    @if(Container == null)
+    {
+        @picker
+    }
+    else
+    {
+        Container.SetContent(picker);
+    }
 }
