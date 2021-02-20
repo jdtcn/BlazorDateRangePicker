@@ -6,11 +6,9 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <IsPackable>true</IsPackable>
-    <RazorLangVersion>3.0</RazorLangVersion>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <LangVersion>preview</LangVersion>
 
-    <Version>3.4.0</Version>
+    <Version>3.5.0</Version>
     <Authors>Sergey Zaikin</Authors>
     <PackageId>BlazorDateRangePicker</PackageId>
     <Title>Blazor Date Range Picker</Title>
@@ -42,6 +40,7 @@
   </ItemGroup>
     
   <ItemGroup>
+    <SupportedPlatform Include="browser" />
     <Content Remove="compilerconfig.json" />
     <None Include="compilerconfig.json" />
   </ItemGroup>

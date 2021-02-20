@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BlazorDateRangePicker
 {
-    public partial class Calendar
+    public partial class Calendar : ComponentBase
     {
 
         [CascadingParameter] public DateRangePicker Picker { get; set; }

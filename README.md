@@ -202,7 +202,13 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |DayTemplate|RenderFragment<CalendarItem>|null|Custom day cell template|
 |Inline|bool|false|Inline mode if true.|
 |ResetOnClear|bool|true|Whether the picker should set dates to null when the user clears the input.|
-
+|TimePicker|bool|false|Adds select boxes to choose times in addition to dates.|
+|TimePicker24Hour|bool|true|Use 24-hour instead of 12-hour times, removing the AM/PM selection.|
+|TimePickerIncrement|int|1|Increment of the minutes selection list for times (i.e. 30 to allow only selection of times ending in 0 or 30).|
+|TimePickerSeconds|bool|false|Show seconds in the timePicker.|
+|InitialStartTime|TimeSpan|TimeSpan.Zero|Initial start time value to show in the picker before any date selected|
+|InitialEndTime|TimeSpan|TimeSpan.FromDays(1).AddTicks(-1)|Initial end time value to show in the picker before any date selected|
+		
 ## Events
 
 | Name | Type | Description |
@@ -247,7 +253,15 @@ public class DateRange
 
 ## Changelog
 
-## 3.3.0
+## 3.5.0
+
+1. Added time picker
+
+### 3.4.0
+
+1. Added net 6 support
+
+### 3.3.0
 
 1. Fixed issue with month & year selection (#45)
 

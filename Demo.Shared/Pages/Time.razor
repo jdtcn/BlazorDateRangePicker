@@ -1,0 +1,94 @@
+﻿@page "/time"
+
+@using System.Globalization
+
+<div class="d-md-flex flex-md-row-reverse align-items-center justify-content-between">
+    <a class="btn btn-sm btn-bd-light my-2 my-md-0" href="https://github.com/jdtcn/BlazorDateRangePicker/blob/master/Demo.Shared/Pages/Time.razor"
+       title="View this file on GitHub" target="_blank" rel="noopener">View on GitHub</a>
+    <h3>Time picker</h3>
+</div>
+
+<p>TimePicker 12 Hour</p>
+
+<Example Text="@ExampleText1">
+    <DateRangePicker Culture="@CultureInfo.GetCultureInfo("en-US")" TimePicker="true" TimePicker24Hour="false"
+                     DateFormat="@($"{DateFormat} hh:mm tt")" />
+</Example>
+
+<p>TimePicker 24 Hour</p>
+
+<Example Text="@ExampleText2">
+    <DateRangePicker TimePicker="true" TimePicker24Hour="true" DateFormat="@($"{DateFormat} HH:mm")" />
+</Example>
+
+<p>TimePicker minutes increment</p>
+
+<Example Text="@ExampleText3">
+    <DateRangePicker TimePicker="true" TimePicker24Hour="true" TimePickerIncrement="15"
+                     InitialStartTime="RundStartTime" InitialEndTime="RoundEndTime"
+                     StartDate="RoundStartDate" EndDate="RoundEndDate"
+                     DateFormat="@($"{DateFormat} HH:mm")" OnRangeSelect="RoundOnRangeSelect" />
+</Example>
+
+<p>TimePicker with seconds</p>
+
+<Example Text="@ExampleText4">
+    <DateRangePicker TimePicker="true" TimePicker24Hour="true" TimePickerSeconds="true"
+                     DateFormat="@($"{DateFormat} HH:mm:ss")" />
+</Example>
+
+<p>Initial StartTime & EndTime</p>
+
+<Example Text="@ExampleText5">
+    <DateRangePicker TimePicker="true" TimePicker24Hour="true"
+                     InitialStartTime="StartTime" InitialEndTime="EndTime"
+                     DateFormat="@($"{DateFormat} HH:mm")" />
+</Example>
+
+<p>Initial StartTime & EndTime set by StartDate & EndDate</p>
+
+<Example Text="@ExampleText6">
+    <DateRangePicker TimePicker="true" TimePicker24Hour="true"
+                     @bind-StartDate="InitialStartDate" @bind-EndDate="InitialEndDate"
+                     DateFormat="@($"{DateFormat} HH:mm")" />
+</Example>
+
+<p>Single picker with time</p>
+
+<Example Text="@ExampleText7">
+    <DateRangePicker SingleDatePicker="true" TimePicker="true" TimePicker24Hour="true"
+                     DateFormat="@($"{DateFormat} HH:mm")" Drops="DropsType.Up" />
+</Example>
+
+@code {
+    private string DateFormat => CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
+    private TimeSpan RundStartTime = TimeSpan.FromHours(2).Add(TimeSpan.FromMinutes(15));
+    private TimeSpan RoundEndTime = TimeSpan.FromHours(15).Add(TimeSpan.FromMinutes(45));
+
+    private TimeSpan StartTime = TimeSpan.FromHours(2);
+    private TimeSpan EndTime = DateTime.Now.TimeOfDay;
+
+    private DateTimeOffset? InitialStartDate { get; set; } = DateTime.Now.AddDays(-1).Date.Add(TimeSpan.FromHours(2));
+    private DateTimeOffset? InitialEndDate { get; set; } = DateTime.Now.AddDays(1).Date.Add(TimeSpan.FromHours(15));
+
+    private DateTimeOffset? RoundStartDate { get; set; }
+    private DateTimeOffset? RoundEndDate { get; set; }
+
+    private void RoundOnRangeSelect(DateRange range)
+    {
+        RoundStartDate = range.Start.Date.Add(TimeSpan.FromHours(range.Start.Hour).Add(TimeSpan.FromMinutes((range.Start.Minute / 15) * 15)));
+        RoundEndDate = range.End.Date.Add(TimeSpan.FromHours(range.End.Hour).Add(TimeSpan.FromMinutes((range.End.Minute / 15) * 15)));
+    }
+
+    private string ExampleText1 = "<DateRangePicker Culture=\"@CultureInfo.GetCultureInfo(\"en-US\")\" \n    TimePicker=\"true\" TimePicker24Hour=\"false\" \n    DateFormat=\"@($\"{DateFormat} hh:mm tt\")\" />";
+    private string ExampleText2 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
+    private string ExampleText3 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" TimePickerIncrement=\"15\"\n" +
+                    "    InitialStartTime=\"RundStartTime\" InitialEndTime=\"RoundEndTime\"\n" +
+                    "    StartDate=\"RoundStartDate\" EndDate=\"RoundEndDate\"\n" +
+                    "    DateFormat=\"@($\"{DateFormat} HH:mm\")\" OnRangeSelect=\"RoundOnRangeSelect\" />";
+    private string ExampleText4 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    TimePickerSeconds=\"true\" DateFormat=\"@($\"{DateFormat} HH:mm:ss\")\" />";
+    private string ExampleText5 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    InitialStartTime=\"StartTime\" InitialEndTime=\"EndTime\" DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
+    private string ExampleText6 = "<DateRangePicker TimePicker=\"true\" TimePicker24Hour=\"true\" \n    @bind-StartDate=\"InitialStartDate\" @bind-EndDate=\"InitialEndDate\" \n    DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
+    private string ExampleText7 = "<DateRangePicker SingleDatePicker=\"true\" TimePicker=\"true\" TimePicker24Hour=\"true\" \n    DateFormat=\"@($\"{DateFormat} HH:mm\")\" />";
+}

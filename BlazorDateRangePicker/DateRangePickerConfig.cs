@@ -178,5 +178,35 @@ namespace BlazorDateRangePicker
         /// Whether the picker should set dates to null when the user cleans the input
         /// </summary>
         public bool? ResetOnClear { get; set; } = true;
+
+        /// <summary>
+        /// Adds select boxes to choose times in addition to dates.
+        /// </summary>
+        public bool? TimePicker { get; set; } = false;
+
+        /// <summary>
+        /// Use 24-hour instead of 12-hour times, removing the AM/PM selection.
+        /// </summary>
+        public bool? TimePicker24Hour { get; set; }
+
+        /// <summary>
+        /// Increment of the minutes selection list for times (i.e. 30 to allow only selection of times ending in 0 or 30).
+        /// </summary>
+        public int? TimePickerIncrement { get; set; } = 1;
+
+        /// <summary>
+        /// Show seconds in the timePicker.
+        /// </summary>
+        public bool? TimePickerSeconds { get; set; } = false;
+
+        /// <summary>
+        /// Initial time value to show in the picker before any date selected
+        /// </summary>
+        public TimeSpan? InitialStartTime { get; set; }
+
+        /// <summary>
+        /// Initial time value to show in the picker before any date selected
+        /// </summary>
+        public TimeSpan? InitialEndTime { get; set; }
     }
 }

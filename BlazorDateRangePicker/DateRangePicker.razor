@@ -10,7 +10,7 @@
 }
 else if (PickerTemplate != null)
 {
-    @PickerTemplate(this);
+    @PickerTemplate(this)
 }
 <div style="visibility:@(Inline == true || Visible ? "visible" : "hidden");">
     <div id="@ContainerId" class="daterangepicker @RootStyles">
@@ -40,17 +40,29 @@ else if (PickerTemplate != null)
                               OnClickDate="ClickDate"
                               OnHoverDate="OnHoverDate" />
                 </div>
+                @if (TimePicker == true)
+                {
+                    <div class="calendar-time">
+                        <TimePicker Side="@SideType.Left" Time="StartTime" TimeChanged="t => TimeChanged(start: t)" />
+                    </div>
+                }
             </div>
             @if (SingleDatePicker != true && ShowOnlyOneCalendar != true)
             {
                 <div class="drp-calendar right">
                     <div class="calendar-table">
                         <Calendar Side="@SideType.Right"
-                                  CalendarData="@RightCalendar"
-                                  OnMonthChanged="RightMonthChanged"
-                                  OnClickDate="ClickDate"
-                                  OnHoverDate="OnHoverDate" />
+                              CalendarData="@RightCalendar"
+                              OnMonthChanged="RightMonthChanged"
+                              OnClickDate="ClickDate"
+                              OnHoverDate="OnHoverDate" />
                     </div>
+                    @if (TimePicker == true)
+                    {
+                        <div class="calendar-time">
+                            <TimePicker Side="@SideType.Right" Time="EndTime" TimeChanged="t => TimeChanged(end: t)" />
+                        </div>
+                    }
                 </div>
             }
         </CascadingValue>
@@ -64,7 +76,7 @@ else if (PickerTemplate != null)
             }
             else
             {
-                @ButtonsTemplate(this);
+                @ButtonsTemplate(this)
             }
         </div>
 

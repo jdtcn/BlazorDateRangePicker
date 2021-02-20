@@ -50,5 +50,11 @@ namespace BlazorDateRangePicker
         bool? AutoAdjustCalendars { get; set; }
         bool? ShowOnlyOneCalendar { get; set; }
         bool? ResetOnClear { get; set; }
+        bool? TimePicker { get; set; }
+        bool? TimePicker24Hour { get; set; }
+        int? TimePickerIncrement { get; set; }
+        bool? TimePickerSeconds { get; set; }
+        TimeSpan? InitialStartTime { get; set; }
+        TimeSpan? InitialEndTime { get; set; }
     }
 }

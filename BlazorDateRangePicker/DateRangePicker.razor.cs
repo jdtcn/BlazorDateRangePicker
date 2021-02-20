@@ -276,6 +276,42 @@ namespace BlazorDateRangePicker
         public bool? AutoAdjustCalendars { get; set; }
 
         /// <summary>
+        /// Adds select boxes to choose times in addition to dates.
+        /// </summary>
+        [Parameter]
+        public bool? TimePicker { get; set; }
+
+        /// <summary>
+        /// Use 24-hour instead of 12-hour times, removing the AM/PM selection.
+        /// </summary>
+        [Parameter]
+        public bool? TimePicker24Hour { get; set; }
+
+        /// <summary>
+        /// Increment of the minutes selection list for times (i.e. 30 to allow only selection of times ending in 0 or 30).
+        /// </summary>
+        [Parameter]
+        public int? TimePickerIncrement { get; set; }
+
+        /// <summary>
+        /// Show seconds in the timePicker.
+        /// </summary>
+        [Parameter]
+        public bool? TimePickerSeconds { get; set; }
+
+        /// <summary>
+        /// Initial time value to show in the picker before any date selected
+        /// </summary>
+        [Parameter]
+        public TimeSpan? InitialStartTime { get; set; }
+
+        /// <summary>
+        /// Initial time value to show in the picker before any date selected
+        /// </summary>
+        [Parameter]
+        public TimeSpan? InitialEndTime { get; set; }
+
+        /// <summary>
         /// Whether the picker appears aligned to the left, to the right, or centered under the HTML element it's attached to.
         /// </summary>
         [Parameter]
@@ -321,7 +357,6 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<DateRange> OnRangeSelect { get; set; }
 
-
         /// <summary>
         /// Triggered when the picker reset by user
         /// </summary>
@@ -365,6 +400,8 @@ namespace BlazorDateRangePicker
         public DateTimeOffset? HoverDate { get; set; }
 
         private string EditText { get; set; }
+        private TimeSpan StartTime { get; set; }
+        private TimeSpan EndTime { get; set; }
 
         protected override void OnInitialized()
         {
@@ -385,7 +422,20 @@ namespace BlazorDateRangePicker
                 DateFormat = Culture.DateTimeFormat.ShortDatePattern;
             }
 
-            if (SingleDatePicker == true) AutoApply = true;
+            if (!TimePicker24Hour.HasValue)
+            {
+                TimePicker24Hour = Culture.DateTimeFormat.LongTimePattern.EndsWith("tt");
+            }
+
+            StartTime = TStartDate.HasValue
+                ? TStartDate.Value.TimeOfDay
+                : InitialStartTime ?? TimeSpan.Zero;
+
+            EndTime = TEndDate.HasValue
+                ? TEndDate.Value.TimeOfDay
+                : InitialEndTime ?? TimeSpan.FromDays(1).Add(TimeSpan.FromTicks(-1));
+
+            if (SingleDatePicker == true && TimePicker == false && !AutoApply.HasValue) AutoApply = true;
 
             if (!FirstDayOfWeek.HasValue)
             {
@@ -395,8 +445,8 @@ namespace BlazorDateRangePicker
             LeftCalendar = new CalendarType(this, SideType.Left);
             RightCalendar = new CalendarType(this, SideType.Right);
 
-            TStartDate = StartDate?.Date;
-            TEndDate = EndDate?.Date.AddDays(1).AddTicks(-1);
+            TStartDate = StartDate?.Date.Add(StartTime);
+            TEndDate = EndDate?.Date.Add(EndTime);
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
@@ -448,13 +498,13 @@ namespace BlazorDateRangePicker
 
                 if (SingleDatePicker == true && TStartDate != null)
                 {
-                    return $"{TStartDate.Value.ToString(DateFormat)}";
+                    return $"{TStartDate.Value.ToString(DateFormat, Culture)}";
                 }
 
                 if (TStartDate != null && TEndDate != null)
                 {
-                    return $"{TStartDate.Value.ToString(DateFormat)} - " +
-                           $"{TEndDate.Value.ToString(DateFormat)}";
+                    return $"{TStartDate.Value.ToString(DateFormat, Culture)} - " +
+                           $"{TEndDate.Value.ToString(DateFormat, Culture)}";
                 }
                 else
                 {
@@ -538,8 +588,10 @@ namespace BlazorDateRangePicker
 
             if (startDateParsed && SingleDatePicker == true)
             {
-                TStartDate = startDate.Date;
-                TEndDate = startDate.Date;
+                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = startDate.Date.Add(StartTime);
+
+                TStartDate = startDate;
+                TEndDate = startDate;
                 EditText = null;
                 return ClickApply(null);
             }
@@ -547,8 +599,11 @@ namespace BlazorDateRangePicker
                 && (!minDate.HasValue || startDate >= MinDate)
                 && (!maxDate.HasValue || endDate <= MaxDate))
             {
-                TStartDate = startDate.Date;
-                TEndDate = endDate.Date.AddDays(1).AddTicks(-1);
+                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = startDate.Date.Add(StartTime);
+                if (endDate.TimeOfDay == TimeSpan.Zero) endDate = endDate.Date.Add(EndTime);
+
+                TStartDate = startDate;
+                TEndDate = endDate;
                 EditText = null;
                 return ClickApply(null);
             }
@@ -586,8 +641,8 @@ namespace BlazorDateRangePicker
             else
             {
                 var dates = Ranges[label];
-                TStartDate = dates.Start.Date;
-                TEndDate = dates.End.Date.AddDays(1).AddTicks(-1);
+                TStartDate = dates.Start.Add(StartTime);
+                TEndDate = dates.End.Date.Add(EndTime);
 
                 if (AlwaysShowCalendars != true)
                 {
@@ -649,20 +704,28 @@ namespace BlazorDateRangePicker
             }
         }
 
-        private async Task ClickDate(DateTimeOffset date)
+        private void TimeChanged(TimeSpan? start = null, TimeSpan? end = null)
+        {
+            StartTime = start ?? StartTime;
+            EndTime = end ?? EndTime;
+            TStartDate = TStartDate?.Date.Add(StartTime);
+            TEndDate = TEndDate?.Date.Add(EndTime);
+        }
+
+        public virtual async Task ClickDate(DateTimeOffset date)
         {
             HoverDate = null;
             if (TEndDate.HasValue || TStartDate == null || date < TStartDate)
             {
                 //picking start
                 TEndDate = null;
-                TStartDate = date.Date;
+                TStartDate = date.Date.Add(StartTime);
                 await OnSelectionStart.InvokeAsync(date.Date);
             }
             else
             {
                 // picking end
-                TEndDate = date.Date.AddDays(1).AddTicks(-1);
+                TEndDate = date.Date.Add(EndTime);
                 await OnSelectionEnd.InvokeAsync(TEndDate.Value);
                 if (AutoApply == true)
                 {
@@ -670,11 +733,11 @@ namespace BlazorDateRangePicker
                 }
             }
 
-            if (SingleDatePicker == true)
+            if (SingleDatePicker == true )
             {
-                TStartDate = date.Date;
+                TStartDate = date.Date.Add(StartTime);
                 TEndDate = TStartDate;
-                await ClickApply(null);
+                if (AutoApply == true) await ClickApply(null);
             }
 
             await LeftCalendar.CalculateCalendar();
@@ -727,6 +790,14 @@ namespace BlazorDateRangePicker
         public async Task Open()
         {
             if (Visible) return;
+
+            StartTime = TStartDate.HasValue
+                ? TStartDate.Value.TimeOfDay
+                : InitialStartTime ?? TimeSpan.Zero;
+
+            EndTime = TEndDate.HasValue
+                ? TEndDate.Value.TimeOfDay
+                : InitialEndTime ?? TimeSpan.FromDays(1).Add(TimeSpan.FromTicks(-1));
 
             var selectedRange = Ranges?.FirstOrDefault(r =>
                 r.Value.Start.Date == TStartDate?.Date &&
