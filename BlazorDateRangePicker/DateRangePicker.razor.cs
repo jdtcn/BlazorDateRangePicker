@@ -505,6 +505,7 @@ namespace BlazorDateRangePicker
 
         protected override async Task OnParametersSetAsync()
         {
+            if (TimePicker == true && AutoApply == true) AutoApply = false;
             await LeftCalendar.CalculateCalendar();
             await RightCalendar.CalculateCalendar();
         }
