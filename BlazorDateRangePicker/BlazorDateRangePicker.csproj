@@ -36,8 +36,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-preview.1.21103.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.1.21103.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-preview.2.21154.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0-preview.2.21154.6" />
   </ItemGroup>
     
   <ItemGroup>
