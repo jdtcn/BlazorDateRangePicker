@@ -254,7 +254,11 @@ public class DateRange
 
 ## Changelog
 
-## 3.5.0
+## 3.6.0
+
+1. Disable AutoApply when TimePicker is enabled (#57)
+
+### 3.5.0
 
 1. Added time picker
 2. Added Prerender property (ability to render DOM only after click on the input) (#52)

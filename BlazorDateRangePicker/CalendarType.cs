@@ -103,14 +103,14 @@ namespace BlazorDateRangePicker
                 classes.Add("ends");
             }
             // Don't allow selection of dates before the minimum date
-            if (Picker.MinDate.HasValue && dt < Picker.MinDate)
+            if (Picker.MinDate.HasValue && dt.Date < Picker.MinDate.Value.Date)
             {
                 classes.Add("off");
                 classes.Add("disabled");
                 disabled = true;
             }
             // Don't allow selection of dates after the maximum date
-            if (Picker.MaxDate.HasValue && dt > Picker.MaxDate)
+            if (Picker.MaxDate.HasValue && dt.Date > Picker.MaxDate.Value.Date)
             {
                 classes.Add("off");
                 classes.Add("disabled");
