@@ -6,7 +6,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TextCopy" Version="4.3.0" />
 		<ProjectReference Include="..\BlazorDateRangePicker\BlazorDateRangePicker.csproj" />
 	</ItemGroup>
 

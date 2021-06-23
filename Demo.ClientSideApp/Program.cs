@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using BlazorDateRangePicker;
-using TextCopy;
 
 namespace Demo.ClientSideApp
 {
@@ -13,7 +13,8 @@ namespace Demo.ClientSideApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.InjectClipboard();
+            builder.Services.AddSingleton<Shared.IClipboard, Shared.BlazorClipboard>();
+
             builder.Services.AddDateRangePicker(config =>
             {
                 config.Attributes = new Dictionary<string, object>

@@ -197,3 +197,4 @@ InstrReports/
 .vscode
 /GeoRoute/GR.Admin/grAdmin/FrontApp/dist/
 Demo.ClientSideApp/Properties/PublishProfiles/*.pubxml
+ServiceDependencies

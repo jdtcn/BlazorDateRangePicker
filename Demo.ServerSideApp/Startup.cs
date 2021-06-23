@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorDateRangePicker;
-using TextCopy;
 
 namespace Demo.ServerSideApp
 {
@@ -25,7 +24,7 @@ namespace Demo.ServerSideApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.InjectClipboard();
+            services.AddSingleton<Shared.IClipboard, Shared.BlazorClipboard>();
 
             services.AddDateRangePicker(config =>
             {
