@@ -193,6 +193,7 @@ services.AddDateRangePicker(config => ..., configName: "CustomConfig");
 |ApplyLabel|string|"Apply"|Apply button text.|
 |CancelLabel|string|"Cancel"|Cancel button text.|
 |CustomRangeLabel|string|"Custom range"|Custom range label at the end of the list of predefined ranges.|
+|DateFormat|string|CultureInfo.DateTimeFormat.ShortDatePattern|Enforces the desired format for formatting the date, ignoring the settings of the current CultureInfo.|
 |Config|string|null|Name of the named configuration to use with this picker instance.|
 |ShowOnlyOneCalendar|bool|false|Show only one calendar in the picker instead of two calendars.|
 |CloseOnOutsideClick|bool|true|Whether the picker should close on outside click.|
