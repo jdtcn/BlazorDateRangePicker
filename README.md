@@ -255,7 +255,12 @@ public class DateRange
 
 ## Changelog
 
-## 3.6.0
+## 4.0.0
+
+1. Updated to NET 6
+2. Fixed issue with handling of DateTime.MinValue and DateTime.MaxValue dates (#65)
+
+### 3.6.0
 
 1. Disable AutoApply when TimePicker is enabled (#57)
 
