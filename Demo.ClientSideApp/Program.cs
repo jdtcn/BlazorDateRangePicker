@@ -13,7 +13,7 @@ namespace Demo.ClientSideApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddSingleton<Shared.IClipboard, Shared.BlazorClipboard>();
+            builder.Services.AddScoped<Shared.IClipboard, Shared.BlazorClipboard>();
 
             builder.Services.AddDateRangePicker(config =>
             {

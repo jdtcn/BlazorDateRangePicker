@@ -574,9 +574,9 @@ namespace BlazorDateRangePicker
             }
 
             var startDateParsed = DateTimeOffset.TryParseExact(dateStrings[0], DateFormat, Culture,
-                System.Globalization.DateTimeStyles.None, out var startDate);
+                System.Globalization.DateTimeStyles.AssumeUniversal, out var startDate);
             var endDateParsed = DateTimeOffset.TryParseExact(dateStrings[1], DateFormat, Culture,
-                System.Globalization.DateTimeStyles.None, out var endDate);
+                System.Globalization.DateTimeStyles.AssumeUniversal, out var endDate);
 
             if (startDateParsed && startDate < MinDate)
             {
@@ -611,7 +611,7 @@ namespace BlazorDateRangePicker
 
             if (startDateParsed && SingleDatePicker == true)
             {
-                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = startDate.Date.Add(StartTime);
+                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = SafeSetTime(startDate, StartTime);
 
                 TStartDate = startDate;
                 TEndDate = startDate;
@@ -622,8 +622,8 @@ namespace BlazorDateRangePicker
                 && (!minDate.HasValue || startDate >= MinDate)
                 && (!maxDate.HasValue || endDate <= MaxDate))
             {
-                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = startDate.Date.Add(StartTime);
-                if (endDate.TimeOfDay == TimeSpan.Zero) endDate = endDate.Date.Add(EndTime);
+                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = SafeSetTime(startDate, StartTime);
+                if (endDate.TimeOfDay == TimeSpan.Zero) endDate = SafeSetTime(endDate, EndTime);
 
                 TStartDate = startDate;
                 TEndDate = endDate;
@@ -639,7 +639,7 @@ namespace BlazorDateRangePicker
             return Task.CompletedTask;
         }
 
-        public void LostFocus(FocusEventArgs e)
+        public void LostFocus(FocusEventArgs _)
         {
             EditText = null;
         }
@@ -742,13 +742,13 @@ namespace BlazorDateRangePicker
             {
                 //picking start
                 TEndDate = null;
-                TStartDate = date.Date.Add(StartTime);
-                await OnSelectionStart.InvokeAsync(date.Date);
+                TStartDate = SafeSetTime(date, StartTime);
+                await OnSelectionStart.InvokeAsync(TStartDate.Value);
             }
             else
             {
                 // picking end
-                TEndDate = date.Date.Add(EndTime);
+                TEndDate = SafeSetTime(date, EndTime);
                 await OnSelectionEnd.InvokeAsync(TEndDate.Value);
                 if (AutoApply == true)
                 {
@@ -756,15 +756,36 @@ namespace BlazorDateRangePicker
                 }
             }
 
-            if (SingleDatePicker == true )
+            if (SingleDatePicker == true)
             {
-                TStartDate = date.Date.Add(StartTime);
+                TStartDate = SafeSetTime(date, StartTime);
                 TEndDate = TStartDate;
                 if (AutoApply == true) await ClickApply(null);
             }
 
             await LeftCalendar.CalculateCalendar();
             await RightCalendar.CalculateCalendar();
+        }
+
+        private DateTimeOffset SafeSetTime(DateTimeOffset date, TimeSpan time)
+        {
+            var isFirstDay = date.Day == 1 && date.Year == 0001 && date.Month == 1;
+            var isLastDay = date.Day == 31 && date.Year == 9999 && date.Month == 12;
+            var offset = DateTimeOffset.Now.Offset;
+            var tzSign = offset > TimeSpan.Zero;
+
+            if (isFirstDay)
+            {
+                return date.Date.Add(tzSign ? offset : TimeSpan.Zero).Add(time);
+            }
+            else if (isLastDay)
+            {
+                return date.Date.Add(tzSign ? TimeSpan.Zero : offset).Add(time);
+            }
+            else
+            {
+                return date.Date.Add(time);
+            }
         }
 
         private async Task OnHoverDate(DateTimeOffset date)
@@ -869,7 +890,10 @@ namespace BlazorDateRangePicker
                 if (newLeftMonth.Month == newRightMonth.Month
                     && newLeftMonth.Year == newRightMonth.Year)
                 {
-                    newRightMonth = newRightMonth.AddMonths(1);
+                    if (newRightMonth < DateTime.MaxValue.AddMonths(-1))
+                    {
+                        newRightMonth = newRightMonth.AddMonths(1);
+                    }
                 }
                 await MonthChanged(newLeftMonth, newRightMonth);
             }

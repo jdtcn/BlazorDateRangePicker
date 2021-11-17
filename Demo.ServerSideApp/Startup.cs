@@ -24,7 +24,7 @@ namespace Demo.ServerSideApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<Shared.IClipboard, Shared.BlazorClipboard>();
+            services.AddScoped<Shared.IClipboard, Shared.BlazorClipboard>();
 
             services.AddDateRangePicker(config =>
             {

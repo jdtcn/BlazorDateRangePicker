@@ -41,9 +41,11 @@ namespace BlazorDateRangePicker
 
         private bool PrevBtnVisible =>
             (!Picker.MinDate.HasValue || Picker.MinDate < CalendarData.FirstDay)
+            && CalendarData.FirstDay.Date > DateTime.MinValue.Date
             && (Picker.LinkedCalendars != true || Side == SideType.Left);
         private bool NextBtnVisible =>
             (!Picker.MaxDate.HasValue || Picker.MaxDate > CalendarData.LastDay)
+            && CalendarData.LastDay.Date < DateTime.MaxValue.Date
             && (Picker.LinkedCalendars != true || Side == SideType.Right || Picker.SingleDatePicker == true);
 
         private List<string> DayNames { get; set; } = new List<string>();
@@ -69,14 +71,16 @@ namespace BlazorDateRangePicker
             DayNames = GetDayNames();
         }
 
-        private Task PreviousMonth()
+        private Task PreviousMonth(bool enabled)
         {
-            return OnMonthChanged.InvokeAsync(CalendarData.Month.AddMonths(-1));
+            if (!enabled) return Task.CompletedTask;
+            return OnMonthChanged.InvokeAsync(CalendarData.Month.Subtract(CalendarData.Month.Offset).ToOffset(TimeSpan.Zero).AddMonths(-1));
         }
 
-        private Task NextMonth()
+        private Task NextMonth(bool enabled)
         {
-            return OnMonthChanged.InvokeAsync(CalendarData.Month.AddMonths(1));
+            if (!enabled) return Task.CompletedTask;
+            return OnMonthChanged.InvokeAsync(CalendarData.Month.Subtract(CalendarData.Month.Offset).ToOffset(TimeSpan.Zero).AddMonths(1));
         }
 
         private Task MonthSelected(int month)

@@ -14,15 +14,12 @@ namespace BlazorDateRangePicker
     public class CalendarType
     {
         private int DaysInMonth => DateTime.DaysInMonth(Month.Year, Month.Month);
-        private int LastMonth => FirstDay.AddMonths(-1).Month;
-        private int LastYear => FirstDay.AddMonths(-1).Year;
-        private int DaysInLastMonth => DateTime.DaysInMonth(LastYear, LastMonth);
         private DayOfWeek DayOfWeek => FirstDay.DayOfWeek;
         internal DayOfWeek FirstDayOfWeek { get; set; }
 
         internal SideType Side { get; private set; }
 
-        internal DateTimeOffset FirstDay => new DateTime(Month.Year, Month.Month, 1);
+        internal DateTimeOffset FirstDay => new DateTimeOffset(Month.Year, Month.Month, 1, 0, 0, 0, TimeSpan.Zero);
         internal DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
 
         public DateTimeOffset Month { get; private set; } = DateTime.Today;
@@ -51,20 +48,12 @@ namespace BlazorDateRangePicker
                 calendar.Add(new List<CalendarItem>());
             }
 
-            var startDay = DaysInLastMonth - (int)DayOfWeek + (int)FirstDayOfWeek + 1;
-            if (startDay > DaysInLastMonth)
-            {
-                startDay -= 7;
-            }
-            if (DayOfWeek == FirstDayOfWeek)
-            {
-                startDay = DaysInLastMonth - 6;
-            }
-
-            var curDate = new DateTimeOffset(LastYear, LastMonth, startDay, 12, 0, 0, Month.Offset);
+            var startDayOffset = (int)FirstDayOfWeek - (int)DayOfWeek;
+            if (startDayOffset > 0) startDayOffset -= 7;
+            if (DayOfWeek == FirstDayOfWeek) startDayOffset = -7;
 
             int col = 0, row = 0;
-            for (var i = 0; i < 42; i++, col++, curDate = curDate.AddDays(1))
+            for (var i = 0; i < 42; i++, col++)
             {
                 if (i > 0 && col % 7 == 0)
                 {
@@ -72,10 +61,21 @@ namespace BlazorDateRangePicker
                     row++;
                 }
 
-                var day = new DateTimeOffset(curDate.Year, curDate.Month, curDate.Day, 12, 0, 0, Month.Offset);
                 if (calendar[row].Count <= col)
-                    calendar[row].Add(new CalendarItem { Day = day, Side = Side });
-                else if (calendar[row][col].Day != day)
+                    calendar[row].Add(new CalendarItem { Side = Side });
+
+                var outOfRange =
+                    (Month.Year == 1 && Month.Month == 1 && startDayOffset + i < 0) ||
+                    (Month.Year == 9999 && Month.Month == 12 && startDayOffset + i >= DaysInMonth);
+
+                if (outOfRange)
+                {
+                    calendar[row][col].OutOfRange = true;
+                    continue;
+                }
+
+                var day = new DateTimeOffset(Month.Year, Month.Month, 1, 12, 0, 0, TimeSpan.Zero).AddDays(startDayOffset + i);
+                if (calendar[row][col].Day != day)
                     calendar[row][col].Day = day;
 
                 await UpdateCellClasses(calendar[row][col]);
@@ -117,7 +117,7 @@ namespace BlazorDateRangePicker
                 disabled = true;
             }
 
-            if (Picker.MinSpan.HasValue && Picker.TStartDate.HasValue && Picker.TEndDate == null 
+            if (Picker.MinSpan.HasValue && Picker.TStartDate.HasValue && Picker.TEndDate == null
                 && dt - Picker.TStartDate >= TimeSpan.Zero && dt - Picker.TStartDate < Picker.MinSpan)
             {
                 classes.Add("disabled");
@@ -223,5 +223,6 @@ namespace BlazorDateRangePicker
         public Action Click { get; set; }
         public string ClassNames { get; set; }
         public bool Disabled { get; set; }
+        public bool OutOfRange { get; set; }
     }
 }

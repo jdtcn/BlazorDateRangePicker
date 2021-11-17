@@ -11,7 +11,7 @@
             {
                 <th></th>
             }
-            <th class="@(PrevBtnVisible ? "prev available" : "")" @onclick="@(_ => PrevBtnVisible ? PreviousMonth() : null)"><span></span></th>
+            <th class="@(PrevBtnVisible ? "prev available" : "")" @onclick="@(_ => PreviousMonth(PrevBtnVisible))"><span></span></th>
             <th colspan="5" class="month">
                 @if (Picker.ShowDropdowns == true)
                 {
@@ -40,7 +40,7 @@
                     @Picker.Culture.DateTimeFormat.GetMonthName(CalendarData.Month.Month)<text>&nbsp;</text>@CalendarData.Month.Year
                 }
             </th>
-            <th class="@(NextBtnVisible ? "next available" : "")" @onclick="@(_ => NextBtnVisible ? NextMonth() : null)"><span></span></th>
+            <th class="@(NextBtnVisible ? "next available" : "")" @onclick="@(_ => NextMonth(NextBtnVisible))"><span></span></th>
 
         </tr>
         <tr>
@@ -76,6 +76,19 @@
                
                 @foreach (var dt in row)
                 {
+                    if (dt.OutOfRange)
+                    {
+                        @if (Picker.DayTemplate != null)
+                        {
+                            @Picker.DayTemplate(dt)
+                        }
+                        else
+                        {
+                            <td class="disabled">-</td>
+                        }
+                        continue;
+                    }
+
                     if (dt.Hover == null) dt.Hover = () => OnMouseOverDate(dt.Day);
                     if (dt.Click == null) dt.Click = () => ClickDate(dt);
 
