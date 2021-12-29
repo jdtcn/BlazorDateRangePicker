@@ -255,7 +255,12 @@ public class DateRange
 
 ## Changelog
 
-## 4.0.0
+## 4.1.0
+
+1. Fixed months adjustment issue (#69)
+2. Fixed problems with dates 01/01/0001 and 31/12/9999
+
+### 4.0.0
 
 1. Updated to NET 6
 2. Fixed issue with handling of DateTime.MinValue and DateTime.MaxValue dates (#65)

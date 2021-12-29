@@ -68,9 +68,10 @@ namespace BlazorDateRangePicker
                     (Month.Year == 1 && Month.Month == 1 && startDayOffset + i < 0) ||
                     (Month.Year == 9999 && Month.Month == 12 && startDayOffset + i >= DaysInMonth);
 
+                calendar[row][col].OutOfRange = outOfRange;
+
                 if (outOfRange)
                 {
-                    calendar[row][col].OutOfRange = true;
                     continue;
                 }
 

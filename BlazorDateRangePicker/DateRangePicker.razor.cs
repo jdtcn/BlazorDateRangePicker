@@ -611,7 +611,7 @@ namespace BlazorDateRangePicker
 
             if (startDateParsed && SingleDatePicker == true)
             {
-                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = SafeSetTime(startDate, StartTime);
+                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = SafeSetStartTime(startDate);
 
                 TStartDate = startDate;
                 TEndDate = startDate;
@@ -622,8 +622,8 @@ namespace BlazorDateRangePicker
                 && (!minDate.HasValue || startDate >= MinDate)
                 && (!maxDate.HasValue || endDate <= MaxDate))
             {
-                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = SafeSetTime(startDate, StartTime);
-                if (endDate.TimeOfDay == TimeSpan.Zero) endDate = SafeSetTime(endDate, EndTime);
+                if (startDate.TimeOfDay == TimeSpan.Zero) startDate = SafeSetStartTime(startDate);
+                if (endDate.TimeOfDay == TimeSpan.Zero) endDate = SafeSetEndTime(endDate);
 
                 TStartDate = startDate;
                 TEndDate = endDate;
@@ -664,8 +664,8 @@ namespace BlazorDateRangePicker
             else
             {
                 var dates = Ranges[label];
-                TStartDate = dates.Start.Add(StartTime);
-                TEndDate = dates.End.Date.Add(EndTime);
+                TStartDate = SafeSetStartTime(dates.Start);
+                TEndDate = SafeSetEndTime(dates.End.Date);
 
                 if (AlwaysShowCalendars != true)
                 {
@@ -731,8 +731,9 @@ namespace BlazorDateRangePicker
         {
             StartTime = start ?? StartTime;
             EndTime = end ?? EndTime;
-            TStartDate = TStartDate?.Date.Add(StartTime);
-            TEndDate = TEndDate?.Date.Add(EndTime);
+
+            TStartDate = TStartDate.HasValue ? SafeSetStartTime(TStartDate.Value) : null;
+            TEndDate = TEndDate.HasValue ? SafeSetEndTime(TEndDate.Value) : null;
         }
 
         public virtual async Task ClickDate(DateTimeOffset date)
@@ -740,15 +741,15 @@ namespace BlazorDateRangePicker
             HoverDate = null;
             if (TEndDate.HasValue || TStartDate == null || date < TStartDate)
             {
-                //picking start
+                // picking start
                 TEndDate = null;
-                TStartDate = SafeSetTime(date, StartTime);
+                TStartDate = SafeSetStartTime(date);
                 await OnSelectionStart.InvokeAsync(TStartDate.Value);
             }
             else
             {
                 // picking end
-                TEndDate = SafeSetTime(date, EndTime);
+                TEndDate = SafeSetEndTime(date);
                 await OnSelectionEnd.InvokeAsync(TEndDate.Value);
                 if (AutoApply == true)
                 {
@@ -758,7 +759,7 @@ namespace BlazorDateRangePicker
 
             if (SingleDatePicker == true)
             {
-                TStartDate = SafeSetTime(date, StartTime);
+                TStartDate = SafeSetStartTime(date);
                 TEndDate = TStartDate;
                 if (AutoApply == true) await ClickApply(null);
             }
@@ -767,20 +768,28 @@ namespace BlazorDateRangePicker
             await RightCalendar.CalculateCalendar();
         }
 
-        private DateTimeOffset SafeSetTime(DateTimeOffset date, TimeSpan time)
+        private DateTimeOffset SafeSetStartTime(DateTimeOffset date) => SafeSetTime(date, true);
+
+        private DateTimeOffset SafeSetEndTime(DateTimeOffset date) => SafeSetTime(date, false);
+
+        private DateTimeOffset SafeSetTime(DateTimeOffset date, bool startTime)
         {
+            var time = TimePicker == true
+                ? startTime ? StartTime : EndTime
+                : startTime ? TimeSpan.Zero : TimeSpan.FromDays(1).Add(TimeSpan.FromTicks(-1));
+
             var isFirstDay = date.Day == 1 && date.Year == 0001 && date.Month == 1;
             var isLastDay = date.Day == 31 && date.Year == 9999 && date.Month == 12;
-            var offset = DateTimeOffset.Now.Offset;
-            var tzSign = offset > TimeSpan.Zero;
 
             if (isFirstDay)
             {
-                return date.Date.Add(tzSign ? offset : TimeSpan.Zero).Add(time);
+                var offset = new DateTimeOffset(date.Date.AddDays(1)).Offset;
+                return date.Date.Add(time < offset ? time + offset : time);
             }
             else if (isLastDay)
-            {
-                return date.Date.Add(tzSign ? TimeSpan.Zero : offset).Add(time);
+            {           
+                var offset = new DateTimeOffset(date.Date.AddDays(-1)).Offset;
+                return date.Date.Add(time - offset > TimeSpan.FromDays(1) ? time + offset : time);
             }
             else
             {
