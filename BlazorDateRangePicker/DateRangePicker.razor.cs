@@ -870,7 +870,7 @@ namespace BlazorDateRangePicker
             if (AutoAdjustCalendars == true || Prerender != true) await AdjustCalendars();
         }
 
-        public async Task AdjustCalendars()
+        public virtual async Task AdjustCalendars()
         {
             Prerender = true;
 
@@ -878,6 +878,15 @@ namespace BlazorDateRangePicker
             var newRightMonth = LinkedCalendars == true
                 ? newLeftMonth.AddMonths(1)
                 : (TEndDate ?? newLeftMonth.AddMonths(1));
+
+            if (newLeftMonth.Month == newRightMonth.Month
+                && newLeftMonth.Year == newRightMonth.Year)
+            {
+                if (newRightMonth < DateTime.MaxValue.AddMonths(-1))
+                {
+                    newRightMonth = newRightMonth.AddMonths(1);
+                }
+            }
 
             var needAdjust =
                 LeftCalendar?.Month.Month != newLeftMonth.Month
@@ -887,14 +896,6 @@ namespace BlazorDateRangePicker
 
             if (needAdjust)
             {
-                if (newLeftMonth.Month == newRightMonth.Month
-                    && newLeftMonth.Year == newRightMonth.Year)
-                {
-                    if (newRightMonth < DateTime.MaxValue.AddMonths(-1))
-                    {
-                        newRightMonth = newRightMonth.AddMonths(1);
-                    }
-                }
                 await MonthChanged(newLeftMonth, newRightMonth);
             }
         }
