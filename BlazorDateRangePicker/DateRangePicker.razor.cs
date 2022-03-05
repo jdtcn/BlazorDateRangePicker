@@ -412,7 +412,7 @@ namespace BlazorDateRangePicker
         public CalendarType LeftCalendar { get; set; }
         public CalendarType RightCalendar { get; set; }
 
-        internal string ChosenLabel { get; set; }
+        public string ChosenLabel { get; private set; }
         internal bool CalendarsVisible { get; set; }
         internal bool Loading { get; set; }
         public DateTimeOffset? HoverDate { get; set; }
