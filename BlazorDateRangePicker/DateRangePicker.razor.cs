@@ -739,7 +739,7 @@ namespace BlazorDateRangePicker
         public virtual async Task ClickDate(DateTimeOffset date)
         {
             HoverDate = null;
-            if (TEndDate.HasValue || TStartDate == null || date < TStartDate)
+            if (TEndDate.HasValue || TStartDate == null || date.Date.Add(EndTime) < TStartDate)
             {
                 // picking start
                 TEndDate = null;
