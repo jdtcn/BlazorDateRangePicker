@@ -664,6 +664,13 @@ namespace BlazorDateRangePicker
             else
             {
                 var dates = Ranges[label];
+
+                if (TimePicker == true)
+                {
+                    StartTime = dates.Start.TimeOfDay;
+                    EndTime = dates.End.TimeOfDay;
+                }
+
                 TStartDate = SafeSetStartTime(dates.Start);
                 TEndDate = SafeSetEndTime(dates.End.Date);
 
