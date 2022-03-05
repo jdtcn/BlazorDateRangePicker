@@ -255,7 +255,14 @@ public class DateRange
 
 ## Changelog
 
-## 4.1.0
+## 4.2.0
+
+1. Fixed same date selection issue when TimePicker is enabled
+2. Fixed predefined date ranges with time
+3. Made `ChosenLabel` property public
+4. Added net7 support
+
+### 4.1.0
 
 1. Fixed months adjustment issue (#69)
 2. Fixed problems with dates 01/01/0001 and 31/12/9999
