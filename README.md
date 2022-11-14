@@ -255,7 +255,11 @@ public class DateRange
 
 ## Changelog
 
-## 4.2.0
+## 4.3.0
+
+1. Updated to net 7
+
+### 4.2.0
 
 1. Fixed same date selection issue when TimePicker is enabled
 2. Fixed predefined date ranges with time

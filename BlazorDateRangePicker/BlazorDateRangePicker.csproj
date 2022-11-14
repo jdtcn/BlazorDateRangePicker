@@ -9,7 +9,7 @@
     <LangVersion>preview</LangVersion>
     <RazorLangVersion>3.0</RazorLangVersion>
 
-    <Version>4.2.0</Version>
+    <Version>4.3.0</Version>
     <Authors>Sergey Zaikin</Authors>
     <PackageId>BlazorDateRangePicker</PackageId>
     <Title>Blazor Date Range Picker</Title>
@@ -40,8 +40,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0'))">
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.0-preview.1.22109.13" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0-preview.1.22109.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
