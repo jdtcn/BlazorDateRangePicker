@@ -409,6 +409,10 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<DateTimeOffset> OnSelectionEnd { get; set; }
 
+        /// <summary>List of day names to be displayed instead of those defined in the Culture</summary>
+        [Parameter]
+        public List<string> CustomDayNames { get; set; }
+
         public CalendarType LeftCalendar { get; set; }
         public CalendarType RightCalendar { get; set; }
 
@@ -431,7 +435,7 @@ namespace BlazorDateRangePicker
                 config = configs.First(c => c.Name == Config);
             }
 
-            if (config == null) config = new DateRangePickerConfig();
+            config ??= new DateRangePickerConfig();
             config.CopyProperties(this);
 
             ConfigAttributes = config.Attributes;
@@ -498,6 +502,27 @@ namespace BlazorDateRangePicker
                     EndDate = TStartDate;
                     TEndDate = TStartDate;
                 }
+            }
+
+            if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(DateFormat)))
+            {
+                DateFormat = ((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.ShortDatePattern;
+            }
+
+            if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(TimePicker24Hour)))
+            {
+                TimePicker24Hour = ((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.LongTimePattern.EndsWith("tt");
+            }
+
+            if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(FirstDayOfWeek)))
+            {
+                FirstDayOfWeek = ((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.FirstDayOfWeek;
+            }
+
+            if (LeftCalendar != null && RightCalendar != null && FirstDayOfWeek.HasValue && LeftCalendar.FirstDayOfWeek != FirstDayOfWeek)
+            {
+                LeftCalendar.FirstDayOfWeek = FirstDayOfWeek.Value;
+                RightCalendar.FirstDayOfWeek = FirstDayOfWeek.Value;
             }
 
             await base.SetParametersAsync(parameters);

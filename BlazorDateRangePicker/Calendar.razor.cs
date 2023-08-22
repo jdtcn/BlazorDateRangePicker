@@ -18,6 +18,7 @@ namespace BlazorDateRangePicker
 
         [CascadingParameter] public DateRangePicker Picker { get; set; }
         [Parameter] public CalendarType CalendarData { get; set; }
+        [Parameter] public List<string> CustomDayNames { get; set; }
 
         [Parameter] public SideType? Side { get; set; }
         [Parameter] public EventCallback<DateTimeOffset> OnMonthChanged { get; set; }
@@ -48,10 +49,12 @@ namespace BlazorDateRangePicker
             && CalendarData.LastDay.Date < DateTime.MaxValue.Date
             && (Picker.LinkedCalendars != true || Side == SideType.Right || Picker.SingleDatePicker == true);
 
-        private List<string> DayNames { get; set; } = new List<string>();
+        private List<string> DayNames => GetDayNames();
 
         private List<string> GetDayNames()
         {
+            if (CustomDayNames?.Count == 7) return CustomDayNames;
+
             var dayNames = Picker.Culture.DateTimeFormat.ShortestDayNames.ToList();
             var firstDayNumber = (int)Picker.FirstDayOfWeek;
             if (firstDayNumber > 0)
@@ -64,11 +67,6 @@ namespace BlazorDateRangePicker
                 }
             }
             return dayNames;
-        }
-
-        protected override void OnInitialized()
-        {
-            DayNames = GetDayNames();
         }
 
         private Task PreviousMonth(bool enabled)

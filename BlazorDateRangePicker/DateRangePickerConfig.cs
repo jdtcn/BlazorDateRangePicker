@@ -213,5 +213,8 @@ namespace BlazorDateRangePicker
         /// Prerender component html before picker opening.
         /// </summary>
         public bool? Prerender { get; set; } = true;
+
+        /// <summary>List of day names to be displayed instead of those defined in the Culture</summary>
+        public List<string> CustomDayNames { get; set; }
     }
 }

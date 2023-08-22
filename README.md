@@ -255,7 +255,12 @@ public class DateRange
 
 ## Changelog
 
-## 4.3.0
+## 4.4.0
+
+1. Made it possible to change culture on the fly (#89)
+2. Added net 8 support
+
+### 4.3.0
 
 1. Updated to net 7
 

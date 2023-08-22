@@ -37,6 +37,7 @@ else if (PickerTemplate != null)
             <div class="drp-calendar left @(SingleDatePicker == true || ShowOnlyOneCalendar == true ? "single" : "")">
                 <div class="calendar-table">
                     <Calendar Side="@SideType.Left"
+                              CustomDayNames="@CustomDayNames"
                               CalendarData="@LeftCalendar"
                               OnMonthChanged="LeftMonthChanged"
                               OnClickDate="ClickDate"
@@ -55,6 +56,7 @@ else if (PickerTemplate != null)
                 <div class="drp-calendar right">
                     <div class="calendar-table">
                         <Calendar Side="@SideType.Right"
+                              CustomDayNames="@CustomDayNames"
                               CalendarData="@RightCalendar"
                               OnMonthChanged="RightMonthChanged"
                               OnClickDate="ClickDate"

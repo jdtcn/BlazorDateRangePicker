@@ -57,5 +57,6 @@ namespace BlazorDateRangePicker
         TimeSpan? InitialStartTime { get; set; }
         TimeSpan? InitialEndTime { get; set; }
         bool? Prerender { get; set; }
+        List<string> CustomDayNames { get; set; }
     }
 }
