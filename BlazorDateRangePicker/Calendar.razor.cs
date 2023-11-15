@@ -47,7 +47,7 @@ namespace BlazorDateRangePicker
         private bool NextBtnVisible =>
             (!Picker.MaxDate.HasValue || Picker.MaxDate > CalendarData.LastDay)
             && CalendarData.LastDay.Date < DateTime.MaxValue.Date
-            && (Picker.LinkedCalendars != true || Side == SideType.Right || Picker.SingleDatePicker == true);
+            && (Picker.LinkedCalendars != true || Side == SideType.Right || Picker.ShowOnlyOneCalendar == true);
 
         private List<string> DayNames => GetDayNames();
 

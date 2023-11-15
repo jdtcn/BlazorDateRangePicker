@@ -29,7 +29,7 @@ Include these lines into your _Host.cshtml (or *index.html* for Blazor WebAssemb
 ````html
 <script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
 <link rel="stylesheet" href="_content/BlazorDateRangePicker/daterangepicker.min.css" />
-```` 
+````
 
 ### Use the component:
 
@@ -109,12 +109,12 @@ Custom buttons:
 ````C#
 <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate">
     <ButtonsTemplate>
-        <button class="cancelBtn btn btn-sm btn-default" 
+        <button class="cancelBtn btn btn-sm btn-default"
             @onclick="@context.ClickCancel" type="button">Cancel</button>
-        <button class="cancelBtn btn btn-sm btn-default" 
+        <button class="cancelBtn btn btn-sm btn-default"
             @onclick="@(e => ResetClick(e, context))" type="button">Reset</button>
         <button class="applyBtn btn btn-sm btn-primary" @onclick="@context.ClickApply"
-            disabled="@(context.TStartDate == null || context.TEndDate == null)" 
+            disabled="@(context.TStartDate == null || context.TEndDate == null)"
             type="button">Apply</button>
     </ButtonsTemplate>
 </DateRangePicker>
@@ -246,8 +246,8 @@ public class DateRange
 }
 ````
 
->Note: 
->DateRange Start and End is in local timezone. 
+>Note:
+>DateRange Start and End is in local timezone.
 >
 >The Start property is the start of a selected day (dateTime.Date).
 >
@@ -255,10 +255,16 @@ public class DateRange
 
 ## Changelog
 
-## 4.4.0
+## 4.5.0
+
+1. Added net 8 support
+2. Fixed TimePicker24Hour has wrong value issue (#90)
+3. Added the ability to display two calendars in single date select mode (#87)
+
+### 4.4.0
 
 1. Made it possible to change culture on the fly (#89)
-2. Added net 8 support
+2. Added net 8 rc1 support
 
 ### 4.3.0
 
@@ -323,7 +329,7 @@ public class DateRange
 
 1. Add `DayTemplate` property to customize picker day cell
 
-2. Demo applications refactored and updated with new examples 
+2. Demo applications refactored and updated with new examples
 
 ### 2.9.0
 
@@ -376,7 +382,7 @@ public class DateRange
 2. Now in Blazor WebAssembly we need to add library static assets manually
 
 In .NET Core 3.0.0 projects you should stay on 1.\*.\* version
- 
+
 ## License
 
 The MIT License (MIT)

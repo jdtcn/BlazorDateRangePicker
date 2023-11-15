@@ -34,7 +34,7 @@ else if (PickerTemplate != null)
         </div>
 
         <CascadingValue Value="this">
-            <div class="drp-calendar left @(SingleDatePicker == true || ShowOnlyOneCalendar == true ? "single" : "")">
+            <div class="drp-calendar left @(ShowOnlyOneCalendar == true ? "single" : "")">
                 <div class="calendar-table">
                     <Calendar Side="@SideType.Left"
                               CustomDayNames="@CustomDayNames"
@@ -51,7 +51,7 @@ else if (PickerTemplate != null)
                     </div>
                 }
             </div>
-            @if (SingleDatePicker != true && ShowOnlyOneCalendar != true)
+            @if (ShowOnlyOneCalendar != true)
             {
                 <div class="drp-calendar right">
                     <div class="calendar-table">
@@ -65,7 +65,7 @@ else if (PickerTemplate != null)
                     @if (TimePicker == true)
                     {
                         <div class="calendar-time">
-                            <TimePicker Side="@SideType.Right" Day="TEndDate"
+                            <TimePicker Side="@SideType.Right" Day="TEndDate" TimePicker24Hour="TimePicker24Hour"
                                         Time="EndTime" TimeChanged="t => TimeChanged(end: t)" />
                         </div>
                     }

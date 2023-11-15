@@ -447,7 +447,7 @@ namespace BlazorDateRangePicker
 
             if (!TimePicker24Hour.HasValue)
             {
-                TimePicker24Hour = Culture.DateTimeFormat.LongTimePattern.EndsWith("tt");
+                TimePicker24Hour = !Culture.DateTimeFormat.LongTimePattern.EndsWith("tt");
             }
 
             StartTime = TStartDate.HasValue
@@ -459,6 +459,7 @@ namespace BlazorDateRangePicker
                 : InitialEndTime ?? TimeSpan.FromDays(1).Add(TimeSpan.FromTicks(-1));
 
             if (SingleDatePicker == true && TimePicker == false && !AutoApply.HasValue) AutoApply = true;
+            if (SingleDatePicker == true && !ShowOnlyOneCalendar.HasValue) ShowOnlyOneCalendar = true;
 
             if (!FirstDayOfWeek.HasValue)
             {
@@ -511,7 +512,7 @@ namespace BlazorDateRangePicker
 
             if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(TimePicker24Hour)))
             {
-                TimePicker24Hour = ((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.LongTimePattern.EndsWith("tt");
+                TimePicker24Hour = !((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.LongTimePattern.EndsWith("tt");
             }
 
             if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(FirstDayOfWeek)))

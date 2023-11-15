@@ -19,12 +19,14 @@ namespace BlazorDateRangePicker
         [Parameter] public TimeSpan Time { get; set; }
         [Parameter] public EventCallback<TimeSpan?> TimeChanged { get; set; }
         [Parameter] public DateTimeOffset? Day { get; set; }
+        [Parameter] public bool? TimePicker24Hour { get; set; }
+
+        private readonly IEnumerable<int> HoursRange24 = Enumerable.Range(0, 24);
+        private readonly IEnumerable<int> HoursRange12 = Enumerable.Range(1, 12);
+        private IEnumerable<int> CustomHoursRange;
 
         protected override void OnInitialized()
         {
-            HoursRange = Enumerable.Range(
-                Picker.TimePicker24Hour == true ? 0 : 1,
-                Picker.TimePicker24Hour == true ? 24 : 12);
             MinutesRange = Enumerable.Range(0, 60);
             SecondsRange = Enumerable.Range(0, 60);
         }
@@ -34,13 +36,19 @@ namespace BlazorDateRangePicker
             if (Picker.TimeEnabledFunction != null)
             {
                 var timeEnabled = await Picker.TimeEnabledFunction(Day);
-                HoursRange = timeEnabled.Hours;
+                CustomHoursRange = timeEnabled.Hours;
                 MinutesRange = timeEnabled.Minutes;
                 SecondsRange = timeEnabled.Seconds;
-            };
+            }
+            else
+            {
+                CustomHoursRange = null;
+                MinutesRange = Enumerable.Range(0, 60);
+                SecondsRange = Enumerable.Range(0, 60);
+            }
         }
 
-        private IEnumerable<int> HoursRange { get; set; }
+        private IEnumerable<int> HoursRange => CustomHoursRange ?? (TimePicker24Hour != false ? HoursRange24 : HoursRange12);
         private IEnumerable<int> MinutesRange { get; set; }
         private IEnumerable<int> SecondsRange { get; set; }
 
