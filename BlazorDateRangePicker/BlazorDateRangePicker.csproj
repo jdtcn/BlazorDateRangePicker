@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2;net5;net6;net7;net8</TargetFrameworks>
@@ -9,7 +9,7 @@
     <LangVersion>preview</LangVersion>
     <RazorLangVersion>3.0</RazorLangVersion>
 
-    <Version>4.5.0</Version>
+    <Version>4.5.1</Version>
     <Authors>Sergey Zaikin</Authors>
     <PackageId>BlazorDateRangePicker</PackageId>
     <Title>Blazor Date Range Picker</Title>
