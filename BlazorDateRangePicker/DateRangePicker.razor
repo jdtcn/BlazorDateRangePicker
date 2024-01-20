@@ -14,7 +14,7 @@ else if (PickerTemplate != null)
 }
 
 @{ RenderFragment picker = 
-@<div style="visibility:@(Inline == true || Visible ? "visible" : "hidden");">
+@<div class="daterangepicker-visibility-@(Inline == true || Visible ? "visible" : "hidden")">
     <div id="@ContainerId" class="daterangepicker @RootStyles">
 
         <div class="ranges">

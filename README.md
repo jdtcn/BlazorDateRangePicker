@@ -24,11 +24,10 @@ Download library from NuGet in the NuGet Package Manager, or by executing the fo
 Install-Package BlazorDateRangePicker
 ````
 
-Include these lines into your _Host.cshtml (or *index.html* for Blazor WebAssembly) file `<head></head>` section:
+The component uses [css and js isolation](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/css-isolation), you don't need to add anything to your _Host.cshtml or index.html, just make sure the isolated styles are connected:
 
 ````html
-<script src="_content/BlazorDateRangePicker/clickAndPositionHandler.js"></script>
-<link rel="stylesheet" href="_content/BlazorDateRangePicker/daterangepicker.min.css" />
+<link href="{ASSEMBLY NAME}.styles.css" rel="stylesheet">
 ````
 
 ### Use the component:
@@ -255,7 +254,14 @@ public class DateRange
 
 ## Changelog
 
-## 4.5.0
+## 5.0.0
+
+1. Removed inline style usage to make CSP work (#95)
+2. Fixed awaiting change handlers before closing (#91)
+3. Switched the component to use css and js isolation, you don't need to add js and css links to your _Host.cshtml manually anymore (#66)
+4. Removed NET Core 3.1 and NET 5 support
+
+### 4.5.0
 
 1. Added net 8 support
 2. Fixed TimePicker24Hour has wrong value issue (#90)
@@ -387,7 +393,7 @@ In .NET Core 3.0.0 projects you should stay on 1.\*.\* version
 
 The MIT License (MIT)
 
-Copyright (c) 2019-2020 Sergey Zaikin
+Copyright (c) 2019-2024 Sergey Zaikin
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

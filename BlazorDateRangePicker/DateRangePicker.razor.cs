@@ -426,6 +426,11 @@ namespace BlazorDateRangePicker
         private TimeSpan EndTime { get; set; }
         public bool Render { get; set; }
 
+        private Task<IJSObjectReference> _module;
+        private const string ImportPath = "./_content/BlazorDateRangePicker/clickAndPositionHandler.js";
+
+        private Task<IJSObjectReference> Module => _module ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", ImportPath).AsTask();
+
         protected override void OnInitialized()
         {
             var configs = ServiceProvider.GetServices<DateRangePickerConfig>();
@@ -820,7 +825,7 @@ namespace BlazorDateRangePicker
                 return date.Date.Add(time < offset ? time + offset : time);
             }
             else if (isLastDay)
-            {           
+            {
                 var offset = new DateTimeOffset(date.Date.AddDays(-1)).Offset;
                 return date.Date.Add(time - offset > TimeSpan.FromDays(1) ? time + offset : time);
             }
@@ -843,7 +848,7 @@ namespace BlazorDateRangePicker
         public async Task ClickApply(MouseEventArgs e)
         {
             await Close();
-            
+
             StartDate = TStartDate;
             await StartDateChanged.InvokeAsync(TStartDate);
 
@@ -903,8 +908,9 @@ namespace BlazorDateRangePicker
                 CalendarsVisible = true;
             }
 
-            await JSRuntime.InvokeAsync<object>("clickAndPositionHandler.addClickOutsideEvent", ContainerId, Id, DotNetObjectReference.Create(this));
-            await JSRuntime.InvokeAsync<object>("clickAndPositionHandler.getPickerPosition", ContainerId, Id,
+            var module = await Module;
+            await module.InvokeVoidAsync("addClickOutsideEvent", ContainerId, Id, DotNetObjectReference.Create(this));
+            await module.InvokeVoidAsync("getPickerPosition", ContainerId, Id,
                 Enum.GetName(typeof(DropsType), Drops).ToLower(), Enum.GetName(typeof(SideType), Opens).ToLower());
 
             Visible = true;
@@ -972,6 +978,15 @@ namespace BlazorDateRangePicker
             {
                 await ClickCancel(null);
                 StateHasChanged();
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_module != null)
+            {
+                var module = await _module;
+                await module.DisposeAsync();
             }
         }
     }
