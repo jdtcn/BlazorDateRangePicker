@@ -254,7 +254,11 @@ public class DateRange
 
 ## Changelog
 
-## 5.0.0
+## 5.1.0
+
+1. Fixed the issue with clickAndPositionHandler.js (#96, #97)
+
+### 5.0.0
 
 1. Removed inline style usage to make CSP work (#95)
 2. Fixed awaiting change handlers before closing (#91)

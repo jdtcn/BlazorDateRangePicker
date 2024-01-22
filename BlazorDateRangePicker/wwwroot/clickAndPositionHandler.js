@@ -23,7 +23,7 @@ export function addClickOutsideEvent(elementId, parentId, dotnetHelper) {
 
 export function getPickerPosition(elementId, parentId, drops, opens, skipAddListener) {
     var resizeFunction = function () {
-        clickAndPositionHandler.getPickerPosition(elementId, parentId, drops, opens, true);
+        getPickerPosition(elementId, parentId, drops, opens, true);
     };
     var parentOffset = { top: 0, left: 0 },
         containerTop;
