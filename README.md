@@ -254,7 +254,11 @@ public class DateRange
 
 ## Changelog
 
-## 5.1.0
+## 5.2.0
+
+1. Fixed the issue with caching of clickAndPositionHandler.js (#96)
+
+### 5.1.0
 
 1. Fixed the issue with clickAndPositionHandler.js (#96, #97)
 
