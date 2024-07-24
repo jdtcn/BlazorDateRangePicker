@@ -254,7 +254,11 @@ public class DateRange
 
 ## Changelog
 
-## 5.2.0
+## 5.3.0
+
+1. Fixed the issue with TimePicker24Hour not working on left calendar (#104)
+
+### 5.2.0
 
 1. Fixed the issue with caching of clickAndPositionHandler.js (#96)
 
