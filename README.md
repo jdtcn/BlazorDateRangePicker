@@ -254,7 +254,12 @@ public class DateRange
 
 ## Changelog
 
-## 5.3.0
+## 5.4.0
+
+1. Added CustomParseFunction callback (#108)
+2. Added net9 support
+
+### 5.3.0
 
 1. Fixed the issue with TimePicker24Hour not working on left calendar (#104)
 

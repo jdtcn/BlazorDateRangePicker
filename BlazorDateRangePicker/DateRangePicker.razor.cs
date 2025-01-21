@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Components.Web;
 using System.Threading.Tasks;
 using System.Threading;
 
+using static BlazorDateRangePicker.DateRangePickerConfig;
+
 namespace BlazorDateRangePicker
 {
     public partial class DateRangePicker : ComponentBase, IConfigurableOptions
@@ -409,6 +411,12 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<DateTimeOffset> OnSelectionEnd { get; set; }
 
+        /// <summary>Custom date parsing function</summary>
+        [Parameter]
+        public DateParsingDelegate CustomParseFunction { get; set; }
+
+        private DateParsingDelegate ParseFunction => CustomParseFunction ?? TryParseDates;
+
         /// <summary>List of day names to be displayed instead of those defined in the Culture</summary>
         [Parameter]
         public List<string> CustomDayNames { get; set; }
@@ -599,16 +607,7 @@ namespace BlazorDateRangePicker
         {
             EditText = e.Value.ToString();
 
-            var dateStrings = EditText.Split('-').Select(s => s.Trim()).ToList();
-            if (dateStrings.Count != 2)
-            {
-                dateStrings = new List<string> { EditText, string.Empty };
-            }
-
-            var startDateParsed = DateTimeOffset.TryParseExact(dateStrings[0], DateFormat, Culture,
-                System.Globalization.DateTimeStyles.AssumeUniversal, out var startDate);
-            var endDateParsed = DateTimeOffset.TryParseExact(dateStrings[1], DateFormat, Culture,
-                System.Globalization.DateTimeStyles.AssumeUniversal, out var endDate);
+            (bool startDateParsed, bool endDateParsed) = ParseFunction(EditText, out DateTimeOffset startDate, out DateTimeOffset endDate);
 
             if (startDateParsed && startDate < MinDate)
             {
@@ -669,6 +668,22 @@ namespace BlazorDateRangePicker
             }
 
             return Task.CompletedTask;
+        }
+
+        private (bool startDateParsed, bool endDateParsed) TryParseDates(string value, out DateTimeOffset startDate, out DateTimeOffset endDate)
+        {
+            var dateStrings = value.Split('-').Select(s => s.Trim()).ToList();
+            if (dateStrings.Count != 2)
+            {
+                dateStrings = [value, string.Empty];
+            }
+
+            var startDateParsed = DateTimeOffset.TryParseExact(dateStrings[0], DateFormat, Culture,
+                System.Globalization.DateTimeStyles.AssumeUniversal, out startDate);
+            var endDateParsed = DateTimeOffset.TryParseExact(dateStrings[1], DateFormat, Culture,
+                System.Globalization.DateTimeStyles.AssumeUniversal, out endDate);
+
+            return (startDateParsed, endDateParsed);
         }
 
         public void LostFocus(FocusEventArgs _)

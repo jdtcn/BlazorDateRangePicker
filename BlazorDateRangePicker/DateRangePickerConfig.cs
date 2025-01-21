@@ -12,6 +12,8 @@ namespace BlazorDateRangePicker
 {
     public class DateRangePickerConfig : IConfigurableOptions
     {
+        public delegate (bool startDateParsed, bool endDateParsed) DateParsingDelegate(string value, out DateTimeOffset startDate, out DateTimeOffset endDate);
+
         public string Name { get; set; }
 
         public Dictionary<string, object> Attributes { get; set; }
@@ -216,5 +218,8 @@ namespace BlazorDateRangePicker
 
         /// <summary>List of day names to be displayed instead of those defined in the Culture</summary>
         public List<string> CustomDayNames { get; set; }
+
+        /// <summary>Custom date parsing function</summary>
+        public DateParsingDelegate CustomParseFunction { get; set; }
     }
 }

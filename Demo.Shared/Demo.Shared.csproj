@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net8</TargetFramework>
+		<TargetFramework>net9</TargetFramework>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	</PropertyGroup>
 

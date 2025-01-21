@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using static BlazorDateRangePicker.DateRangePickerConfig;
 
 namespace BlazorDateRangePicker
 {
@@ -58,5 +59,6 @@ namespace BlazorDateRangePicker
         TimeSpan? InitialEndTime { get; set; }
         bool? Prerender { get; set; }
         List<string> CustomDayNames { get; set; }
+        DateParsingDelegate CustomParseFunction { get; set; }
     }
 }
