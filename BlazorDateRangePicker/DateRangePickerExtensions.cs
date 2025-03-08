@@ -18,7 +18,7 @@ namespace BlazorDateRangePicker
             DateRangePickerConfig configuration,
             string configName = null)
         {
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            ArgumentNullException.ThrowIfNull(configuration);
 
             configuration.Name = configName;
             services.AddSingleton(configuration);
@@ -32,7 +32,7 @@ namespace BlazorDateRangePicker
             Action<DateRangePickerConfig> configure,
             string configName = null)
         {
-            if (configure == null) throw new ArgumentNullException(nameof(configure));
+            ArgumentNullException.ThrowIfNull(configure);
 
             var options = new DateRangePickerConfig();
             configure(options);

@@ -19,12 +19,12 @@ namespace BlazorDateRangePicker
 
         internal SideType Side { get; private set; }
 
-        internal DateTimeOffset FirstDay => new DateTimeOffset(Month.Year, Month.Month, 1, 0, 0, 0, TimeSpan.Zero);
+        internal DateTimeOffset FirstDay => new(Month.Year, Month.Month, 1, 0, 0, 0, TimeSpan.Zero);
         internal DateTimeOffset LastDay => new DateTime(Month.Year, Month.Month, DaysInMonth);
 
         public DateTimeOffset Month { get; private set; } = DateTime.Today;
 
-        public List<List<CalendarItem>> Calendar { get; set; } = new List<List<CalendarItem>>();
+        public List<List<CalendarItem>> Calendar { get; set; } = [];
         private DateRangePicker Picker { get; set; }
 
         public CalendarType(DateRangePicker picker, SideType side)
@@ -42,10 +42,10 @@ namespace BlazorDateRangePicker
 
         public async Task CalculateCalendar()
         {
-            var calendar = Calendar ?? new List<List<CalendarItem>>();
+            var calendar = Calendar ?? [];
             for (var i = calendar.Count; i < 6; i++)
             {
-                calendar.Add(new List<CalendarItem>());
+                calendar.Add([]);
             }
 
             var startDayOffset = (int)FirstDayOfWeek - (int)DayOfWeek;

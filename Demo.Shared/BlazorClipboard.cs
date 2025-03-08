@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.JSInterop;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
 
 #nullable enable
 
@@ -33,22 +32,17 @@ namespace Demo.Shared
         public void SetText(string text);
     }
 
-    public class BlazorClipboard : IClipboard
+    /// <summary>
+    /// Construct a new instance.
+    /// </summary>
+    public class BlazorClipboard(IJSRuntime jsRuntime) : IClipboard
     {
-        protected readonly IJSRuntime jsRuntime;
-
-        /// <summary>
-        /// Construct a new instance.
-        /// </summary>
-        public BlazorClipboard(IJSRuntime jsRuntime)
-        {
-            this.jsRuntime = jsRuntime;
-        }
+        protected readonly IJSRuntime jsRuntime = jsRuntime;
 
         /// <inheritdoc />
         public virtual async Task<string?> GetTextAsync(CancellationToken cancellation = default)
         {
-            return await jsRuntime.InvokeAsync<string>("navigator.clipboard.readText", cancellation, Array.Empty<object>());
+            return await jsRuntime.InvokeAsync<string>("navigator.clipboard.readText", cancellation, []);
         }
 
         /// <inheritdoc />
@@ -60,7 +54,7 @@ namespace Demo.Shared
         /// <inheritdoc />
         public virtual async Task SetTextAsync(string text, CancellationToken cancellation = default)
         {
-            await jsRuntime.InvokeAsync<string>("navigator.clipboard.writeText", cancellation, new object[] { text });
+            await jsRuntime.InvokeAsync<string>("navigator.clipboard.writeText", cancellation, [text]);
         }
 
         /// <inheritdoc />

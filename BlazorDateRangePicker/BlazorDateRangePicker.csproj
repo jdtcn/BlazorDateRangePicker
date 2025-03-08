@@ -1,40 +1,43 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-	<PropertyGroup>
-		<TargetFrameworks>net6;net7;net8;net9</TargetFrameworks>
-		<OutputType>Library</OutputType>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-		<IsPackable>true</IsPackable>
-		<LangVersion>preview</LangVersion>
-		<RazorLangVersion>3.0</RazorLangVersion>
+  <PropertyGroup>
+    <TargetFrameworks>net6;net8;net9</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <IsPackable>true</IsPackable>
+    <LangVersion>preview</LangVersion>
+    <RazorLangVersion>latest</RazorLangVersion>
 
-		<Version>5.4.0</Version>
-		<Authors>Sergey Zaikin</Authors>
-		<PackageId>BlazorDateRangePicker</PackageId>
-		<Title>Blazor Date Range Picker</Title>
-		<Description>A fully managed port of daterangepicker.js for Blazor</Description>
-		<PackageProjectUrl>https://github.com/jdtcn/BlazorDateRangePicker</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/jdtcn/BlazorDateRangePicker</RepositoryUrl>
-		<PackageTags>blazor;daterangepicker;datepicker</PackageTags>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	</PropertyGroup>
+    <Version>5.4.0</Version>
+    <Authors>Sergey Zaikin</Authors>
+    <PackageId>BlazorDateRangePicker</PackageId>
+    <Title>Blazor Date Range Picker</Title>
+    <Description>A fully managed port of daterangepicker.js for Blazor</Description>
+    <PackageProjectUrl>https://github.com/jdtcn/BlazorDateRangePicker</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jdtcn/BlazorDateRangePicker</RepositoryUrl>
+    <PackageTags>blazor;daterangepicker;datepicker</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net6'))">
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-	</ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net7'))">
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
-	</ItemGroup>
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6'))">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.29" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+  </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SourceGenerators\SourceGenerators.csproj"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
   </ItemGroup>
 
 </Project>
