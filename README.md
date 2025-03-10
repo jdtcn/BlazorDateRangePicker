@@ -254,7 +254,12 @@ public class DateRange
 
 ## Changelog
 
-## 5.4.0
+## 6.0.0
+
+1. Replaced reflection usage with source generators, the library is now NativeAOT-compatible
+2. Fixed NRE when SingleDatePicker is set to `null` (#111)
+
+### 5.4.0
 
 1. Added CustomParseFunction callback (#108)
 2. Added net9 support

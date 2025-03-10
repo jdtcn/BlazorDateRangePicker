@@ -4,15 +4,16 @@
 * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
 */
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components.Web;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.JSInterop;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BlazorDateRangePicker
 {
@@ -229,20 +230,15 @@ namespace BlazorDateRangePicker
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            var paramsDict = parameters.ToDictionary();
-
-            if (paramsDict.ContainsKey(nameof(EndDate))
-                && (DateTimeOffset?)paramsDict[nameof(EndDate)] != EndDate)
+            if (parameters.TryGetValue(nameof(EndDate), out DateTimeOffset? endDate) && endDate != EndDate)
             {
-                TEndDate = (DateTimeOffset?)paramsDict[nameof(EndDate)];
+                TEndDate = endDate;
             }
 
-            if (paramsDict.ContainsKey(nameof(StartDate))
-                && (DateTimeOffset?)paramsDict[nameof(StartDate)] != StartDate)
+            if (parameters.TryGetValue(nameof(StartDate), out DateTimeOffset? startDate) && startDate != StartDate)
             {
-                TStartDate = (DateTimeOffset?)paramsDict[nameof(StartDate)];
-                var singleDatePicker = paramsDict.ContainsKey(nameof(SingleDatePicker))
-                    && (bool)paramsDict[nameof(SingleDatePicker)] == true;
+                TStartDate = startDate;
+                var singleDatePicker = parameters.TryGetValue(nameof(SingleDatePicker), out bool? enabled) && enabled == true;
                 if (SingleDatePicker == true || singleDatePicker)
                 {
                     EndDate = TStartDate;
@@ -250,19 +246,14 @@ namespace BlazorDateRangePicker
                 }
             }
 
-            if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(DateFormat)))
+            if (parameters.TryGetValue(nameof(Culture), out CultureInfo culture))
             {
-                DateFormat = ((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.ShortDatePattern;
-            }
-
-            if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(TimePicker24Hour)))
-            {
-                TimePicker24Hour = !((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.LongTimePattern.EndsWith("tt");
-            }
-
-            if (paramsDict.ContainsKey(nameof(Culture)) && !paramsDict.ContainsKey(nameof(FirstDayOfWeek)))
-            {
-                FirstDayOfWeek = ((System.Globalization.CultureInfo)paramsDict[nameof(Culture)]).DateTimeFormat.FirstDayOfWeek;
+                if (!parameters.TryGetValue(nameof(DateFormat), out string _))
+                    DateFormat = culture.DateTimeFormat.ShortDatePattern;
+                if (!parameters.TryGetValue(nameof(TimePicker24Hour), out bool? _))
+                    TimePicker24Hour = culture.DateTimeFormat.LongTimePattern.EndsWith("tt");
+                if (!parameters.TryGetValue(nameof(FirstDayOfWeek), out DayOfWeek? _))
+                    FirstDayOfWeek = culture.DateTimeFormat.FirstDayOfWeek;
             }
 
             if (LeftCalendar != null && RightCalendar != null && FirstDayOfWeek.HasValue && LeftCalendar.FirstDayOfWeek != FirstDayOfWeek)
