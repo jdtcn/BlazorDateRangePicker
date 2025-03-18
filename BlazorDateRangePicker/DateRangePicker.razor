@@ -47,7 +47,7 @@ else if (PickerTemplate != null)
                 {
                     <div class="calendar-time">
                         <TimePicker Side="@SideType.Left" Day="TStartDate" TimePicker24Hour="TimePicker24Hour"
-                                    Time="StartTime" TimeChanged="t => TimeChanged(start: t)" />
+                                    Time="StartTime" TimeChanged="StartTimeChanged" />
                     </div>
                 }
             </div>
@@ -66,7 +66,7 @@ else if (PickerTemplate != null)
                     {
                         <div class="calendar-time">
                             <TimePicker Side="@SideType.Right" Day="TEndDate" TimePicker24Hour="TimePicker24Hour"
-                                        Time="EndTime" TimeChanged="t => TimeChanged(end: t)" />
+                                        Time="EndTime" TimeChanged="EndTimeChanged" />
                         </div>
                     }
                 </div>

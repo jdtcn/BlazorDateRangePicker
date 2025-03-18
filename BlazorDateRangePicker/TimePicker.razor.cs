@@ -17,7 +17,7 @@ namespace BlazorDateRangePicker
         [CascadingParameter] public DateRangePicker Picker { get; set; }
         [Parameter] public SideType Side { get; set; }
         [Parameter] public TimeSpan Time { get; set; }
-        [Parameter] public EventCallback<TimeSpan?> TimeChanged { get; set; }
+        [Parameter] public EventCallback<TimeSpan> TimeChanged { get; set; }
         [Parameter] public DateTimeOffset? Day { get; set; }
         [Parameter] public bool? TimePicker24Hour { get; set; }
 
@@ -75,11 +75,10 @@ namespace BlazorDateRangePicker
             }
             set
             {
-                if (Picker.TimePicker24Hour == true) Set(h: value);
                 Set(h: AmPm switch
                 {
-                    AmPmEnum.AM when value >= 12 => value - 12,
-                    AmPmEnum.PM when value < 12 => value + 12,
+                    AmPmEnum.AM when TimePicker24Hour == false && value >= 12 => value - 12,
+                    AmPmEnum.PM when TimePicker24Hour == false && value < 12 => value + 12,
                     _ => value
                 });
             }

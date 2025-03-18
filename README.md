@@ -254,7 +254,11 @@ public class DateRange
 
 ## Changelog
 
-## 6.0.0
+## 6.1.0
+
+1. Added OnStartTimeChanged and OnEndTimeChanged events (#112)
+
+### 6.0.0
 
 1. Replaced reflection usage with source generators, the library is now NativeAOT-compatible
 2. Fixed NRE when SingleDatePicker is set to `null` (#111)

@@ -151,6 +151,18 @@ namespace BlazorDateRangePicker
         [Parameter]
         public EventCallback<DateTimeOffset> OnSelectionEnd { get; set; }
 
+        /// <summary>
+        /// An event that is invoked when the StartDate is changed when TimePicker is enabled
+        /// </summary>
+        [Parameter]
+        public EventCallback<TimeSpan> OnStartTimeChanged { set; get; }
+
+        /// <summary>
+        /// An event that is invoked when the EndDate is changed when TimePicker is enabled
+        /// </summary>
+        [Parameter]
+        public EventCallback<TimeSpan> OnEndTimeChanged { set; get; }
+
         private DateParsingDelegate ParseFunction => CustomParseFunction ?? TryParseDates;
 
         public CalendarType LeftCalendar { get; set; }
@@ -503,13 +515,18 @@ namespace BlazorDateRangePicker
             }
         }
 
-        private void TimeChanged(TimeSpan? start = null, TimeSpan? end = null)
+        private async Task StartTimeChanged(TimeSpan start)
         {
-            StartTime = start ?? StartTime;
-            EndTime = end ?? EndTime;
-
+            StartTime = start;
             TStartDate = TStartDate.HasValue ? SafeSetStartTime(TStartDate.Value) : null;
+            await OnStartTimeChanged.InvokeAsync(start);
+        }
+
+        private async Task EndTimeChanged(TimeSpan end)
+        {
+            EndTime = end;
             TEndDate = TEndDate.HasValue ? SafeSetEndTime(TEndDate.Value) : null;
+            await OnEndTimeChanged.InvokeAsync(end);
         }
 
         public virtual async Task ClickDate(DateTimeOffset date)
