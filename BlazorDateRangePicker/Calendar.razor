@@ -20,7 +20,7 @@
                     <select class="monthselect" @bind="@CurrentMonth">
                         @for (var m = 1; m < 13; m++)
                         {
-                            var enabled = (!inMinYear || (m >= Picker.MinDate?.Month)) && (!inMaxYear || (m <= Picker.MaxDate?.Month));
+                            var enabled = (!inMinYear || (m >= Picker.MinDate?.Month)) && (!inMaxYear || (m <= Picker.MaxDate?.Month)) && CurrentYear <= MaxYear;
                             var selected = m == CurrentMonth;
                             <option @key="m" selected="@selected" disabled="@(!enabled)" value="@m">
                                 @Picker.Culture.DateTimeFormat.GetMonthName(m)
@@ -32,6 +32,10 @@
                         @for (var y = MinYear; y <= MaxYear; y++)
                         {
                             <option @key="y" value="@y" selected="@(y == CurrentYear)">@y</option>
+                        }
+                        @if(CurrentYear > MaxYear)
+                        {
+                            <option @key="CurrentYear" value="@CurrentYear" selected="true">@CurrentYear</option>
                         }
                     </select>
                 }

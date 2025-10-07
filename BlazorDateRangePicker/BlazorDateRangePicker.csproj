@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6;net7;net8;net9</TargetFrameworks>
+    <TargetFrameworks>net6;net7;net8;net9;net10.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -9,7 +9,7 @@
     <LangVersion>preview</LangVersion>
     <RazorLangVersion>latest</RazorLangVersion>
 
-    <Version>6.1.0</Version>
+    <Version>6.2.0</Version>
     <Authors>Sergey Zaikin</Authors>
     <PackageId>BlazorDateRangePicker</PackageId>
     <Title>Blazor Date Range Picker</Title>
@@ -35,6 +35,9 @@
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0'))">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0-rc.1.25451.107" />
   </ItemGroup>
 
   <ItemGroup>

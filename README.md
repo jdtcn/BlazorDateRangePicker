@@ -254,7 +254,12 @@ public class DateRange
 
 ## Changelog
 
-## 6.1.0
+## 6.2.0
+
+1. Fixed calendars behavior when setting MaxDate (#115)
+2. Added net10 support
+
+### 6.1.0
 
 1. Added OnStartTimeChanged and OnEndTimeChanged events (#112)
 
